@@ -1,1 +1,1 @@
-export * from './fantasy-baseball-home.page'; 
+export * from './fantasy-baseball-home.page';
