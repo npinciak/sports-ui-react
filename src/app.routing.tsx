@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import { AppStore } from './app.store';
 import { BaseballHome, BaseballTeam } from './features/espn/fantasy-baseball';
-import { fantasyBaseballClient } from './features/espn/fantasy-baseball/client/fantasy-baseball.client';
+import { baseballClient } from './features/espn/fantasy-baseball/client/fantasy-baseball.client';
 
 // export function AppRouting() {
 //   // const { data, error, isLoading } =
@@ -31,7 +31,7 @@ export const AppRouter = createBrowserRouter([
                 path: ':leagueId',
                 loader: async ({ params }) => {
                   await AppStore.dispatch(
-                    fantasyBaseballClient.endpoints.fetchLeague.initiate({
+                    baseballClient.endpoints.fetchLeague.initiate({
                       year: params?.year ?? '',
                       leagueId: params?.leagueId ?? '',
                     })

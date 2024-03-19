@@ -10,8 +10,8 @@ type FetchLeagueParams = {
   leagueId: string;
 };
 
-export const fantasyBaseballClient = createApi({
-  reducerPath: 'fantasyBaseballClient',
+export const baseballClient = createApi({
+  reducerPath: 'baseballClient',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://fantasy.espn.com/apis/v3',
   }),
