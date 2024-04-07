@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { AppStore } from './app.store';
+import { Home } from './core';
 import {
   BaseballBatters,
   BaseballFreeAgents,
@@ -15,6 +16,10 @@ export const AppRouter = createBrowserRouter([
   {
     path: '',
     children: [
+      {
+        path: '',
+        element: <Home />,
+      },
       {
         path: ':year',
         children: [
@@ -101,4 +106,5 @@ export const AppRouter = createBrowserRouter([
       },
     ],
   },
+  { path: '*', element: <div>404</div> },
 ]);
