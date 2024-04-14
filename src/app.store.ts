@@ -1,7 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { supabaseClient } from './@shared/supabase/supabase.client';
 import { baseballClient } from './features/espn/fantasy-baseball/client/fantasy-baseball.client';
-import { baseballLeagueSlice, baseballTeamLiveSlice, baseballTeamSlice } from './features/espn/fantasy-baseball/store';
+import { baseballTeamSlice } from './features/espn/fantasy-baseball/slice';
+import { baseballLeagueSlice } from './features/espn/fantasy-baseball/slice/baseball-league.slice';
+import { baseballTeamLiveSlice } from './features/espn/fantasy-baseball/slice/baseball-team-live.slice';
 
 export const AppStore = configureStore({
   reducer: {
@@ -16,3 +18,5 @@ export const AppStore = configureStore({
 
 export type RootState = ReturnType<typeof AppStore.getState>;
 export type AppDispatch = typeof AppStore.dispatch;
+
+export const getAppStore = AppStore.getState();

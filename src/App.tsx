@@ -7,8 +7,9 @@ function App() {
   return (
     <div className="App">
       <HeaderComponent />
-
-      <RouterProvider router={AppRouter} />
+      <div className="mx-5 overflow-auto">
+        <RouterProvider router={AppRouter} />
+      </div>
     </div>
   );
 }

@@ -21,4 +21,8 @@ export const baseballTeamLiveSlice = createSlice({
       baseballTeamLiveAdapter.setAll(state, action.payload.teamsLive);
     });
   },
+  selectors: {
+    selectAllEntitiesList: store => Object.values(store.entities),
+    selectAllEntityIds: store => store.ids,
+  },
 });
