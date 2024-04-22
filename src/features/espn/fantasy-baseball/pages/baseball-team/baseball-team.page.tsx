@@ -2,13 +2,13 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { RootState } from '../../../../../app.store';
 import { BaseballTeamSelector } from '../../selectors';
-import { baseballTeamLiveSelector } from '../../selectors/baseball-team-live.selector';
+import { BaseballTeamLiveEntitySelectors } from '../../selectors/baseball-team-live.selector';
 
 export function BaseballTeam() {
   const { teamId } = useParams();
 
   const { totalPoints } = useSelector((state: RootState) =>
-    baseballTeamLiveSelector.selectById(state, teamId!)
+    BaseballTeamLiveEntitySelectors.selectById(state, teamId!)
   );
 
   const { id, name, logo, currentRank, roster } = useSelector(

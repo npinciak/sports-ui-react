@@ -21,8 +21,5 @@ export const baseballTeamSlice = createSlice({
       baseballTeamAdapter.setAll(state, action.payload.teams);
     });
   },
-  selectors: {
-    selectAllEntities: store => store.entities,
-    selectAllEntityIds: store => store.ids,
-  },
+
 });
