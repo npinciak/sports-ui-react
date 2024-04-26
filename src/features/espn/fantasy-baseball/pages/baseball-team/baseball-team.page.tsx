@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { RootState } from '../../../../../app.store';
 import {
-  BaseballTeamSelector,
+  BaseballTeamEntitySelector,
   selectTeamStartingLineupBatters,
   selectTeamStartingLineupPitchers,
 } from '../../selectors';
@@ -16,15 +16,13 @@ export function BaseballTeam() {
   );
 
   const { id, name, logo, currentRank, roster } = useSelector(
-    (state: RootState) => BaseballTeamSelector.selectById(state, teamId!)
+    (state: RootState) => BaseballTeamEntitySelector.selectById(state, teamId!)
   );
 
   const startingBatters = useSelector(selectTeamStartingLineupBatters)(teamId!);
   const startingPitchers = useSelector(selectTeamStartingLineupPitchers)(
     teamId!
   );
-  console.log('startingBatters', startingBatters);
-  console.log('startingPitchers', startingPitchers);
 
   return (
     <div key={id}>

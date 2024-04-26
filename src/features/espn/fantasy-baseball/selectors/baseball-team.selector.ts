@@ -4,28 +4,28 @@ import { RootState } from '../../../../app.store';
 import { startingPlayersFilter } from '../helpers/baseball-helpers';
 import { baseballTeamAdapter } from '../slices/baseball-team.slice';
 
-export const BaseballTeamSelector = baseballTeamAdapter.getSelectors<RootState>(store => store.baseballTeam);
+const baseballTeamState = (state: RootState) => state.baseballTeam;
 
-export function selectTeamById(state: RootState) {
-  return (id: string) => BaseballTeamSelector.selectById(state, id);
-}
+export const BaseballTeamEntitySelector = baseballTeamAdapter.getSelectors<RootState>(baseballTeamState);
 
-export function selectTeamList(state: RootState) {
-  return BaseballTeamSelector.selectAll(state);
-}
+export const getTeamById = createSelector([baseballTeamState], state => (id: string) => state.entities[id]);
 
-export const selectTeamBatters = createSelector([selectTeamById], teamById => {
-  return (id: string) => teamById(id).roster.filter(p => !p.isPitcher || p.lineupSlotId === 12);
-});
+export const selectTeamBatters = createSelector(
+  [getTeamById],
+  teamById => (id: string) => teamById(id).roster.filter(p => !p.isPitcher || p.lineupSlotId === 12)
+);
 
-export const selectTeamStartingLineupBatters = createSelector([selectTeamBatters], selectTeamBatters => {
-  return (id: string) => startingPlayersFilter(selectTeamBatters(id), BASEBALL_LINEUP_MAP);
-});
+export const selectTeamStartingLineupBatters = createSelector(
+  [selectTeamBatters],
+  selectTeamBatters => (id: string) => startingPlayersFilter(selectTeamBatters(id), BASEBALL_LINEUP_MAP)
+);
 
-export const selectTeamPitchers = createSelector([selectTeamById], teamById => {
-  return (id: string) => teamById(id).roster.filter(p => p.isPitcher && p.lineupSlotId !== 12);
-});
+export const selectTeamPitchers = createSelector(
+  [getTeamById],
+  teamById => (id: string) => teamById(id).roster.filter(p => p.isPitcher && p.lineupSlotId !== 12)
+);
 
-export const selectTeamStartingLineupPitchers = createSelector([selectTeamPitchers], selectTeamPitchers => {
-  return (id: string) => startingPlayersFilter(selectTeamPitchers(id), BASEBALL_LINEUP_MAP);
-});
+export const selectTeamStartingLineupPitchers = createSelector(
+  [selectTeamPitchers],
+  selectTeamPitchers => (id: string) => startingPlayersFilter(selectTeamPitchers(id), BASEBALL_LINEUP_MAP)
+);

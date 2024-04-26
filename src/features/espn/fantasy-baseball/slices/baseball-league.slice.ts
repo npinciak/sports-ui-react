@@ -36,7 +36,7 @@ export const baseballLeagueSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addMatcher(baseballClient.endpoints.fetchLeague.matchFulfilled, (state, action) => {
+    builder.addMatcher(baseballClient.endpoints.fetchLeagueById.matchFulfilled, (state, action) => {
       const { id, scoringPeriodId, matchupPeriodCount, firstScoringPeriod, finalScoringPeriod, seasonId } = action.payload;
 
       const store = { id, scoringPeriodId, matchupPeriodCount, firstScoringPeriod, finalScoringPeriod, seasonId };

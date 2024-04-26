@@ -17,7 +17,7 @@ export const baseballTeamLiveSlice = createSlice({
     teamRemoved: baseballTeamLiveAdapter.removeOne,
   },
   extraReducers: builder => {
-    builder.addMatcher(baseballClient.endpoints.fetchLeague.matchFulfilled, (state, action) => {
+    builder.addMatcher(baseballClient.endpoints.fetchLeagueById.matchFulfilled, (state, action) => {
       baseballTeamLiveAdapter.setAll(state, action.payload.teamsLive);
     });
   },

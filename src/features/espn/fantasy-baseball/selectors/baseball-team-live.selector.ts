@@ -1,19 +1,17 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../../../app.store';
 import { baseballTeamLiveAdapter } from '../slices/baseball-team-live.slice';
-import { selectTeamById } from './baseball-team.selector';
+import { getTeamById } from './baseball-team.selector';
 
-export const BaseballTeamLiveEntitySelectors = baseballTeamLiveAdapter.getSelectors<RootState>(store => store.baseballTeamLive);
+const baseballTeamLiveState = (state: RootState) => state.baseballTeamLive;
 
-export function selectLiveTeamById(state: RootState) {
-  return (id: string) => BaseballTeamLiveEntitySelectors.selectById(state, id);
-}
+export const BaseballTeamLiveEntitySelectors = baseballTeamLiveAdapter.getSelectors<RootState>(baseballTeamLiveState);
 
-export function selectLiveTeamList(state: RootState) {
-  return BaseballTeamLiveEntitySelectors.selectAll(state);
-}
+export const getLiveTeamList = createSelector([baseballTeamLiveState], state => state.ids.map(id => state.entities[id]));
 
-export const standings = createSelector([selectLiveTeamList, selectTeamById], (liveTeamList, teamById) =>
+export const getLiveTeamById = createSelector([baseballTeamLiveState], state => (id: string) => state.entities[id]);
+
+export const standings = createSelector([getLiveTeamList, getTeamById], (liveTeamList, teamById) =>
   liveTeamList
     .map(liveTeam => ({
       ...liveTeam,
