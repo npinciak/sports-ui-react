@@ -1,4 +1,4 @@
-import { PITCHING_LINEUP_IDS, PlayerStatsYear, ProLeagueType, SportType, getContrastRatio } from 'sports-ui-sdk';
+import { PlayerStatsYear, ProLeagueType, SportType, getContrastRatio } from 'sports-ui-sdk';
 
 /**
  * Sports to include in Fastcast
@@ -29,16 +29,6 @@ export function includeLeagues(id: string): boolean {
 export function excludeLeagues(id: string): boolean {
   const leagueIds = ['14', '62', '760', '102', '3923', '8097', '8301', '20226', '54', '59', '19834', '8301', '19483', '19868', '19728'];
   return new Set(leagueIds).has(id);
-}
-
-/**
- * Find if player is eligible pitcher
- *
- * @param eligiblePos
- * @returns boolean
- */
-export function isPitcher(eligiblePos: number[]): boolean {
-  return eligiblePos.some(posId => PITCHING_LINEUP_IDS.has(posId));
 }
 
 /**

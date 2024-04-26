@@ -1,7 +1,11 @@
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { RootState } from '../../../../../app.store';
-import { BaseballTeamSelector } from '../../selectors';
+import {
+  BaseballTeamSelector,
+  selectTeamStartingLineupBatters,
+  selectTeamStartingLineupPitchers,
+} from '../../selectors';
 import { BaseballTeamLiveEntitySelectors } from '../../selectors/baseball-team-live.selector';
 
 export function BaseballTeam() {
@@ -14,6 +18,13 @@ export function BaseballTeam() {
   const { id, name, logo, currentRank, roster } = useSelector(
     (state: RootState) => BaseballTeamSelector.selectById(state, teamId!)
   );
+
+  const startingBatters = useSelector(selectTeamStartingLineupBatters)(teamId!);
+  const startingPitchers = useSelector(selectTeamStartingLineupPitchers)(
+    teamId!
+  );
+  console.log('startingBatters', startingBatters);
+  console.log('startingPitchers', startingPitchers);
 
   return (
     <div key={id}>
@@ -36,27 +47,52 @@ export function BaseballTeam() {
         </div>
       </div>
 
-      <div className="text-left">
-        {roster.map(player => (
-          <div className="grid grid-cols-4 py-3" key={player.id}>
-            <div>
-              <img
-                className="w-13 h-9 rounded-full text-center text-xs text-gray-500"
-                src={player.img}
-                alt={player.name}
-                role="presentation"
-                aria-roledescription="presentation"
-              />
-            </div>
-            <div className="col-span-3">
-              {player.name}
-              <div className="text-xs">
-                {player.team}{' '}
-                <span className="font-bold">{player.position}</span>
+      <div className="flex text-left">
+        <div className="w-full px-4 xl:w-4/12">
+          {startingBatters.map(player => (
+            <div className="grid grid-cols-4 py-3" key={player.id}>
+              <div>
+                <img
+                  className="w-13 h-9 rounded-full text-center text-xs text-gray-500"
+                  src={player.img}
+                  alt={player.name}
+                  role="presentation"
+                  aria-roledescription="presentation"
+                />
+              </div>
+              <div className="col-span-3">
+                {player.name}
+                <div className="text-xs">
+                  {player.team}
+                  <span className="font-bold"> {player.lineupSlot}</span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+
+          <div className="py-3"></div>
+          {startingPitchers.map(player => (
+            <div className="grid grid-cols-4 py-3" key={player.id}>
+              <div>
+                <img
+                  className="w-13 h-9 rounded-full text-center text-xs text-gray-500"
+                  src={player.img}
+                  alt={player.name}
+                  role="presentation"
+                  aria-roledescription="presentation"
+                />
+              </div>
+              <div className="col-span-3">
+                {player.name}
+                <div className="text-xs">
+                  {player.team}
+                  <span className="font-bold"> {player.lineupSlot}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+          <div className="w-full px-4 xl:w-8/12"></div>
+        </div>
       </div>
     </div>
   );
