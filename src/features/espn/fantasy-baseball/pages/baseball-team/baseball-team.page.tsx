@@ -1,15 +1,23 @@
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { useGetFangraphsConstantsBySeasonQuery } from '../../../../../@shared/supabase/supabase.client';
 import { RootState } from '../../../../../app.store';
+import { BaseballPlayerStatsTable } from '../../components';
+import { BaseballScoringPeriod } from '../../helpers';
 import {
   BaseballTeamEntitySelector,
+  selectTeamBatterStats,
   selectTeamStartingLineupBatters,
   selectTeamStartingLineupPitchers,
 } from '../../selectors';
 import { BaseballTeamLiveEntitySelectors } from '../../selectors/baseball-team-live.selector';
 
 export function BaseballTeam() {
-  const { teamId } = useParams();
+  const { teamId, leagueId, year } = useParams();
+
+  const { data: fangraphs } = useGetFangraphsConstantsBySeasonQuery({
+    seasonId: year!,
+  });
 
   const { totalPoints } = useSelector((state: RootState) =>
     BaseballTeamLiveEntitySelectors.selectById(state, teamId!)
@@ -22,6 +30,11 @@ export function BaseballTeam() {
   const startingBatters = useSelector(selectTeamStartingLineupBatters)(teamId!);
   const startingPitchers = useSelector(selectTeamStartingLineupPitchers)(
     teamId!
+  );
+
+  const playerStats = useSelector(selectTeamBatterStats)(
+    teamId!,
+    BaseballScoringPeriod.season(year!)
   );
 
   return (
@@ -89,7 +102,9 @@ export function BaseballTeam() {
               </div>
             </div>
           ))}
-          <div className="w-full px-4 xl:w-8/12"></div>
+        </div>
+        <div className="w-full px-4 xl:w-8/12">
+          <BaseballPlayerStatsTable data={playerStats} />
         </div>
       </div>
     </div>

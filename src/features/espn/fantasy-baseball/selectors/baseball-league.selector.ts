@@ -1,4 +1,6 @@
-import { baseballLeagueSlice } from '../slices/baseball-league.slice';
+import { createSelector } from '@reduxjs/toolkit';
+import { RootState } from '../../../../app.store';
 
-export const BaseballLeagueSelector = baseballLeagueSlice.selectors.selectStore.unwrapped;
+const baseballLeagueState = (state: RootState) => state.baseballLeague;
 
+export const selectSeasonId = createSelector([baseballLeagueState], state => state.seasonId);

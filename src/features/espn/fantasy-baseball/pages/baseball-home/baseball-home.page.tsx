@@ -25,7 +25,9 @@ export function BaseballHome() {
       minWidth: 250,
       defaultFlex: 1,
       sortable: true,
-      render: ({ data }: { data: BaseballTeam }) => <Link to={`team/${data.id}`}>{data?.name}</Link>
+      render: ({ data }: { data: BaseballTeam }) => (
+        <Link to={`team/${data.id}`}>{data?.name}</Link>
+      ),
     },
     {
       header: 'R',

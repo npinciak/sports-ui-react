@@ -3,11 +3,15 @@ import { SupaClientFangraphsConstantsTable } from '../../../../@shared/supabase/
 import { MlbAdvancedStats } from '../helpers';
 import { BaseballPlayer, BaseballPlayerStatsRow } from '../models/baseball-player.model';
 
-export function transformToBaseballPlayerBatterStatsRow(
-  player: BaseballPlayer,
-  statPeriod: string,
-  seasonConst: SupaClientFangraphsConstantsTable
-): BaseballPlayerStatsRow | null {
+export function transformToBaseballPlayerBatterStatsRow({
+  player,
+  statPeriod,
+  seasonConstants,
+}: {
+  player: BaseballPlayer;
+  statPeriod: string;
+  seasonConstants: SupaClientFangraphsConstantsTable;
+}): BaseballPlayerStatsRow | null {
   const {
     id,
     name,
@@ -24,11 +28,12 @@ export function transformToBaseballPlayerBatterStatsRow(
   } = player;
 
   if (!exists(player.stats)) return null;
+
   if (!exists(player.stats[statPeriod])) return null;
 
   const statsEntity = player.stats[statPeriod]!.stats;
 
-  const { fip, wOBA, wRAA, babip, iso, leftOnBasePercent, wRC } = MlbAdvancedStats(seasonConst, statsEntity);
+  const { fip, wOBA, wRAA, babip, iso, leftOnBasePercent, wRC } = MlbAdvancedStats(seasonConstants, statsEntity);
 
   const adv = {} as Record<BaseballStat, number>;
 
