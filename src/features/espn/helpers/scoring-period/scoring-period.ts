@@ -14,6 +14,7 @@ import { ScoringPeriodId } from './scoring-period.model';
 export function BaseScoringPeriod() {
   class BaseScoringPeriodClass {
     static season(year: string | null) {
+      console.log(BaseScoringPeriodClass.seasonToScoringPeriodId(ScoringPeriodId.Season, year));
       return BaseScoringPeriodClass.seasonToScoringPeriodId(ScoringPeriodId.Season, year);
     }
 
@@ -64,13 +65,13 @@ export function BaseScoringPeriod() {
       const season = year ?? new Date().getFullYear();
       const upcomingWeek = week ?? '0';
 
-      if (isProjected) return `${ScoringPeriodId}${season}`;
+      if (isProjected) return `${scoringPeriodId}${season}`;
 
-      if (!exists(year) && !isProjected) return `0${ScoringPeriodId}${season}`;
+      if (!exists(year) && !isProjected) return `0${scoringPeriodId}${season}`;
 
-      if (exists(week)) return `${ScoringPeriodId}${season}${upcomingWeek}`; //1120231
+      if (exists(week)) return `${scoringPeriodId}${season}${upcomingWeek}`; //1120231
 
-      return `0${ScoringPeriodId}${season}`;
+      return `0${scoringPeriodId}${season}`;
     }
   }
   return BaseScoringPeriodClass;
