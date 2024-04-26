@@ -30,7 +30,7 @@ export const AppRouter = createBrowserRouter([
                 path: ':leagueId',
                 loader: async ({ params }) => {
                   await AppStore.dispatch(
-                    baseballClient.endpoints.fetchLeague.initiate({
+                    baseballClient.endpoints.fetchLeagueById.initiate({
                       year: params?.year ?? '',
                       leagueId: params?.leagueId ?? '',
                     })
