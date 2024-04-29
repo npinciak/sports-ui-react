@@ -14,7 +14,6 @@ import { ScoringPeriodId } from './scoring-period.model';
 export function BaseScoringPeriod() {
   class BaseScoringPeriodClass {
     static season(year: string | null) {
-      console.log(BaseScoringPeriodClass.seasonToScoringPeriodId(ScoringPeriodId.Season, year));
       return BaseScoringPeriodClass.seasonToScoringPeriodId(ScoringPeriodId.Season, year);
     }
 

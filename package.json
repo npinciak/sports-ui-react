@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "generate:types": "npx supabase gen types typescript --project-id \"tvzszyncqcrrsyekaodt\" --schema public > src/@shared/supabase/supabase-database.model.ts"
+    "generate:types": "npx supabase gen types typescript --project-id \"tvzszyncqcrrsyekaodt\" --schema public > src/@shared/supabase/supabase-database.model.ts",
+    "serve:functions": "npx supabase functions serve --no-verify-jwt"
   },
   "dependencies": {
     "@inovua/reactdatagrid-community": "^5.10.2",
@@ -36,7 +37,7 @@
     "postcss": "^8.4.35",
     "prettier": "^3.2.5",
     "prettier-plugin-organize-imports": "^3.2.4",
-    "supabase": "^1.153.4",
+    "supabase": "^1.163.6",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
     "vite": "^5.1.4",

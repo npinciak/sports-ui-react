@@ -19,3 +19,6 @@ export type SupaClientTeam = SupaClientTableRelationRow<'league'>;
 
 export type SupaClientLeagueProgression = SupaClientTableRelationRow<'league-progression'>;
 export type SupaClientLeagueProgressionInsert = SupaClientTableRelationInsert<'league-progression'>;
+
+export type SupaClientEspnPlayer = SupaClientTableRelationRow<'espn_player'>;
+export type SupaClientEspnPlayerInsert = SupaClientTableRelationInsert<'espn_player'>;
