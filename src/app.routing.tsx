@@ -1,7 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { AppStore } from './app.store';
-import { Home } from './core';
+import {
+  ForgotPasswordPage,
+  Home,
+  LoginPage,
+  ResetPasswordPage,
+  SignUpPage,
+} from './core';
 import {
   BaseballBatters,
   BaseballFreeAgents,
@@ -19,6 +25,22 @@ export const AppRouter = createBrowserRouter([
       {
         path: '',
         element: <Home />,
+      },
+      {
+        path: 'login',
+        element: <LoginPage />,
+      },
+      {
+        path: 'forgot-password',
+        element: <ForgotPasswordPage />,
+      },
+      {
+        path: 'reset-password',
+        element: <ResetPasswordPage />,
+      },
+      {
+        path: 'sign-up',
+        element: <SignUpPage />,
       },
       {
         path: ':year',
