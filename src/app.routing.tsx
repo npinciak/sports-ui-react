@@ -8,6 +8,7 @@ import {
   ResetPasswordPage,
   SignUpPage,
 } from './core';
+import { AdminLeagueProgressionPage } from './features';
 import {
   BaseballBatters,
   BaseballFreeAgents,
@@ -41,6 +42,15 @@ export const AppRouter = createBrowserRouter([
       {
         path: 'sign-up',
         element: <SignUpPage />,
+      },
+      {
+        path: 'admin',
+        children: [
+          {
+            path: 'league-progression',
+            element: <AdminLeagueProgressionPage />,
+          },
+        ],
       },
       {
         path: ':year',
