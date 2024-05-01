@@ -8,6 +8,9 @@ export function Home() {
         <Link to="/2024/league/548464880">League</Link>
       </div>
       <div>
+        <Link to="/profile">Profile</Link>
+      </div>
+      <div>
         <Link to="/admin/league-progression">Admin</Link>
       </div>
     </div>
