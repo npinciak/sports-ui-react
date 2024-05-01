@@ -66,6 +66,37 @@ export const supabaseClient = createApi({
         return { data };
       },
     }),
+    getProfile: builder.query({
+      queryFn: async () => {
+        const { data, error } = await supabase.from('profile').select();
+        if (error) return { error };
+
+        return { data };
+      },
+    }),
+    getProfileWithTeams: builder.query<
+      | {
+          id: number;
+          teams: {
+            team: {
+              created_at: string;
+              espn_team_id: number;
+              id: number;
+              league_team_id: string;
+              name: string | null;
+            } | null;
+          }[];
+        }[]
+      | undefined,
+      object
+    >({
+      queryFn: async () => {
+        const { data, error } = await supabase.from('profile').select('id,teams:profile_to_fantasy_team(team(*))');
+        if (error) return { error };
+
+        return { data };
+      },
+    }),
   }),
 });
 
@@ -75,6 +106,8 @@ export const {
   useGetFangraphProjectionsQuery,
   useGetFangraphsConstantsBySeasonQuery,
   useCreateEspnPlayerMutation,
+  useGetProfileQuery,
+  useGetProfileWithTeamsQuery,
 } = supabaseClient;
 
 export interface FangraphsProjPlayer {
