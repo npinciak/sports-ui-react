@@ -1,4 +1,11 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { SupaClientLeagueProgressionInsert } from '../../../@shared/supabase/supabase-tables.model';
+import { useCreateLeagueProgressionEntityMutation } from '../../../@shared/supabase/supabase.client';
+import {
+  selectEspnTeamId,
+  selectRank,
+  selectTotalPoints,
+} from '../selectors/league-progression-form.selector';
 import {
   setEspnTeamId,
   setRank,
@@ -16,12 +23,37 @@ const fieldStyles = {
 export function AdminLeagueProgressionForm() {
   const dispatch = useDispatch();
 
-  const handleCancel = () => {
-    throw new Error('Function not implemented.');
-  };
+  const getEspnTeamId = useSelector(selectEspnTeamId);
+  const getTotalPoints = useSelector(selectTotalPoints);
+  const getRank = useSelector(selectRank);
+
+  const [handleCreateLeagueProgressionEntity] =
+    useCreateLeagueProgressionEntityMutation();
+
+  const handleCancel = () => {};
 
   const handleSubmit = () => {
-    throw new Error('Function not implemented.');
+    const getLeagueId = null;
+    const getLeagueTeamId = null;
+
+    if (
+      !getEspnTeamId ||
+      !getTotalPoints ||
+      !getRank ||
+      !getLeagueId ||
+      !getLeagueTeamId
+    )
+      throw new Error('Missing required fields');
+
+    const form: SupaClientLeagueProgressionInsert = {
+      espn_team_id: getEspnTeamId,
+      total_points: getTotalPoints,
+      league_id: getLeagueId,
+      league_team_id: getLeagueTeamId,
+      rank: getRank,
+    };
+
+    handleCreateLeagueProgressionEntity(form);
   };
 
   return (
