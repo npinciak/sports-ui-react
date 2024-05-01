@@ -29,16 +29,19 @@ export function AdminLeagueProgressionPage() {
 
   return (
     <>
-      <h1>League Progression Page</h1>
-
-      <ReactDataGrid
-        idProperty="playerId"
-        columns={columns}
-        dataSource={data ?? []}
-        style={gridStyle}
-      />
-
-      <AdminLeagueProgressionForm />
+      <div className="grid grid-cols-3 text-left mb-5 mt-5">
+        <div>
+          <ReactDataGrid
+            idProperty="playerId"
+            columns={columns}
+            dataSource={data ?? []}
+            style={gridStyle}
+          />
+        </div>
+        <div>
+          <AdminLeagueProgressionForm />
+        </div>
+      </div>
     </>
   );
 }

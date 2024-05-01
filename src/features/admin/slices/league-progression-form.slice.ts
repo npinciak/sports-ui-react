@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 type AdminLeagueProgressionForm = {
   espnTeamId: number | null;
-  leagueLd: string | null;
+  leagueId: string | null;
   leagueTeamId: string | null;
   totalPoints: number | null;
   rank: number | null;
@@ -10,7 +10,7 @@ type AdminLeagueProgressionForm = {
 
 const INITIAL_STATE: AdminLeagueProgressionForm = {
   espnTeamId: null,
-  leagueLd: null,
+  leagueId: null,
   leagueTeamId: null,
   totalPoints: null,
   rank: null,
@@ -24,7 +24,7 @@ export const AdminLeagueProgressionFormSlice = createSlice({
       state.espnTeamId = action.payload;
     },
     setLeagueId: (state, action) => {
-      state.leagueLd = action.payload;
+      state.leagueId = action.payload;
     },
     setSeasonId: (state, action) => {
       state.leagueTeamId = action.payload;
