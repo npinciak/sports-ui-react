@@ -1,13 +1,21 @@
+import { ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SupaClientLeagueProgressionInsert } from '../../../@shared/supabase/supabase-tables.model';
-import { useCreateLeagueProgressionEntityMutation } from '../../../@shared/supabase/supabase.client';
+import {
+  useCreateLeagueProgressionEntityMutation,
+  useGetProfileWithTeamsQuery,
+} from '../../../@shared/supabase/supabase.client';
 import {
   selectEspnTeamId,
+  selectLeagueId,
+  selectLeagueTeamId,
   selectRank,
   selectTotalPoints,
 } from '../selectors/league-progression-form.selector';
 import {
   setEspnTeamId,
+  setLeagueId,
+  setLeagueTeamId,
   setRank,
   setTotalPoints,
 } from '../slices/league-progression-form.slice';
@@ -21,11 +29,17 @@ const fieldStyles = {
 };
 
 export function AdminLeagueProgressionForm() {
+  const { data: profileTeams } = useGetProfileWithTeamsQuery({});
+
+  const teams = profileTeams != undefined ? profileTeams[0].teams : [];
+
   const dispatch = useDispatch();
 
-  const getEspnTeamId = useSelector(selectEspnTeamId);
+  const getLeagueId = useSelector(selectLeagueId);
+  const getLeagueTeamId = useSelector(selectLeagueTeamId);
   const getTotalPoints = useSelector(selectTotalPoints);
   const getRank = useSelector(selectRank);
+  const getEspnTeamId = useSelector(selectEspnTeamId);
 
   const [handleCreateLeagueProgressionEntity] =
     useCreateLeagueProgressionEntityMutation();
@@ -33,15 +47,12 @@ export function AdminLeagueProgressionForm() {
   const handleCancel = () => {};
 
   const handleSubmit = () => {
-    const getLeagueId = null;
-    const getLeagueTeamId = null;
-
     if (
-      !getEspnTeamId ||
+      !getLeagueTeamId ||
       !getTotalPoints ||
       !getRank ||
       !getLeagueId ||
-      !getLeagueTeamId
+      !getEspnTeamId
     )
       throw new Error('Missing required fields');
 
@@ -56,6 +67,15 @@ export function AdminLeagueProgressionForm() {
     handleCreateLeagueProgressionEntity(form);
   };
 
+  function handleLeagueTeamIdChange(e: ChangeEvent<HTMLSelectElement>): void {
+    const espnTeamId = Number(e.target.value.split('-')[1]);
+    const leagueId = e.target.value.split('-')[0];
+
+    dispatch(setEspnTeamId(espnTeamId));
+    dispatch(setLeagueId(leagueId));
+    dispatch(setLeagueTeamId(e.target.value));
+  }
+
   return (
     <>
       <div className="container">
@@ -66,70 +86,70 @@ export function AdminLeagueProgressionForm() {
         </div>
         <div className="row">
           <div className="col-12">
-            <form>
-              <div className="form-group">
-                <label className={fieldStyles.inputLabel} htmlFor="totalPoints">
-                  Total Points
-                </label>
-                <input
-                  type="number"
-                  className={fieldStyles.input}
-                  id="totalPoints"
-                  step="0.001"
-                  onChange={e => dispatch(setTotalPoints(e.target.value))}
-                />
-              </div>
+            <div className="form-group">
+              <label className={fieldStyles.inputLabel} htmlFor="totalPoints">
+                Total Points
+              </label>
+              <input
+                type="number"
+                className={fieldStyles.input}
+                id="totalPoints"
+                step="0.001"
+                onChange={e => dispatch(setTotalPoints(e.target.value))}
+              />
+            </div>
 
-              <div className="form-group">
-                <label className={fieldStyles.inputLabel} htmlFor="rank">
-                  Rank
-                </label>
-                <input
-                  type="number"
-                  className={fieldStyles.input}
-                  id="rank"
-                  onChange={e => dispatch(setRank(e.target.value))}
-                />
-              </div>
+            <div className="form-group">
+              <label className={fieldStyles.inputLabel} htmlFor="rank">
+                Rank
+              </label>
+              <input
+                type="number"
+                className={fieldStyles.input}
+                id="rank"
+                onChange={e => dispatch(setRank(e.target.value))}
+              />
+            </div>
 
-              <div className="form-group">
-                <label className={fieldStyles.inputLabel} htmlFor="espnTeamId">
-                  ESPN Team ID
-                </label>
-                <select
-                  className={fieldStyles.input}
-                  id="espnTeamId"
-                  onChange={e => dispatch(setEspnTeamId(e.target.value))}
-                >
-                  <option value="5">5</option>
-                </select>
-              </div>
+            <div className="form-group">
+              <label className={fieldStyles.inputLabel} htmlFor="leagueTeamId">
+                Team
+              </label>
+              <select
+                className={fieldStyles.input}
+                id="leagueTeamId"
+                onChange={handleLeagueTeamIdChange}
+              >
+                <option value="">Select a team</option>
+                {teams.map(team => (
+                  <option
+                    key={team!.team!.id}
+                    value={team!.team!.league_team_id}
+                  >
+                    {team!.team!.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-              <div className="mt-6 flex items-center justify-end gap-x-6">
-                <button
-                  onClick={handleCancel}
-                  type="button"
-                  className="text-sm font-semibold leading-6 text-gray-900"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  className={fieldStyles.submitButton}
-                >
-                  Save
-                </button>
-              </div>
-            </form>
+            <div className="mt-6 flex items-center justify-end gap-x-6">
+              <button
+                onClick={handleCancel}
+                type="button"
+                className="text-sm font-semibold leading-6 text-gray-900"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmit}
+                className={fieldStyles.submitButton}
+              >
+                Save
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </>
   );
 }
-// espnTeamId: number | null;
-// leagueLd: string | null;
-// leagueTeamId: string | null;
-// totalPoints: number | null;
-// rank: number | null;
