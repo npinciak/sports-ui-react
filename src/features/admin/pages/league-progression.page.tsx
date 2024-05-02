@@ -1,10 +1,14 @@
 import ReactDataGrid from '@inovua/reactdatagrid-community';
 import { SupaClientLeagueProgression } from '../../../@shared/supabase/supabase-tables.model';
-import { useGetLeagueProgressionQuery } from '../../../@shared/supabase/supabase.client';
+import {
+  useGetLeagueProgressionQuery,
+  useGetProfileQuery,
+} from '../../../@shared/supabase/supabase.client';
 import { AdminLeagueProgressionForm } from '../components/league-progression-form.component';
 
 export function AdminLeagueProgressionPage() {
-  const { data } = useGetLeagueProgressionQuery({});
+  const { data: profile } = useGetProfileQuery({});
+  const { data: leagueProgression } = useGetLeagueProgressionQuery({});
 
   const columns = [
     {
@@ -34,7 +38,7 @@ export function AdminLeagueProgressionPage() {
           <ReactDataGrid
             idProperty="playerId"
             columns={columns}
-            dataSource={data ?? []}
+            dataSource={leagueProgression ?? []}
             style={gridStyle}
           />
         </div>

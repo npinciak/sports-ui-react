@@ -18,6 +18,7 @@ import {
   BaseballTeam,
 } from './features/espn/fantasy-baseball';
 import { baseballClient } from './features/espn/fantasy-baseball/client/fantasy-baseball.client';
+import { ProfilePage } from './features/profile';
 
 export const AppRouter = createBrowserRouter([
   {
@@ -42,6 +43,15 @@ export const AppRouter = createBrowserRouter([
       {
         path: 'sign-up',
         element: <SignUpPage />,
+      },
+      {
+        path: 'profile',
+        children: [
+          {
+            path: '',
+            element: <ProfilePage />,
+          },
+        ],
       },
       {
         path: 'admin',

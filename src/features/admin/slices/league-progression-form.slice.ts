@@ -26,7 +26,7 @@ export const AdminLeagueProgressionFormSlice = createSlice({
     setLeagueId: (state, action) => {
       state.leagueId = action.payload;
     },
-    setSeasonId: (state, action) => {
+    setLeagueTeamId: (state, action) => {
       state.leagueTeamId = action.payload;
     },
     setTotalPoints: (state, action) => {
@@ -38,4 +38,4 @@ export const AdminLeagueProgressionFormSlice = createSlice({
   },
 });
 
-export const { setEspnTeamId, setLeagueId, setSeasonId, setTotalPoints, setRank } = AdminLeagueProgressionFormSlice.actions;
+export const { setEspnTeamId, setLeagueId, setLeagueTeamId, setTotalPoints, setRank } = AdminLeagueProgressionFormSlice.actions;
