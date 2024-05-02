@@ -68,7 +68,7 @@ export const supabaseClient = createApi({
     }),
     getProfile: builder.query({
       queryFn: async () => {
-        const { data, error } = await supabase.from('profile').select();
+        const { data, error } = await supabase.from('profile').select().single();
         if (error) return { error };
 
         return { data };
@@ -77,6 +77,10 @@ export const supabaseClient = createApi({
     getProfileWithTeams: builder.query<
       | {
           id: number;
+          user_name: string | null;
+          first_name: string | null;
+          last_name: string | null;
+          bio: string | null;
           teams: {
             team: {
               created_at: string;
@@ -86,12 +90,26 @@ export const supabaseClient = createApi({
               name: string | null;
             } | null;
           }[];
-        }[]
+          leagues: {
+            league: {
+              id: number;
+              name: string | null;
+              season: string;
+              sport: string;
+              league_id: string;
+            } | null;
+          }[];
+        }
       | undefined,
       object
     >({
       queryFn: async () => {
-        const { data, error } = await supabase.from('profile').select('id,teams:profile_to_fantasy_team(team(*))');
+        const { data, error } = await supabase
+          .from('profile')
+          .select(
+            'id,user_name,first_name,last_name,bio,teams:profile_to_fantasy_team(team(*)),leagues:profile_to_fantasy_league(league(*))'
+          )
+          .single();
         if (error) return { error };
 
         return { data };

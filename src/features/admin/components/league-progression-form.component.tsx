@@ -31,7 +31,7 @@ const fieldStyles = {
 export function AdminLeagueProgressionForm() {
   const { data: profileTeams } = useGetProfileWithTeamsQuery({});
 
-  const teams = profileTeams != undefined ? profileTeams[0].teams : [];
+  const teams = profileTeams != undefined ? profileTeams.teams : [];
 
   const dispatch = useDispatch();
 
