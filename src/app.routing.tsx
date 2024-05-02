@@ -63,78 +63,83 @@ export const AppRouter = createBrowserRouter([
         ],
       },
       {
-        path: ':year',
+        path: 'baseball',
         children: [
           {
-            path: 'league',
+            path: ':year',
             children: [
               {
-                path: ':leagueId',
-                loader: async ({ params }) => {
-                  await AppStore.dispatch(
-                    baseballClient.endpoints.fetchLeagueById.initiate({
-                      year: params?.year ?? '',
-                      leagueId: params?.leagueId ?? '',
-                    })
-                  );
-
-                  return null;
-                },
+                path: 'league',
                 children: [
                   {
-                    path: '',
-                    element: <BaseballHome />,
-                  },
-                  {
-                    path: 'team',
+                    path: ':leagueId',
+                    loader: async ({ params }) => {
+                      await AppStore.dispatch(
+                        baseballClient.endpoints.fetchLeagueById.initiate({
+                          year: params?.year ?? '',
+                          leagueId: params?.leagueId ?? '',
+                        })
+                      );
+
+                      return null;
+                    },
                     children: [
                       {
-                        path: ':teamId',
+                        path: '',
+                        element: <BaseballHome />,
+                      },
+                      {
+                        path: 'team',
                         children: [
                           {
-                            path: '',
-                            element: <BaseballTeam />,
-                          },
-                          {
-                            path: 'batters',
+                            path: ':teamId',
                             children: [
                               {
                                 path: '',
-                                element: <BaseballBatters />,
+                                element: <BaseballTeam />,
                               },
-                            ],
-                          },
-                          {
-                            path: 'pitchers',
-                            children: [
                               {
-                                path: '',
-                                element: <BaseballPitchers />,
+                                path: 'batters',
+                                children: [
+                                  {
+                                    path: '',
+                                    element: <BaseballBatters />,
+                                  },
+                                ],
+                              },
+                              {
+                                path: 'pitchers',
+                                children: [
+                                  {
+                                    path: '',
+                                    element: <BaseballPitchers />,
+                                  },
+                                ],
                               },
                             ],
                           },
                         ],
                       },
-                    ],
-                  },
-                  {
-                    path: 'free-agents',
-                    children: [
                       {
-                        path: '',
-                        element: <BaseballFreeAgents />,
-                      },
-                    ],
-                  },
-                  {
-                    path: 'player',
-                    children: [
-                      {
-                        path: ':playerId',
+                        path: 'free-agents',
                         children: [
                           {
                             path: '',
-                            element: <BaseballPlayer />,
+                            element: <BaseballFreeAgents />,
+                          },
+                        ],
+                      },
+                      {
+                        path: 'player',
+                        children: [
+                          {
+                            path: ':playerId',
+                            children: [
+                              {
+                                path: '',
+                                element: <BaseballPlayer />,
+                              },
+                            ],
                           },
                         ],
                       },
