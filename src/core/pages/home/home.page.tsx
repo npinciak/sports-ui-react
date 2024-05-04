@@ -5,7 +5,7 @@ export function Home() {
     <div>
       <h1>Home</h1>
       <div>
-        <Link to="/2024/league/548464880">League</Link>
+        <Link to="baseball/2024/league/548464880">League</Link>
       </div>
       <div>
         <Link to="/profile">Profile</Link>

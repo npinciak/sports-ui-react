@@ -22,7 +22,7 @@ export function BaseballPlayerStatsTable({
       defaultFlex: 1,
       sortable: true,
       render: ({ data }: { data: BaseballPlayerStatsRow }) => (
-        <Link to={`player/${data.id}`}>{data?.name}</Link>
+        <Link to={`/player/${data.id}`}>{data?.name}</Link>
       ),
     },
     {

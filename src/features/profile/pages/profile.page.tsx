@@ -32,7 +32,7 @@ export function ProfilePage() {
         {profile?.leagues.map(league => (
           <div key={league!.league!.id}>
             <Link
-              to={`/${league!.league!.season}/league/${league!.league!.league_id}`}
+              to={`/${league!.league!.sport }/${league!.league!.season}/league/${league!.league!.league_id}`}
             >
               {league!.league!.name}
             </Link>
