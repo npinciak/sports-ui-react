@@ -1,3 +1,5 @@
+import { MLB_TEAM_MAP, MlbTeam } from 'sports-ui-sdk';
+
 export const enum FangraphTeam {
   AllTeams,
   Angels,
@@ -158,3 +160,37 @@ export const FangraphsTeamList = [
     label: 'Yankees',
   },
 ];
+
+export const FangraphsTeamToEspnTeam: Record<string, string> = {
+  ATL: MLB_TEAM_MAP[MlbTeam.Atl],
+  LAD: MLB_TEAM_MAP[MlbTeam.LAD],
+  NYY: MLB_TEAM_MAP[MlbTeam.NYY],
+  SDP: MLB_TEAM_MAP[MlbTeam.SD],
+  BAL: MLB_TEAM_MAP[MlbTeam.Bal],
+  TEX: MLB_TEAM_MAP[MlbTeam.Tex],
+  HOU: MLB_TEAM_MAP[MlbTeam.Hou],
+  KCR: MLB_TEAM_MAP[MlbTeam.KC],
+  SEA: MLB_TEAM_MAP[MlbTeam.Sea],
+  CLE: MLB_TEAM_MAP[MlbTeam.Cle],
+  ARI: MLB_TEAM_MAP[MlbTeam.Ari],
+  LAA: MLB_TEAM_MAP[MlbTeam.LAA],
+  BOS: MLB_TEAM_MAP[MlbTeam.Bos],
+  NYM: MLB_TEAM_MAP[MlbTeam.NYM],
+  TOR: MLB_TEAM_MAP[MlbTeam.Tor],
+  MIL: MLB_TEAM_MAP[MlbTeam.Mil],
+  PHI: MLB_TEAM_MAP[MlbTeam.Phi],
+  CHC: MLB_TEAM_MAP[MlbTeam.ChC],
+  SFG: MLB_TEAM_MAP[MlbTeam.SF],
+  STL: MLB_TEAM_MAP[MlbTeam.StL],
+  TBR: MLB_TEAM_MAP[MlbTeam.TB],
+  MIN: MLB_TEAM_MAP[MlbTeam.Min],
+  CHW: MLB_TEAM_MAP[MlbTeam.ChW],
+  PIT: MLB_TEAM_MAP[MlbTeam.Pit],
+  WSN: MLB_TEAM_MAP[MlbTeam.Wsh],
+  MIA: MLB_TEAM_MAP[MlbTeam.Mia],
+  CIN: MLB_TEAM_MAP[MlbTeam.Cin],
+  DET: MLB_TEAM_MAP[MlbTeam.Det],
+  OAK: MLB_TEAM_MAP[MlbTeam.Oak],
+  COL: MLB_TEAM_MAP[MlbTeam.Col],
+  null: MLB_TEAM_MAP[MlbTeam.FA],
+} as const;
