@@ -8,7 +8,7 @@ import {
   exists,
 } from 'sports-ui-sdk';
 import { PositionEntityMap } from '../../../@shared/models';
-import { flattenPlayerStats, transformIdToUid } from '../espn-helpers';
+import { flattenPlayerStats, normalizeName, transformIdToUid } from '../espn-helpers';
 import { ImageBuilder } from '../helpers';
 import { FantasyPlayer } from '../models/fantasy-player.model';
 
@@ -50,6 +50,7 @@ export function clientPlayerToFantasyPlayer({
 
   return {
     id: id.toString(),
+    sportsUiId: `name=${normalizeName(fullName)}~team=${team.toLowerCase()}`,
     name: fullName,
     teamId: proTeamId.toString(),
     teamUid: transformIdToUid(sport, leagueId, proTeamId),

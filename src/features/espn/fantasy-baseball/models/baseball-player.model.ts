@@ -11,6 +11,7 @@ export interface BaseballPlayerProps {
   lineupSlot: string | null;
   starterStatusByProGame: Record<number, PlayerInjuryStatus> | null;
   eligibleLineupSlots: string;
+  sportsUiId: string;
 }
 
 export type BaseballPlayer = FantasyPlayer & BaseballPlayerProps & Pick<TeamRosterEntry, 'lineupSlotId'>;

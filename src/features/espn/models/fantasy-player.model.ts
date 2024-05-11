@@ -2,6 +2,7 @@ import { PlayerInjuryStatus, PlayerStatsYear } from 'sports-ui-sdk';
 import { PlayerEntity } from '../../../@shared/models';
 
 export type FantasyPlayer = PlayerEntity & {
+  sportsUiId: string;
   lastNewsDate: number;
   injured: boolean;
   injuryStatus: PlayerInjuryStatus;

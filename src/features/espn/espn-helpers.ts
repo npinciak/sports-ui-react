@@ -31,6 +31,16 @@ export function excludeLeagues(id: string): boolean {
   return new Set(leagueIds).has(id);
 }
 
+export function normalizeName(name: string) {
+  return name
+    .split(' ')
+    .join('')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9\s]/g, '')
+    .toLowerCase();
+}
+
 /**
  * Removes and replaces poor contrast team colors
  *
