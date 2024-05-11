@@ -12,7 +12,6 @@ export const CDN_REDESIGN_IMG = CDN + 'redesign/assets/img';
 
 export const COMMON_V3 = import.meta.env.VITE_ESPN_COMMON;
 
-export const FANTASY_BASE_V2 = API_BASE + '/fantasy/v2';
 export const FANTASY_BASE_V3 = import.meta.env.VITE_ESPN_FANTASY_BASE_V3;
 
 export const FASTCAST_SERVICE_URI = import.meta.env.VITE_ESPN_FASTCAST_SERVICE_URI;
