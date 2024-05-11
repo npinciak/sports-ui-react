@@ -2,9 +2,10 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { EspnClient } from 'sports-ui-sdk';
 import { BaseEspnEndpointBuilder } from '../../helpers';
 import { ESPN_PARAM_FRAGMENTS, ESPN_VIEW_PARAM_FRAGMENTS } from '../../helpers/endpoint-builder/endpoint-builder.const';
-import { clientLeagueToLeague } from '../../transformers';
+import { clientLeagueToLeagueSettings } from '../../transformers';
 import { BaseballLeague } from '../models/baseball-league.model';
-import { transformClientLeagueToBaseballLeagueV2 } from '../transformers';
+import { BaseballTeam } from '../models/baseball-team.model';
+import { clientTeamToBaseballTeam, transformClientLeagueToBaseballLeagueV2 } from '../transformers';
 
 type FetchLeagueParams = {
   year: string;
@@ -20,7 +21,6 @@ const endpoints = BaseEspnEndpointBuilder({});
 export const baseballClient = createApi({
   reducerPath: 'baseballClient',
   baseQuery: fetchBaseQuery({
-    // https://lm-api-reads.fantasy.espn.com/apis/v3
     baseUrl: endpoints.fantasyBaseV3Seasons,
   }),
   endpoints: builder => ({
@@ -41,15 +41,32 @@ export const baseballClient = createApi({
         };
       },
       transformResponse: (league: EspnClient.BaseballLeague) => {
-        const genericLeagueSettings = clientLeagueToLeague(league);
+        const genericLeagueSettings = clientLeagueToLeagueSettings(league);
 
         return transformClientLeagueToBaseballLeagueV2(league, genericLeagueSettings);
       },
     }),
-    fetchTeamById: builder.query<any, FetchTeamParams>({
-      query: args => ({
-        url: `/games/flb/seasons/${args.year}/segments/0/leagues/${args.leagueId}?rosterForTeamId=${args.teamId}&[ESPN_PARAM_FRAGMENTS.View]=mRoster`,
-      }),
+    fetchTeamById: builder.query<BaseballTeam, FetchTeamParams>({
+      query: args => {
+        const { year, leagueId, teamId } = args;
+
+        const params = new URLSearchParams();
+        params.append(ESPN_PARAM_FRAGMENTS.RosterForTeamId, teamId);
+        params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Team);
+        params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Roster);
+
+        return {
+          url: endpoints.fantasyBaseV3LeagueBySeasonById(year, leagueId),
+          params,
+        };
+      },
+      transformResponse: (league: EspnClient.BaseballLeague, _, args) => {
+        const { teamId } = args;
+
+        const team = league.teams.find(t => t.id.toString() === teamId) as EspnClient.Team;
+
+        return clientTeamToBaseballTeam(team);
+      },
     }),
   }),
 });

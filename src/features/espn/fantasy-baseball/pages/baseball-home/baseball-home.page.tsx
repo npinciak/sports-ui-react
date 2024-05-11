@@ -7,7 +7,8 @@ import {
 import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { BaseballStat } from 'sports-ui-sdk';
-import { useGetLeagueProgressionQuery } from '../../../../../@shared/supabase/supabase.client';
+import { FangraphsProjPlayer } from '../../../../../@shared/fangraphs';
+import { useGetFangraphProjectionsQuery } from '../../../../../@shared/supabase/supabase.client';
 import { useFetchLeagueByIdQuery } from '../../client/fantasy-baseball.client';
 import { BaseballTeam } from '../../models/baseball-team.model';
 import { standings } from '../../selectors';
@@ -19,6 +20,7 @@ export function BaseballHome() {
     year: year ?? '',
     leagueId: leagueId ?? '',
   });
+  const { data: fangraphs } = useGetFangraphProjectionsQuery({});
 
   const liveStandings = useSelector(standings);
 
@@ -108,6 +110,41 @@ export function BaseballHome() {
     },
   ];
 
+  const fansgraphsColumns: TypeColumn[] = [
+    {
+      name: 'PlayerName',
+      header: 'Name',
+      minWidth: 250,
+      defaultFlex: 1,
+      sortable: true,
+      render: ({ data }: { data: FangraphsProjPlayer }) => data.PlayerName,
+    },
+    {
+      name: `R`,
+      header: 'R',
+      minWidth: 100,
+      defaultFlex: 1,
+      render: ({ data }: { data: FangraphsProjPlayer }) => data?.R,
+      type: 'number',
+      sortable: true,
+    },
+    {
+      name: `WAR`,
+      header: 'WAR',
+      render: ({ data }: { data: FangraphsProjPlayer }) => data?.WAR,
+      type: 'number',
+      sortable: true,
+    },
+    {
+      name: 'RBI',
+      header: 'RBI',
+      render: ({ data }: { data: FangraphsProjPlayer }) => data?.RBI ?? 0,
+      type: 'number',
+      sortable: true,
+    },
+  ];
+
+  const fangraphDatasource = fangraphs ?? [];
   const gridStyle = { minHeight: 500 };
 
   const dataSource = isSuccess ? data.teams : [];
@@ -135,6 +172,17 @@ export function BaseballHome() {
             defaultSortInfo={defaultSortInfo}
             columns={columns}
             dataSource={dataSource}
+            style={gridStyle}
+          />
+        </div>
+      </div>
+      <div className="flex">
+        <div className="flex-1">
+          <ReactDataGrid
+            idProperty="id"
+            defaultSortInfo={defaultSortInfo}
+            columns={fansgraphsColumns}
+            dataSource={fangraphDatasource}
             style={gridStyle}
           />
         </div>

@@ -7,7 +7,7 @@ interface BaseballTeamProps {
   roster: BaseballPlayer[];
   totalPoints: number;
   currentRank: number;
-  liveScore: number;
+  liveScore: number | null;
 }
 
 export type BaseballTeam = TeamEntity & BaseballTeamProps & Pick<EspnClient.Team, 'valuesByStat' | 'pointsByStat'>;

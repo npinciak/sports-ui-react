@@ -1,7 +1,7 @@
 import { EspnClient } from 'sports-ui-sdk';
 import { FantasyLeague } from '../models/fantasy-league.model';
 
-export function clientLeagueToLeague(league: EspnClient.League): FantasyLeague {
+export function clientLeagueToLeagueSettings(league: EspnClient.League): FantasyLeague {
   const {
     id,
     seasonId,

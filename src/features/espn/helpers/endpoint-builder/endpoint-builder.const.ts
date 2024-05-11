@@ -38,6 +38,7 @@ export const ESPN_PARAM_FRAGMENTS = {
   PlayerId: 'playerId',
   PbpOnly: 'pbpOnly',
   BatterId: 'batterId',
+  RosterForTeamId: 'rosterForTeamId',
 } as const;
 
 export const ESPN_VIEW_PARAM_FRAGMENTS = {

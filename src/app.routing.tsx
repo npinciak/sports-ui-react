@@ -1,6 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import { AppStore } from './app.store';
 import {
   ForgotPasswordPage,
   Home,
@@ -17,7 +16,6 @@ import {
   BaseballPlayer,
   BaseballTeam,
 } from './features/espn/fantasy-baseball';
-import { baseballClient } from './features/espn/fantasy-baseball/client/fantasy-baseball.client';
 import { ProfilePage } from './features/profile';
 
 export const AppRouter = createBrowserRouter([
@@ -73,16 +71,6 @@ export const AppRouter = createBrowserRouter([
                 children: [
                   {
                     path: ':leagueId',
-                    loader: async ({ params }) => {
-                      await AppStore.dispatch(
-                        baseballClient.endpoints.fetchLeagueById.initiate({
-                          year: params?.year ?? '',
-                          leagueId: params?.leagueId ?? '',
-                        })
-                      );
-
-                      return null;
-                    },
                     children: [
                       {
                         path: '',
