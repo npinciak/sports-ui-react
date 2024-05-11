@@ -10,7 +10,6 @@ export function clientLeagueToLeague(league: EspnClient.League): FantasyLeague {
     settings: {
       scheduleSettings: { matchupPeriodCount },
     },
-    transactions,
   } = league;
 
   return {
@@ -20,6 +19,5 @@ export function clientLeagueToLeague(league: EspnClient.League): FantasyLeague {
     firstScoringPeriod: firstScoringPeriod.toString(),
     finalScoringPeriod: finalScoringPeriod.toString(),
     matchupPeriodCount: matchupPeriodCount.toString(),
-    transactions,
   };
 }
