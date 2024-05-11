@@ -17,17 +17,21 @@ import { BaseballLeague } from '../models/baseball-league.model';
 import { BaseballPlayer } from '../models/baseball-player.model';
 import { BaseballTeam, BaseballTeamLive } from '../models/baseball-team.model';
 
-export function clientLeagueToBaseballLeague(res: EspnClient.BaseballLeague, genericLeagueSettings: FantasyLeague): BaseballLeague {
-  const schedule = res.schedule[0];
+/** @deprecated use transformClientLeagueToBaseballLeagueV2 */
+export function transformClientLeagueToBaseballLeague(
+  client: EspnClient.BaseballLeague,
+  genericLeagueSettings: FantasyLeague
+): BaseballLeague {
+  const schedule = client.schedule[0];
 
-  const teams = res.teams.map(t => clientTeamListToTeamList(t));
+  const teams = client.teams.map(t => clientTeamListToTeamList(t));
   const teamsLive = exists(schedule.teams) ? schedule.teams.map(t => clientScheduleTeamListToTeamList(t)) : [];
 
   return {
     ...genericLeagueSettings,
     teams,
     teamsLive,
-    freeAgents: transformEspnFreeAgentToBaseballPlayer(res.players),
+    freeAgents: transformEspnFreeAgentToBaseballPlayer(client.players),
   };
 }
 
@@ -156,3 +160,4 @@ export function clientTeamListToTeamList(team: EspnClient.Team): BaseballTeam {
     pointsByStat,
   };
 }
+

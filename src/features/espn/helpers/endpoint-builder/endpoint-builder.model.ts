@@ -62,7 +62,8 @@ export type BaseEspnEndpointBuilderClass = {
   oneFeed: string;
   staticScoreboard: string;
   baseballStatsBatterVsPitcher: string;
-  fantasyBaseV3WithFragments: string;
+  fantasyBaseV3Seasons: string;
+  fantasyBaseV3LeagueBySeasonById: (year: string, leagueId: string) => string;
   leagueClickout: string;
   matchupClickout: (teamId: string | number, matchupPeriodId: string | number) => string;
 };

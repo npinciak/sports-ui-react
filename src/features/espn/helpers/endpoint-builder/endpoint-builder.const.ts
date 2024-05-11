@@ -41,6 +41,7 @@ export const ESPN_PARAM_FRAGMENTS = {
 } as const;
 
 export const ESPN_VIEW_PARAM_FRAGMENTS = {
+  Status: 'mStatus',
   Settings: 'mSettings',
   PlayerInfo: 'kona_player_info',
   PlayerCard: 'kona_playercard',

@@ -5,14 +5,20 @@ import {
   TypeSortInfo,
 } from '@inovua/reactdatagrid-community/types';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { BaseballStat } from 'sports-ui-sdk';
 import { useGetLeagueProgressionQuery } from '../../../../../@shared/supabase/supabase.client';
+import { useFetchLeagueByIdQuery } from '../../client/fantasy-baseball.client';
 import { BaseballTeam } from '../../models/baseball-team.model';
-import { BaseballTeamEntitySelector, standings } from '../../selectors';
+import { standings } from '../../selectors';
 
 export function BaseballHome() {
-  const { data: teams } = useGetLeagueProgressionQuery({});
+  const { year, leagueId } = useParams<{ year: string; leagueId: string }>();
+
+  const { data, isSuccess } = useFetchLeagueByIdQuery({
+    year: year ?? '',
+    leagueId: leagueId ?? '',
+  });
 
   const liveStandings = useSelector(standings);
 
@@ -30,6 +36,7 @@ export function BaseballHome() {
       ),
     },
     {
+      name: `${BaseballStat.R}`,
       header: 'R',
       minWidth: 100,
       defaultFlex: 1,
@@ -103,7 +110,7 @@ export function BaseballHome() {
 
   const gridStyle = { minHeight: 500 };
 
-  const dataSource = useSelector(BaseballTeamEntitySelector.selectAll);
+  const dataSource = isSuccess ? data.teams : [];
 
   return (
     <>

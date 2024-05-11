@@ -1,5 +1,4 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { baseballClient } from '../client/fantasy-baseball.client';
 import { BaseballTeam } from '../models/baseball-team.model';
 
 export const baseballTeamAdapter = createEntityAdapter({
@@ -7,6 +6,9 @@ export const baseballTeamAdapter = createEntityAdapter({
   sortComparer: (a: BaseballTeam, b: BaseballTeam) => Number(a.id) - Number(b.id),
 });
 
+/**
+ * @deprecated use baseballTeamQuery
+ */
 export const baseballTeamSlice = createSlice({
   name: 'baseballTeam',
   initialState: baseballTeamAdapter.getInitialState(),
@@ -15,10 +17,5 @@ export const baseballTeamSlice = createSlice({
     teamAddMany: baseballTeamAdapter.addMany,
     teamUpdated: baseballTeamAdapter.updateOne,
     teamRemoved: baseballTeamAdapter.removeOne,
-  },
-  extraReducers: builder => {
-    builder.addMatcher(baseballClient.endpoints.fetchLeagueById.matchFulfilled, (state, action) => {
-      baseballTeamAdapter.setAll(state, action.payload.teams);
-    });
   },
 });
