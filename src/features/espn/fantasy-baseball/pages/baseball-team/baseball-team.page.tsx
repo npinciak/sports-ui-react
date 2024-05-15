@@ -1,10 +1,14 @@
 import { TypeSortInfo } from '@inovua/reactdatagrid-community/types';
 import { useParams } from 'react-router-dom';
 import { BASEBALL_LINEUP_MAP } from 'sports-ui-sdk';
-import { FangraphsTeamToEspnTeam } from '../../../../../@shared/fangraphs';
+import {
+  FangraphsProjPlayer,
+  FangraphsTeamToEspnTeam,
+} from '../../../../../@shared/fangraphs';
 import {
   useCreateEspnPlayerMutation,
   useGetFangraphProjectionsQuery,
+  useGetFangraphStatsQuery,
 } from '../../../../../@shared/supabase/supabase.client';
 import { normalizeName } from '../../../espn-helpers';
 import { useFetchTeamByIdQuery } from '../../client/fantasy-baseball.client';
@@ -30,6 +34,7 @@ export function BaseballTeam() {
   const defaultSortInfo: TypeSortInfo = [];
 
   const { data: fangraphsProj } = useGetFangraphProjectionsQuery({});
+  const { data: fangraphsStats } = useGetFangraphStatsQuery({});
 
   // const playerStats = useSelector(selectTeamBatterStats)(
   //   teamId!,
@@ -86,6 +91,10 @@ export function BaseballTeam() {
   const espnToFangraphsStartingBatters = mapFangraphsPlayersToBaseballTeam(
     startingBatters,
     fangraphsProjections
+  );
+
+  const fangraphIds = espnToFangraphsStartingBatters?.map(
+    player => (player?.fangraphsProjection as FangraphsProjPlayer)?.playerid
   );
 
   if (isLoading) return <div>Loading...</div>;

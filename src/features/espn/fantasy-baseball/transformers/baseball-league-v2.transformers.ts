@@ -76,3 +76,19 @@ export function mapFangraphsPlayersToBaseballTeam(espnPlayers: BaseballPlayer[],
       : null;
   });
 }
+
+export function mapBaseballTeamToFangraphsPlayers(espnPlayers: BaseballPlayer[], fangraphsPlayerMap: Record<string, unknown>) {
+  
+
+
+  return espnPlayers?.map(player => {
+    return fangraphsPlayerMap
+      ? {
+          ...player,
+          fangraphsProjection: {
+            ...(fangraphsPlayerMap[player.sportsUiId] as object),
+          },
+        }
+      : null;
+  });
+}

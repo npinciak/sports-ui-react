@@ -10,13 +10,15 @@ export const supabase = createClient<Database>(import.meta.env.VITE_SUPABASE_URL
 const SupabaseClientTag = {
   GetLeagueProgression: 'GetLeagueProgression',
   FangraphsProjections: 'FangraphsProjections',
+  FangraphsStats: 'FangraphsStats',
   FangraphsConstants: 'FangraphsConstants',
   EspnPlayer: 'EspnPlayer',
-};
+} as const;
 
 const SupabaseClientTagList = [
   SupabaseClientTag.GetLeagueProgression,
   SupabaseClientTag.FangraphsProjections,
+  SupabaseClientTag.FangraphsStats,
   SupabaseClientTag.FangraphsConstants,
   SupabaseClientTag.EspnPlayer,
 ];
@@ -72,6 +74,29 @@ export const supabaseClient = createApi({
       },
       providesTags: [SupabaseClientTag.FangraphsProjections],
     }),
+    getFangraphStats: builder.query({
+      queryFn: async () => {
+        const { data } = await supabase.functions.invoke<{
+          data: FangraphsProjPlayer[];
+          dateRange: string;
+          dateRangeSeason: string;
+          sortDir: string;
+          sortStat: string;
+          totalCount: number;
+        }>('fangraphs-stats', {
+          body: {
+            team: FangraphTeam.AllTeams,
+            pos: 'all',
+            players: [26288, 11579, 18568, 17338, 25768, 19287, 29931, 24816, 19755],
+            meta: { pageitems: 100, pagenum: 1 },
+          },
+        });
+
+        if (!data) return { data: [], dateRange: '', dateRangeSeason: '', sortDir: '', sortStat: '', totalCount: 0 };
+        return { data };
+      },
+      providesTags: [SupabaseClientTag.FangraphsProjections],
+    }),
     getProfile: builder.query({
       queryFn: async () => {
         const { data, error } = await supabase.from('profile').select().single();
@@ -80,35 +105,7 @@ export const supabaseClient = createApi({
         return { data };
       },
     }),
-    getProfileWithTeams: builder.query<
-      | {
-          id: number;
-          user_name: string | null;
-          first_name: string | null;
-          last_name: string | null;
-          bio: string | null;
-          teams: {
-            team: {
-              created_at: string;
-              espn_team_id: number;
-              id: number;
-              league_team_id: string;
-              name: string | null;
-            } | null;
-          }[];
-          leagues: {
-            league: {
-              id: number;
-              name: string | null;
-              season: string;
-              sport: string;
-              league_id: string;
-            } | null;
-          }[];
-        }
-      | undefined,
-      object
-    >({
+    getProfileWithTeams: builder.query({
       queryFn: async () => {
         const { data, error } = await supabase
           .from('profile')
@@ -128,6 +125,7 @@ export const {
   useCreateLeagueProgressionEntityMutation,
   useGetLeagueProgressionQuery,
   useGetFangraphProjectionsQuery,
+  useGetFangraphStatsQuery,
   useGetFangraphsConstantsBySeasonQuery,
   useCreateEspnPlayerMutation,
   useGetProfileQuery,

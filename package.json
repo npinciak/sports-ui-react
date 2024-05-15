@@ -11,7 +11,8 @@
     "generate:types": "npx supabase gen types typescript --project-id \"tvzszyncqcrrsyekaodt\" --schema public > src/@shared/supabase/supabase-database.model.ts",
     "serve:functions": "npx supabase functions serve --no-verify-jwt",
     "dev:serve:functions": "vite && serve:functions",
-    "deploy:fangraphs-projections": "npx supabase functions deploy fangraphs-projections --project-ref tvzszyncqcrrsyekaodt"
+    "deploy:fangraphs-projections": "npx supabase functions deploy fangraphs-projections --project-ref tvzszyncqcrrsyekaodt",
+    "deploy:fangraphs-stats": "npx supabase functions deploy fangraphs-stats --project-ref tvzszyncqcrrsyekaodt",
   },
   "dependencies": {
     "@inovua/reactdatagrid-community": "^5.10.2",
