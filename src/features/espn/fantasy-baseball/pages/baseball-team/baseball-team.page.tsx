@@ -6,6 +6,7 @@ import {
   useGetFangraphProjectionsQuery,
 } from '../../../../../@shared/supabase/supabase.client';
 import { useFetchTeamByIdQuery } from '../../client/fantasy-baseball.client';
+import { BaseballLineupCard } from '../../components';
 import { startingPlayersFilter } from '../../helpers';
 
 export function BaseballTeam() {
@@ -127,48 +128,10 @@ export function BaseballTeam() {
 
       <div className="flex text-left">
         <div className="w-full px-4 xl:w-4/12">
-          {startingBatters.map(player => (
-            <div className="grid grid-cols-4 py-3" key={player.id}>
-              <div>
-                <img
-                  className="w-13 h-9 rounded-full text-center text-xs text-gray-500"
-                  src={player.img}
-                  alt={player.name}
-                  role="presentation"
-                  aria-roledescription="presentation"
-                />
-              </div>
-              <div className="col-span-3">
-                {player.name}
-                <div className="text-xs">
-                  {player.team}
-                  <span className="font-bold"> {player.lineupSlot}</span>
-                </div>
-              </div>
-            </div>
-          ))}
+          <BaseballLineupCard players={startingBatters} />
 
           <div className="py-3"></div>
-          {startingPitchers.map(player => (
-            <div className="grid grid-cols-4 py-3" key={player.id}>
-              <div>
-                <img
-                  className="w-13 h-9 rounded-full text-center text-xs text-gray-500"
-                  src={player.img}
-                  alt={player.name}
-                  role="presentation"
-                  aria-roledescription="presentation"
-                />
-              </div>
-              <div className="col-span-3">
-                {player.name}
-                <div className="text-xs">
-                  {player.team}
-                  <span className="font-bold"> {player.lineupSlot}</span>
-                </div>
-              </div>
-            </div>
-          ))}
+          <BaseballLineupCard players={startingPitchers} />
         </div>
 
         <div className="w-full px-4 xl:w-8/12">
