@@ -6,15 +6,15 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-console.log('Hello from Functions!');
-
 Deno.serve(async req => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
-  }
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+
+  const body = await req.json();
+
+  const { type, pos, team } = body;
 
   const response = await fetch(
-    'https://www.fangraphs.com/api/projections?type=thebatx&stats=bat&pos=all&team=0&players=0&lg=all&z=1714300977'
+    `https://www.fangraphs.com/api/projections?type=${type}&stats=bat&pos=${pos}&team=${team}&players=0&lg=all&z=1714300977`
   );
 
   const dataTwo = await response.json();

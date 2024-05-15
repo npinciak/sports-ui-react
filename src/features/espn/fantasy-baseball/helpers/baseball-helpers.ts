@@ -1,4 +1,6 @@
 import { EspnClient } from 'sports-ui-sdk';
+import { FangraphsProjPlayer, FangraphsTeamToEspnTeam } from '../../../../@shared/fangraphs';
+import { normalizeName } from '../../espn-helpers';
 import { BaseballPlayer, BaseballPlayerStatsRow } from '../models/baseball-player.model';
 
 /**
@@ -37,4 +39,26 @@ export function sortPlayersByLineupSlotDisplayOrder<T extends BaseballPlayer | B
 export function benchPlayersFilter<T extends BaseballPlayer>(players: T[], lineupMap: EspnClient.LineupEntityMap): T[] {
   const playerList = players.filter(p => lineupMap[p.lineupSlotId].bench && !p.injured);
   return sortPlayersByLineupSlotDisplayOrder(playerList, lineupMap);
+}
+
+export function generateSportsUiPlayerId({
+  espnPlayer,
+  fangraphsPlayer,
+}: {
+  espnPlayer: BaseballPlayer;
+  fangraphsPlayer: FangraphsProjPlayer;
+}): {
+  normalizedEspnId: string;
+  normalizedFangraphsId: string;
+} {
+  const espnTeam = espnPlayer.team ? espnPlayer.team.toLowerCase() : '';
+  const fangraphsTeam = fangraphsPlayer.Team ? FangraphsTeamToEspnTeam[fangraphsPlayer.Team].toLowerCase() : '';
+
+  const normalizedEspnId = `name=${normalizeName(espnPlayer.name)}~team=${espnTeam}`;
+  const normalizedFangraphsId = `name=${normalizeName(fangraphsPlayer.PlayerName)}~team=${fangraphsTeam}`;
+
+  return {
+    normalizedEspnId,
+    normalizedFangraphsId,
+  };
 }

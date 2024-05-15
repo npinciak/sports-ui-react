@@ -1,13 +1,16 @@
 import { TypeSortInfo } from '@inovua/reactdatagrid-community/types';
 import { useParams } from 'react-router-dom';
 import { BASEBALL_LINEUP_MAP } from 'sports-ui-sdk';
+import { FangraphsTeamToEspnTeam } from '../../../../../@shared/fangraphs';
 import {
   useCreateEspnPlayerMutation,
   useGetFangraphProjectionsQuery,
 } from '../../../../../@shared/supabase/supabase.client';
+import { normalizeName } from '../../../espn-helpers';
 import { useFetchTeamByIdQuery } from '../../client/fantasy-baseball.client';
 import { BaseballLineupCard } from '../../components';
 import { startingPlayersFilter } from '../../helpers';
+import { mapFangraphsPlayersToBaseballTeam } from '../../transformers';
 
 export function BaseballTeam() {
   const { year, leagueId, teamId } = useParams<{
@@ -28,42 +31,19 @@ export function BaseballTeam() {
 
   const { data: fangraphsProj } = useGetFangraphProjectionsQuery({});
 
-  // const startingBatters = useSelector(selectTeamStartingLineupBatters)(teamId!);
-  // const startingPitchers = useSelector(selectTeamStartingLineupPitchers)(
-  //   teamId!
-  // );
-
   // const playerStats = useSelector(selectTeamBatterStats)(
   //   teamId!,
   //   BaseballScoringPeriod.season(year!)
   // );
 
-  // const test = fangraphsProj?.reduce(
-  //   (acc, player) => {
-  //     const id = `name=${normalizeName(player.PlayerName)}~team=${player.Team ? FangraphsTeamToEspnTeam[player.Team].toLowerCase() : ''}`;
-  //     acc[id] = { ...player };
-  //     return acc;
-  //   },
-  //   {} as Record<string, any>
-  // );
-
-  // const espnToFangraphsStartingBatters = startingBatters?.map(player => {
-  //   const id = `name=${normalizeName(player.name)}~team=${player.team ? player.team.toLowerCase() : ''}`;
-  //   return test
-  //     ? {
-  //         espn: {
-  //           name: player.name,
-  //           team: player.team,
-  //           sportsUi: id,
-  //           espnId: player.id,
-  //           positionId: player.defaultPositionId,
-  //         },
-  //         fangraphs: {
-  //           ...test[id],
-  //         },
-  //       }
-  //     : null;
-  // });
+  const fangraphsProjections = fangraphsProj?.reduce(
+    (acc, player) => {
+      const id = `name=${normalizeName(player.PlayerName)}~team=${player.Team ? FangraphsTeamToEspnTeam[player.Team].toLowerCase() : ''}`;
+      acc[id] = { ...player };
+      return acc;
+    },
+    {} as Record<string, unknown>
+  );
 
   const handleSyncBatters = async () => {
     // const player: SupaClientEspnPlayerInsert[] =
@@ -103,6 +83,11 @@ export function BaseballTeam() {
     BASEBALL_LINEUP_MAP
   );
 
+  const espnToFangraphsStartingBatters = mapFangraphsPlayersToBaseballTeam(
+    startingBatters,
+    fangraphsProjections
+  );
+
   if (isLoading) return <div>Loading...</div>;
 
   return (
@@ -128,9 +113,10 @@ export function BaseballTeam() {
 
       <div className="flex text-left">
         <div className="w-full px-4 xl:w-4/12">
+          <div className="font-bold">Starting Batters</div>
           <BaseballLineupCard players={startingBatters} />
-
           <div className="py-3"></div>
+          <div className="font-bold">Starting Pitchers</div>
           <BaseballLineupCard players={startingPitchers} />
         </div>
 
