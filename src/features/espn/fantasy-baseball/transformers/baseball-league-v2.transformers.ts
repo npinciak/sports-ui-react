@@ -1,4 +1,5 @@
 import { EspnClient, exists } from 'sports-ui-sdk';
+import { FangraphsPlayerProjectionEntity } from '../../../../@shared/fangraphs';
 import { FantasyLeague } from '../../models';
 import { BaseballLeague } from '../models/baseball-league.model';
 import { BaseballPlayer } from '../models/baseball-player.model';
@@ -64,7 +65,10 @@ export function clientTeamToBaseballTeam(team: EspnClient.Team): BaseballTeam {
   };
 }
 
-export function mapFangraphsPlayersToBaseballTeam(espnPlayers: BaseballPlayer[], fangraphsPlayerMap: Record<string, unknown>) {
+export function mapFangraphsPlayersToBaseballTeam(
+  espnPlayers: BaseballPlayer[],
+  fangraphsPlayerMap: Record<string, FangraphsPlayerProjectionEntity>
+) {
   return espnPlayers?.map(player => {
     return fangraphsPlayerMap
       ? {
@@ -78,9 +82,6 @@ export function mapFangraphsPlayersToBaseballTeam(espnPlayers: BaseballPlayer[],
 }
 
 export function mapBaseballTeamToFangraphsPlayers(espnPlayers: BaseballPlayer[], fangraphsPlayerMap: Record<string, unknown>) {
-  
-
-
   return espnPlayers?.map(player => {
     return fangraphsPlayerMap
       ? {

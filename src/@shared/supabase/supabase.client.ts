@@ -1,7 +1,11 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { createClient } from '@supabase/supabase-js';
-import { FangraphsProjPlayer } from '../fangraphs/models';
-import { FangraphTeam } from '../fangraphs/models/teams.model';
+import {
+  FangraphsPageOfPlayerStats,
+  FangraphsPlayerProjectionEntity,
+  FangraphsPlayerProjectionsRequestBody,
+  FangraphsPlayerStatsRequestBody,
+} from '../fangraphs/models';
 import { Database } from './supabase-database.model';
 import { SupaClientEspnPlayerInsert, SupaClientFangraphsConstantsTable, SupaClientLeagueProgressionInsert } from './supabase-tables.model';
 
@@ -63,10 +67,11 @@ export const supabaseClient = createApi({
       },
       providesTags: [SupabaseClientTag.FangraphsConstants],
     }),
-    getFangraphProjections: builder.query<FangraphsProjPlayer[], object>({
-      queryFn: async () => {
-        const { data } = await supabase.functions.invoke<FangraphsProjPlayer[]>('fangraphs-projections', {
-          body: { type: 'thebatx', team: FangraphTeam.AllTeams, pos: 'all' },
+    getFangraphProjections: builder.query<FangraphsPlayerProjectionEntity[], FangraphsPlayerProjectionsRequestBody>({
+      queryFn: async args => {
+        const body = args;
+        const { data } = await supabase.functions.invoke<FangraphsPlayerProjectionEntity[]>('fangraphs-projections', {
+          body,
         });
 
         if (!data) return { data: [] };
@@ -74,25 +79,13 @@ export const supabaseClient = createApi({
       },
       providesTags: [SupabaseClientTag.FangraphsProjections],
     }),
-    getFangraphStats: builder.query({
-      queryFn: async () => {
-        const { data } = await supabase.functions.invoke<{
-          data: FangraphsProjPlayer[];
-          dateRange: string;
-          dateRangeSeason: string;
-          sortDir: string;
-          sortStat: string;
-          totalCount: number;
-        }>('fangraphs-stats', {
-          body: {
-            team: FangraphTeam.AllTeams,
-            pos: 'all',
-            players: [26288, 11579, 18568, 17338, 25768, 19287, 29931, 24816, 19755],
-            meta: { pageitems: 100, pagenum: 1 },
-          },
+    getFangraphStats: builder.query<FangraphsPageOfPlayerStats | null, FangraphsPlayerStatsRequestBody>({
+      queryFn: async args => {
+        const body = args;
+        const { data } = await supabase.functions.invoke<FangraphsPageOfPlayerStats>('fangraphs-stats', {
+          body,
         });
 
-        if (!data) return { data: [], dateRange: '', dateRangeSeason: '', sortDir: '', sortStat: '', totalCount: 0 };
         return { data };
       },
       providesTags: [SupabaseClientTag.FangraphsProjections],

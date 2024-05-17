@@ -1,4 +1,4 @@
-export interface FangraphsPlayerStatsEntity {
+export interface FangraphsPlayerStatEntity {
   Bats: string;
   xMLBAMID: number;
   Name: string;

@@ -1,10 +1,14 @@
-import { TypeSortInfo } from '@inovua/reactdatagrid-community/types';
 import { useParams } from 'react-router-dom';
 import { BASEBALL_LINEUP_MAP } from 'sports-ui-sdk';
 import {
-  FangraphsProjPlayer,
+  FangraphsPlayerProjectionEntity,
+  FangraphsPlayerProjectionsRequestBody,
+  FangraphsPlayerStatsRequestBody,
+  FangraphsProjection,
+  FangraphsTeam,
   FangraphsTeamToEspnTeam,
 } from '../../../../../@shared/fangraphs';
+import { FangraphsPosition } from '../../../../../@shared/fangraphs/models/positions.model';
 import {
   useCreateEspnPlayerMutation,
   useGetFangraphProjectionsQuery,
@@ -31,15 +35,25 @@ export function BaseballTeam() {
 
   const [createEspnPlayer] = useCreateEspnPlayerMutation();
 
-  const defaultSortInfo: TypeSortInfo = [];
+  const projectionsFilter: FangraphsPlayerProjectionsRequestBody = {
+    type: FangraphsProjection.RestOfSeasonTheBatX,
+    team: FangraphsTeam.AllTeams,
+    pos: FangraphsPosition.All,
+  };
+  const { data: fangraphsProj } =
+    useGetFangraphProjectionsQuery(projectionsFilter);
 
-  const { data: fangraphsProj } = useGetFangraphProjectionsQuery({});
-  const { data: fangraphsStats } = useGetFangraphStatsQuery({});
+  const statsFilter: FangraphsPlayerStatsRequestBody = {
+    team: FangraphsTeam.AllTeams,
+    pos: FangraphsPosition.All,
+    players: [],
+    meta: {
+      pageitems: 0,
+      pagenum: 0,
+    },
+  };
 
-  // const playerStats = useSelector(selectTeamBatterStats)(
-  //   teamId!,
-  //   BaseballScoringPeriod.season(year!)
-  // );
+  const { data: fangraphsStats } = useGetFangraphStatsQuery(statsFilter);
 
   const fangraphsProjections = fangraphsProj?.reduce(
     (acc, player) => {
@@ -90,11 +104,12 @@ export function BaseballTeam() {
 
   const espnToFangraphsStartingBatters = mapFangraphsPlayersToBaseballTeam(
     startingBatters,
-    fangraphsProjections
+    fangraphsProjections as Record<string, FangraphsPlayerProjectionEntity>
   );
 
   const fangraphIds = espnToFangraphsStartingBatters?.map(
-    player => (player?.fangraphsProjection as FangraphsProjPlayer)?.playerid
+    player =>
+      (player?.fangraphsProjection as FangraphsPlayerProjectionEntity)?.playerid
   );
 
   if (isLoading) return <div>Loading...</div>;

@@ -1,5 +1,5 @@
 import { EspnClient } from 'sports-ui-sdk';
-import { FangraphsProjPlayer, FangraphsTeamToEspnTeam } from '../../../../@shared/fangraphs';
+import { FangraphsPlayerProjectionEntity, FangraphsTeamToEspnTeam } from '../../../../@shared/fangraphs';
 import { normalizeName } from '../../espn-helpers';
 import { BaseballPlayer, BaseballPlayerStatsRow } from '../models/baseball-player.model';
 
@@ -46,7 +46,7 @@ export function generateSportsUiPlayerId({
   fangraphsPlayer,
 }: {
   espnPlayer: BaseballPlayer;
-  fangraphsPlayer: FangraphsProjPlayer;
+  fangraphsPlayer: FangraphsPlayerProjectionEntity;
 }): {
   normalizedEspnId: string;
   normalizedFangraphsId: string;

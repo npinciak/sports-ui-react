@@ -1,6 +1,6 @@
 import { MLB_TEAM_MAP, MlbTeam } from 'sports-ui-sdk';
 
-export const enum FangraphTeam {
+export const enum FangraphsTeam {
   AllTeams,
   Angels,
   Orioles,
@@ -36,127 +36,127 @@ export const enum FangraphTeam {
 
 export const FangraphsTeamList = [
   {
-    value: [FangraphTeam.AllTeams],
+    value: [FangraphsTeam.AllTeams],
     label: 'All Teams',
   },
   {
-    value: [FangraphTeam.Angels],
+    value: [FangraphsTeam.Angels],
     label: 'Angels',
   },
   {
-    value: [FangraphTeam.Astros],
+    value: [FangraphsTeam.Astros],
     label: 'Astros',
   },
   {
-    value: [FangraphTeam.Athletics],
+    value: [FangraphsTeam.Athletics],
     label: 'Athletics',
   },
   {
-    value: [FangraphTeam.BlueJays],
+    value: [FangraphsTeam.BlueJays],
     label: 'Blue Jays',
   },
   {
-    value: [FangraphTeam.Braves],
+    value: [FangraphsTeam.Braves],
     label: 'Braves',
   },
   {
-    value: [FangraphTeam.Brewers],
+    value: [FangraphsTeam.Brewers],
     label: 'Brewers',
   },
   {
-    value: [FangraphTeam.Cardinals],
+    value: [FangraphsTeam.Cardinals],
     label: 'Cardinals',
   },
   {
-    value: [FangraphTeam.Cubs],
+    value: [FangraphsTeam.Cubs],
     label: 'Cubs',
   },
   {
-    value: [FangraphTeam.Diamondbacks],
+    value: [FangraphsTeam.Diamondbacks],
     label: 'Diamondbacks',
   },
   {
-    value: [FangraphTeam.Dodgers],
+    value: [FangraphsTeam.Dodgers],
     label: 'Dodgers',
   },
   {
-    value: [FangraphTeam.Giants],
+    value: [FangraphsTeam.Giants],
     label: 'Giants',
   },
   {
-    value: [FangraphTeam.Guardians],
+    value: [FangraphsTeam.Guardians],
     label: 'Guardians',
   },
   {
-    value: [FangraphTeam.Mariners],
+    value: [FangraphsTeam.Mariners],
     label: 'Mariners',
   },
   {
-    value: [FangraphTeam.Marlins],
+    value: [FangraphsTeam.Marlins],
     label: 'Marlins',
   },
   {
-    value: [FangraphTeam.Mets],
+    value: [FangraphsTeam.Mets],
     label: 'Mets',
   },
   {
-    value: [FangraphTeam.Nationals],
+    value: [FangraphsTeam.Nationals],
     label: 'Nationals',
   },
   {
-    value: [FangraphTeam.Orioles],
+    value: [FangraphsTeam.Orioles],
     label: 'Orioles',
   },
   {
-    value: [FangraphTeam.Padres],
+    value: [FangraphsTeam.Padres],
     label: 'Padres',
   },
   {
-    value: [FangraphTeam.Phillies],
+    value: [FangraphsTeam.Phillies],
     label: 'Phillies',
   },
   {
-    value: [FangraphTeam.Pirates],
+    value: [FangraphsTeam.Pirates],
     label: 'Pirates',
   },
   {
-    value: [FangraphTeam.Rangers],
+    value: [FangraphsTeam.Rangers],
     label: 'Rangers',
   },
   {
-    value: [FangraphTeam.Rays],
+    value: [FangraphsTeam.Rays],
     label: 'Rays',
   },
   {
-    value: [FangraphTeam.RedSox],
+    value: [FangraphsTeam.RedSox],
     label: 'Red Sox',
   },
   {
-    value: [FangraphTeam.Reds],
+    value: [FangraphsTeam.Reds],
     label: 'Reds',
   },
   {
-    value: [FangraphTeam.Rockies],
+    value: [FangraphsTeam.Rockies],
     label: 'Rockies',
   },
   {
-    value: [FangraphTeam.Royals],
+    value: [FangraphsTeam.Royals],
     label: 'Royals',
   },
   {
-    value: [FangraphTeam.Tigers],
+    value: [FangraphsTeam.Tigers],
     label: 'Tigers',
   },
   {
-    value: [FangraphTeam.Twins],
+    value: [FangraphsTeam.Twins],
     label: 'Twins',
   },
   {
-    value: [FangraphTeam.WhiteSox],
+    value: [FangraphsTeam.WhiteSox],
     label: 'White Sox',
   },
   {
-    value: [FangraphTeam.Yankees],
+    value: [FangraphsTeam.Yankees],
     label: 'Yankees',
   },
 ];

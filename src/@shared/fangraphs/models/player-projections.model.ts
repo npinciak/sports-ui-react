@@ -1,4 +1,4 @@
-export interface FangraphsProjPlayer {
+export interface FangraphsPlayerProjectionEntity {
   Team: string;
   ShortName: string;
   G: number;

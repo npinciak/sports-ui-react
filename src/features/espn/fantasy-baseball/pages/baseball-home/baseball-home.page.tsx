@@ -6,7 +6,7 @@ import {
 } from '@inovua/reactdatagrid-community/types';
 import { Link, useParams } from 'react-router-dom';
 import { BaseballStat } from 'sports-ui-sdk';
-import { FangraphsProjPlayer } from '../../../../../@shared/fangraphs';
+import { FangraphsPlayerProjectionEntity } from '../../../../../@shared/fangraphs';
 import { useGetFangraphProjectionsQuery } from '../../../../../@shared/supabase/supabase.client';
 import { useFetchLeagueByIdQuery } from '../../client/fantasy-baseball.client';
 import { BaseballTeam } from '../../models/baseball-team.model';
@@ -113,28 +113,31 @@ export function BaseballHome() {
       minWidth: 250,
       defaultFlex: 1,
       sortable: true,
-      render: ({ data }: { data: FangraphsProjPlayer }) => data.PlayerName,
+      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
+        data.PlayerName,
     },
     {
       name: `R`,
       header: 'R',
       minWidth: 100,
       defaultFlex: 1,
-      render: ({ data }: { data: FangraphsProjPlayer }) => data?.R,
+      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) => data?.R,
       type: 'number',
       sortable: true,
     },
     {
       name: `WAR`,
       header: 'WAR',
-      render: ({ data }: { data: FangraphsProjPlayer }) => data?.WAR,
+      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
+        data?.WAR,
       type: 'number',
       sortable: true,
     },
     {
       name: 'RBI',
       header: 'RBI',
-      render: ({ data }: { data: FangraphsProjPlayer }) => data?.RBI ?? 0,
+      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
+        data?.RBI ?? 0,
       type: 'number',
       sortable: true,
     },
