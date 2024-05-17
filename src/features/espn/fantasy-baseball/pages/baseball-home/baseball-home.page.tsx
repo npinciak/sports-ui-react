@@ -4,14 +4,12 @@ import {
   TypeColumn,
   TypeSortInfo,
 } from '@inovua/reactdatagrid-community/types';
-import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { BaseballStat } from 'sports-ui-sdk';
 import { FangraphsProjPlayer } from '../../../../../@shared/fangraphs';
 import { useGetFangraphProjectionsQuery } from '../../../../../@shared/supabase/supabase.client';
 import { useFetchLeagueByIdQuery } from '../../client/fantasy-baseball.client';
 import { BaseballTeam } from '../../models/baseball-team.model';
-import { standings } from '../../selectors';
 
 export function BaseballHome() {
   const { year, leagueId } = useParams<{ year: string; leagueId: string }>();
@@ -21,8 +19,6 @@ export function BaseballHome() {
     leagueId: leagueId ?? '',
   });
   const { data: fangraphs } = useGetFangraphProjectionsQuery({});
-
-  const liveStandings = useSelector(standings);
 
   const defaultSortInfo: TypeSortInfo = [];
 
@@ -154,7 +150,7 @@ export function BaseballHome() {
       <h1>Fantasy Baseball Home</h1>
       <div className="flex">
         <div className="flex-1">
-          {liveStandings.map(team => {
+          {/* {liveStandings.map(team => {
             return (
               <ul key={team.id}>
                 <li>
@@ -162,7 +158,7 @@ export function BaseballHome() {
                 </li>
               </ul>
             );
-          })}
+          })} */}
         </div>
       </div>
       <div className="flex">
