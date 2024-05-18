@@ -6,8 +6,6 @@ import {
 } from '@inovua/reactdatagrid-community/types';
 import { Link, useParams } from 'react-router-dom';
 import { BaseballStat } from 'sports-ui-sdk';
-import { FangraphsPlayerProjectionEntity } from '../../../../../@shared/fangraphs';
-import { useGetFangraphProjectionsQuery } from '../../../../../@shared/supabase/supabase.client';
 import { useFetchLeagueByIdQuery } from '../../client/fantasy-baseball.client';
 import { BaseballTeam } from '../../models/baseball-team.model';
 
@@ -18,7 +16,6 @@ export function BaseballHome() {
     year: year ?? '',
     leagueId: leagueId ?? '',
   });
-  const { data: fangraphs } = useGetFangraphProjectionsQuery({});
 
   const defaultSortInfo: TypeSortInfo = [];
 
@@ -67,7 +64,7 @@ export function BaseballHome() {
     {
       header: 'AVG',
       render: ({ data }: { data: BaseballTeam }) =>
-        data?.valuesByStat[BaseballStat.AVG],
+        data?.valuesByStat[BaseballStat.AVG].toFixed(3),
       type: 'number',
       sortable: true,
     },
@@ -100,50 +97,12 @@ export function BaseballHome() {
     {
       header: 'ERA',
       render: ({ data }: { data: BaseballTeam }) =>
-        data?.valuesByStat[BaseballStat.ERA],
+        data?.valuesByStat[BaseballStat.ERA].toFixed(3),
       type: 'number',
       sortable: true,
     },
   ];
 
-  const fansgraphsColumns: TypeColumn[] = [
-    {
-      name: 'PlayerName',
-      header: 'Name',
-      minWidth: 250,
-      defaultFlex: 1,
-      sortable: true,
-      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
-        data.PlayerName,
-    },
-    {
-      name: `R`,
-      header: 'R',
-      minWidth: 100,
-      defaultFlex: 1,
-      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) => data?.R,
-      type: 'number',
-      sortable: true,
-    },
-    {
-      name: `WAR`,
-      header: 'WAR',
-      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
-        data?.WAR,
-      type: 'number',
-      sortable: true,
-    },
-    {
-      name: 'RBI',
-      header: 'RBI',
-      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
-        data?.RBI ?? 0,
-      type: 'number',
-      sortable: true,
-    },
-  ];
-
-  const fangraphDatasource = fangraphs ?? [];
   const gridStyle = { minHeight: 500 };
 
   const dataSource = isSuccess ? data.teams : [];
@@ -171,17 +130,6 @@ export function BaseballHome() {
             defaultSortInfo={defaultSortInfo}
             columns={columns}
             dataSource={dataSource}
-            style={gridStyle}
-          />
-        </div>
-      </div>
-      <div className="flex">
-        <div className="flex-1">
-          <ReactDataGrid
-            idProperty="id"
-            defaultSortInfo={defaultSortInfo}
-            columns={fansgraphsColumns}
-            dataSource={fangraphDatasource}
             style={gridStyle}
           />
         </div>

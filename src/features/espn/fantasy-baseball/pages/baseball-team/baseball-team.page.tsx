@@ -1,6 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { BASEBALL_LINEUP_MAP } from 'sports-ui-sdk';
 import {
+  DEFAULT_PAGE_NUMBER,
+  DEFAULT_PAGE_SIZE,
   FangraphsPlayerProjectionEntity,
   FangraphsPlayerProjectionsRequestBody,
   FangraphsPlayerStatsRequestBody,
@@ -16,7 +18,7 @@ import {
 } from '../../../../../@shared/supabase/supabase.client';
 import { normalizeName } from '../../../espn-helpers';
 import { useFetchTeamByIdQuery } from '../../client/fantasy-baseball.client';
-import { BaseballLineupCard } from '../../components';
+import { BaseballLineupCard, BaseballPlayerStatsTable } from '../../components';
 import { startingPlayersFilter } from '../../helpers';
 import { mapFangraphsPlayersToBaseballTeam } from '../../transformers';
 
@@ -40,20 +42,8 @@ export function BaseballTeam() {
     team: FangraphsTeam.AllTeams,
     pos: FangraphsPosition.All,
   };
-  const { data: fangraphsProj } =
+  const { data: fangraphsProj, isLoading: isFangraphsProjectionsLoading } =
     useGetFangraphProjectionsQuery(projectionsFilter);
-
-  const statsFilter: FangraphsPlayerStatsRequestBody = {
-    team: FangraphsTeam.AllTeams,
-    pos: FangraphsPosition.All,
-    players: [],
-    meta: {
-      pageitems: 0,
-      pagenum: 0,
-    },
-  };
-
-  const { data: fangraphsStats } = useGetFangraphStatsQuery(statsFilter);
 
   const fangraphsProjections = fangraphsProj?.reduce(
     (acc, player) => {
@@ -107,12 +97,27 @@ export function BaseballTeam() {
     fangraphsProjections as Record<string, FangraphsPlayerProjectionEntity>
   );
 
-  const fangraphIds = espnToFangraphsStartingBatters?.map(
-    player =>
+  const fangraphIds = espnToFangraphsStartingBatters?.map(player =>
+    Number(
       (player?.fangraphsProjection as FangraphsPlayerProjectionEntity)?.playerid
+    )
   );
 
-  if (isLoading) return <div>Loading...</div>;
+  const statsFilter: FangraphsPlayerStatsRequestBody = {
+    team: FangraphsTeam.AllTeams,
+    pos: FangraphsPosition.All,
+    players: fangraphIds,
+    meta: {
+      pageitems: DEFAULT_PAGE_SIZE,
+      pagenum: DEFAULT_PAGE_NUMBER,
+    },
+  };
+
+  const { data: fangraphsStats, isLoading: isFangraphsStatsLoading } =
+    useGetFangraphStatsQuery(statsFilter);
+
+  if (isLoading && isFangraphsProjectionsLoading && isFangraphsStatsLoading)
+    return <div className="animate-pulse">Loading...</div>;
 
   return (
     <div key={team?.id}>
@@ -153,12 +158,9 @@ export function BaseballTeam() {
               Sync Batters
             </button>
           </div>
-          {/* <div>
-            <BaseballPlayerStatsTable
-              data={playerStats}
-              defaultSortInfo={defaultSortInfo}
-            />
-          </div> */}
+          <div>
+            <BaseballPlayerStatsTable data={fangraphsStats?.data ?? []} />
+          </div>
         </div>
       </div>
     </div>

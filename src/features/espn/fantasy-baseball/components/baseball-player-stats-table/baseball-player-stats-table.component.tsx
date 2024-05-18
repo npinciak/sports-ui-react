@@ -3,140 +3,113 @@ import {
   TypeColumn,
   TypeSortInfo,
 } from '@inovua/reactdatagrid-community/types';
-import { Link } from 'react-router-dom';
-import { BaseballStat } from 'sports-ui-sdk';
-import { BaseballPlayerStatsRow } from '../../models/baseball-player.model';
+import { FangraphsPlayerStatEntity } from '../../../../../@shared/fangraphs';
 
 export function BaseballPlayerStatsTable({
   data,
 }: {
-  data: BaseballPlayerStatsRow[];
+  data: FangraphsPlayerStatEntity[];
 }) {
   const defaultSortInfo: TypeSortInfo = [];
 
   const columns: TypeColumn[] = [
     {
-      name: 'name',
+      name: 'PlayerName',
       header: 'Name',
-      minWidth: 250,
+      minWidth: 175,
       defaultFlex: 1,
       sortable: true,
-      render: ({ data }: { data: BaseballPlayerStatsRow }) => (
-        <Link to={`/player/${data.id}`}>{data?.name}</Link>
+      render: ({ data }: { data: FangraphsPlayerStatEntity }) => (
+        <>
+          <div className="col">
+            <div>{data.PlayerName}</div>
+            <div className="text-xs">{data.TeamNameAbb}</div>
+          </div>
+        </>
       ),
     },
     {
+      name: 'H',
       header: 'H',
-      minWidth: 100,
       defaultFlex: 1,
-      render: ({ data }: { data: BaseballPlayerStatsRow }) =>
-        data.stats[BaseballStat.H],
-      type: 'number',
       sortable: true,
+      render: ({ data }: { data: FangraphsPlayerStatEntity }) => data?.H,
     },
     {
-      header: 'AB',
-      minWidth: 100,
+      name: 'PA',
+      header: 'PA',
       defaultFlex: 1,
-      render: ({ data }: { data: BaseballPlayerStatsRow }) =>
-        data.stats[BaseballStat.AB],
-      type: 'number',
       sortable: true,
+      render: ({ data }: { data: FangraphsPlayerStatEntity }) => data?.PA,
     },
     {
-      header: 'R',
-      minWidth: 100,
-      defaultFlex: 1,
-      render: ({ data }: { data: BaseballPlayerStatsRow }) =>
-        data.stats[BaseballStat.R],
-      type: 'number',
-      sortable: true,
-    },
-    {
-      header: 'RBI',
-      render: ({ data }: { data: BaseballPlayerStatsRow }) =>
-        data.stats[BaseballStat.RBI],
-      type: 'number',
-      sortable: true,
-    },
-    {
+      name: 'HR',
       header: 'HR',
-      render: ({ data }: { data: BaseballPlayerStatsRow }) =>
-        data.stats[BaseballStat.HR],
-      type: 'number',
+      defaultFlex: 1,
       sortable: true,
+      render: ({ data }: { data: FangraphsPlayerStatEntity }) => data?.HR,
     },
     {
-      header: 'SB',
-      render: ({ data }: { data: BaseballPlayerStatsRow }) =>
-        data.stats[BaseballStat.SB],
-      type: 'number',
+      name: 'R',
+      header: 'R',
+      defaultFlex: 1,
       sortable: true,
+      render: ({ data }: { data: FangraphsPlayerStatEntity }) => data?.R,
     },
     {
+      name: 'RBI',
+      header: 'RBI',
+      defaultFlex: 1,
+      sortable: true,
+      render: ({ data }: { data: FangraphsPlayerStatEntity }) => data?.RBI,
+    },
+    {
+      name: 'AVG',
       header: 'AVG',
-      render: ({ data }: { data: BaseballPlayerStatsRow }) =>
-        data.stats[BaseballStat.AVG],
-      type: 'number',
+      defaultFlex: 1,
       sortable: true,
+      render: ({ data }: { data: FangraphsPlayerStatEntity }) =>
+        data?.AVG.toFixed(3),
     },
     {
-      header: 'OBP',
-      render: ({ data }: { data: BaseballPlayerStatsRow }) =>
-        data.stats[BaseballStat.OBP],
-      type: 'number',
+      name: 'BABIP',
+      header: 'BABIP',
+      defaultFlex: 1,
       sortable: true,
+      render: ({ data }: { data: FangraphsPlayerStatEntity }) =>
+        data?.BABIP.toFixed(3),
     },
     {
-      header: 'OPS',
-      render: ({ data }: { data: BaseballPlayerStatsRow }) =>
-        data.stats[BaseballStat.OPS],
-      type: 'number',
+      name: 'BABIP',
+      header: 'BABIP+',
+      defaultFlex: 1,
       sortable: true,
+      render: ({ data }: { data: FangraphsPlayerStatEntity }) =>
+        data?.['BABIP+'].toFixed(3),
     },
     {
-      header: 'ISO',
-      render: ({ data }: { data: BaseballPlayerStatsRow }) =>
-        data.stats[BaseballStat.ISO],
-      type: 'number',
+      name: 'WAR',
+      header: 'WAR',
+      defaultFlex: 1,
       sortable: true,
+      render: ({ data }: { data: FangraphsPlayerStatEntity }) =>
+        data?.WAR.toFixed(3),
     },
     {
+      name: 'wOBA',
       header: 'wOBA',
-      render: ({ data }: { data: BaseballPlayerStatsRow }) => null,
-      type: 'number',
+      defaultFlex: 1,
       sortable: true,
+      render: ({ data }: { data: FangraphsPlayerStatEntity }) =>
+        data?.wOBA.toFixed(3),
     },
     {
-      header: 'wRC',
-      render: ({ data }: { data: BaseballPlayerStatsRow }) => null,
-      type: 'number',
+      name: 'wRC+',
+      header: 'wRC+',
+      defaultFlex: 1,
       sortable: true,
-    },
-    {
-      header: 'wRAA',
-      render: ({ data }: { data: BaseballPlayerStatsRow }) => null,
-      type: 'number',
-      sortable: true,
-    },
-    {
-      header: 'wRC',
-      render: ({ data }: { data: BaseballPlayerStatsRow }) => null,
-      type: 'number',
-      sortable: true,
-    },
-    {
-      header: 'percentChange',
-      render: ({ data }: { data: BaseballPlayerStatsRow }) =>
-        data.percentChange,
-      type: 'number',
-      sortable: true,
-    },
-    {
-      header: 'percentOwned',
-      render: ({ data }: { data: BaseballPlayerStatsRow }) => data.percentOwned,
-      type: 'number',
-      sortable: true,
+      render: ({ data }: { data: FangraphsPlayerStatEntity }) =>
+        data?.['wRC+'].toFixed(3),
     },
   ];
 
