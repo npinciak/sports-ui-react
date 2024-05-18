@@ -4,20 +4,16 @@ import { useGetProfileWithTeamsQuery } from '../../../@shared/supabase/supabase.
 export function ProfilePage() {
   const { data: profile, isLoading } = useGetProfileWithTeamsQuery({});
 
+  if (isLoading) return <div className="animate-pulse">Loading...</div>;
+
   return (
     <div className="grid grid-cols-3 text-left mb-5 mt-5">
       <div>
-        {isLoading ? (
-          <div className="animate-pulse">Loading...</div>
-        ) : (
-          <>
-            <div>
-              <h1>Profile</h1>
-              <div>{profile?.user_name}</div>
-              <div>{profile?.bio}</div>
-            </div>
-          </>
-        )}
+        <div>
+          <h1>Profile</h1>
+          <div>{profile?.user_name}</div>
+          <div>{profile?.bio}</div>
+        </div>
       </div>
       <div>
         <h2>Teams</h2>
@@ -32,7 +28,7 @@ export function ProfilePage() {
         {profile?.leagues.map(league => (
           <div key={league!.league!.id}>
             <Link
-              to={`/${league!.league!.sport }/${league!.league!.season}/league/${league!.league!.league_id}`}
+              to={`/${league!.league!.sport}/${league!.league!.season}/league/${league!.league!.league_id}`}
             >
               {league!.league!.name}
             </Link>

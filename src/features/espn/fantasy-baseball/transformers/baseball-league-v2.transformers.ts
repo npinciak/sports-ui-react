@@ -1,6 +1,8 @@
 import { EspnClient, exists } from 'sports-ui-sdk';
+import { FangraphsPlayerProjectionEntity } from '../../../../@shared/fangraphs';
 import { FantasyLeague } from '../../models';
 import { BaseballLeague } from '../models/baseball-league.model';
+import { BaseballPlayer } from '../models/baseball-player.model';
 import { BaseballTeam, BaseballTeamLive } from '../models/baseball-team.model';
 import { clientPlayerToBaseballPlayer } from './baseball-league.transformers';
 
@@ -61,4 +63,33 @@ export function clientTeamToBaseballTeam(team: EspnClient.Team): BaseballTeam {
     ...basicTeam,
     roster,
   };
+}
+
+export function mapFangraphsPlayersToBaseballTeam(
+  espnPlayers: BaseballPlayer[],
+  fangraphsPlayerMap: Record<string, FangraphsPlayerProjectionEntity>
+) {
+  return espnPlayers?.map(player => {
+    return fangraphsPlayerMap
+      ? {
+          ...player,
+          fangraphsProjection: {
+            ...(fangraphsPlayerMap[player.sportsUiId] as object),
+          },
+        }
+      : null;
+  });
+}
+
+export function mapBaseballTeamToFangraphsPlayers(espnPlayers: BaseballPlayer[], fangraphsPlayerMap: Record<string, unknown>) {
+  return espnPlayers?.map(player => {
+    return fangraphsPlayerMap
+      ? {
+          ...player,
+          fangraphsProjection: {
+            ...(fangraphsPlayerMap[player.sportsUiId] as object),
+          },
+        }
+      : null;
+  });
 }

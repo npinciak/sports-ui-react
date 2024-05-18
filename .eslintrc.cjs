@@ -15,4 +15,23 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
+  overrides: [
+    {
+      files: '**/*.+(ts|tsx)',
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        project: './tsconfig.json',
+      },
+      plugins: ['@typescript-eslint/eslint-plugin'],
+      extends: [
+        'plugin:@@typescript-eslint/no-unused-vars',
+        'plugin:@typescript-eslint/eslint-recommended', // removes redundant warnings between TS & ESLint
+        'plugin:@typescript-eslint/recommended', // rules specific to typescript, e.g., writing interfaces
+        'eslint-config-prettier/@typescript-eslint', // ensure rule set doesn't conflict with prettier for TS files too
+      ],
+      rules: {
+        '@typescript-eslint/no-unused-vars': 'warn',
+      },
+    },
+  ],
 };
