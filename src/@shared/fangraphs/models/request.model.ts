@@ -3,9 +3,6 @@ import { FangraphsPositionType } from './positions.model';
 import { FangraphsProjectionType } from './projection-type.model';
 import { FangraphsTeam } from './teams.model';
 
-export const DEFAULT_PAGE_SIZE = 100;
-export const DEFAULT_PAGE_NUMBER = 1;
-
 export type FangraphsPageOfResponse<T> = {
   data: T[];
   dateRange: string;

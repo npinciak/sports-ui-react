@@ -9,13 +9,13 @@ import {
   FangraphsProjection,
   FangraphsTeam,
   FangraphsTeamToEspnTeam,
-} from '../../../../../@shared/fangraphs';
-import { FangraphsPosition } from '../../../../../@shared/fangraphs/models/positions.model';
+} from '../../../../../@shared/fangraphs/';
 import {
-  useCreateEspnPlayerMutation,
   useGetFangraphProjectionsQuery,
   useGetFangraphStatsQuery,
-} from '../../../../../@shared/supabase/supabase.client';
+} from '../../../../../@shared/fangraphs/client/fangraphs.client';
+import { FangraphsPosition } from '../../../../../@shared/fangraphs/models';
+import { useCreateEspnPlayerMutation } from '../../../../../@shared/supabase/supabase.client';
 import { normalizeName } from '../../../espn-helpers';
 import { useFetchTeamByIdQuery } from '../../client/fantasy-baseball.client';
 import { BaseballLineupCard, BaseballPlayerStatsTable } from '../../components';

@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { AuthenticationClient } from './@shared';
+import { fangraphsClient } from './@shared/fangraphs/client/fangraphs.client';
 import { supabaseClient } from './@shared/supabase/supabase.client';
 import { AdminLeagueProgressionFormSlice } from './features/admin/slices/league-progression-form.slice';
 import { baseballClient } from './features/espn/fantasy-baseball/client/fantasy-baseball.client';
@@ -11,6 +12,7 @@ export const AppStore = configureStore({
   reducer: {
     [AdminLeagueProgressionFormSlice.reducerPath]: AdminLeagueProgressionFormSlice.reducer,
     [AuthenticationClient.reducerPath]: AuthenticationClient.reducer,
+    [fangraphsClient.reducerPath]: fangraphsClient.reducer,
     [supabaseClient.reducerPath]: supabaseClient.reducer,
     [baseballClient.reducerPath]: baseballClient.reducer,
     [baseballTeamSlice.reducerPath]: baseballTeamSlice.reducer,
@@ -18,7 +20,11 @@ export const AppStore = configureStore({
     [baseballLeagueSlice.reducerPath]: baseballLeagueSlice.reducer,
   },
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(AuthenticationClient.middleware).concat(baseballClient.middleware).concat(supabaseClient.middleware),
+    getDefaultMiddleware()
+      .concat(AuthenticationClient.middleware)
+      .concat(baseballClient.middleware)
+      .concat(supabaseClient.middleware)
+      .concat(fangraphsClient.middleware),
 });
 
 export type RootState = ReturnType<typeof AppStore.getState>;

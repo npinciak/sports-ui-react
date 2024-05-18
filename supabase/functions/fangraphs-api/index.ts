@@ -1,6 +1,3 @@
-// Setup type definitions for built-in Supabase Runtime APIs
-/// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -11,11 +8,9 @@ Deno.serve(async req => {
 
   const body = await req.json();
 
-  const { type, pos, team } = body;
+  const { path } = body;
 
-  const response = await fetch(
-    `https://www.fangraphs.com/api/projections?type=${type}&stats=bat&pos=${pos}&team=${team}&players=0&lg=all&z=1714300977`
-  );
+  const response = await fetch(`https://www.fangraphs.com/api${path}`);
 
   const dataTwo = await response.json();
 
