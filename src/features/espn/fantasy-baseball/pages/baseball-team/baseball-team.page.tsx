@@ -42,6 +42,7 @@ export function BaseballTeam() {
     team: FangraphsTeam.AllTeams,
     pos: FangraphsPosition.All,
   };
+
   const { data: fangraphsProj, isLoading: isFangraphsProjectionsLoading } =
     useGetFangraphProjectionsQuery(projectionsFilter);
 
@@ -115,6 +116,8 @@ export function BaseballTeam() {
 
   const { data: fangraphsStats, isLoading: isFangraphsStatsLoading } =
     useGetFangraphStatsQuery(statsFilter);
+
+    const {data} = useGetFangraphProjectionsQuery(projectionsFilter);
 
   if (isLoading && isFangraphsProjectionsLoading && isFangraphsStatsLoading)
     return <div className="animate-pulse">Loading...</div>;
