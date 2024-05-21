@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { BASEBALL_LINEUP_MAP } from 'sports-ui-sdk';
 import {
@@ -9,12 +11,17 @@ import {
   FangraphsProjection,
   FangraphsTeam,
   FangraphsTeamToEspnTeam,
+  setStatSplitPeriod,
 } from '../../../../../@shared/fangraphs/';
 import {
   useGetFangraphProjectionsQuery,
   useGetFangraphStatsQuery,
+  useGetStatPeriodSplitOptionsQuery,
+  useLazyGetFangraphStatsQuery,
+  useRefetchStatsMutation,
 } from '../../../../../@shared/fangraphs/client/fangraphs.client';
 import { FangraphsPosition } from '../../../../../@shared/fangraphs/models';
+import { selectStatSplitPeriod } from '../../../../../@shared/fangraphs/selectors/stats-filter.selector';
 import { useCreateEspnPlayerMutation } from '../../../../../@shared/supabase/supabase.client';
 import { normalizeName } from '../../../espn-helpers';
 import { useFetchTeamByIdQuery } from '../../client/fantasy-baseball.client';
@@ -23,6 +30,10 @@ import { startingPlayersFilter } from '../../helpers';
 import { mapFangraphsPlayersToBaseballTeam } from '../../transformers';
 
 export function BaseballTeam() {
+  const dispatch = useDispatch();
+
+  const getStatSplitPeriod = useSelector(selectStatSplitPeriod);
+
   const { year, leagueId, teamId } = useParams<{
     year: string;
     leagueId: string;
@@ -42,6 +53,8 @@ export function BaseballTeam() {
     team: FangraphsTeam.AllTeams,
     pos: FangraphsPosition.All,
   };
+
+  useEffect(() => {}, []);
 
   const { data: fangraphsProj, isLoading: isFangraphsProjectionsLoading } =
     useGetFangraphProjectionsQuery(projectionsFilter);
@@ -112,15 +125,34 @@ export function BaseballTeam() {
       pageitems: DEFAULT_PAGE_SIZE,
       pagenum: DEFAULT_PAGE_NUMBER,
     },
+    statSplitPeriod: getStatSplitPeriod,
   };
 
   const { data: fangraphsStats, isLoading: isFangraphsStatsLoading } =
     useGetFangraphStatsQuery(statsFilter);
 
-    const {data} = useGetFangraphProjectionsQuery(projectionsFilter);
+  const { data: statPeriodList, isLoading: statPeriodLoading } =
+    useGetStatPeriodSplitOptionsQuery();
 
-  if (isLoading && isFangraphsProjectionsLoading && isFangraphsStatsLoading)
+  const [refetch] = useRefetchStatsMutation();
+
+  const [getFangraphStats] = useLazyGetFangraphStatsQuery();
+
+  function handleStatPeriodChange(value: any) {
+    dispatch(setStatSplitPeriod(value));
+
+    refetch();
+  }
+
+  if (
+    isLoading &&
+    isFangraphsProjectionsLoading &&
+    isFangraphsStatsLoading &&
+    statPeriodLoading
+  )
     return <div className="animate-pulse">Loading...</div>;
+
+  const statPeriodOptions = statPeriodList ?? [];
 
   return (
     <div key={team?.id}>
@@ -160,6 +192,23 @@ export function BaseballTeam() {
             >
               Sync Batters
             </button>
+          </div>
+
+          <div>
+            <div className="form-group">
+              <label htmlFor="statSplitPeriod">Stat Split</label>
+              <select
+                id="statSplitPeriod"
+                onChange={e => handleStatPeriodChange(e.target.value)}
+              >
+                <option value="">Select Stat Split</option>
+                {statPeriodOptions.map(item => (
+                  <option key={item!.value} value={item!.value}>
+                    {item!.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <div>
             <BaseballPlayerStatsTable data={fangraphsStats?.data ?? []} />

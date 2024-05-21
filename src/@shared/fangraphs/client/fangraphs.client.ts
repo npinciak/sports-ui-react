@@ -36,13 +36,14 @@ export const fangraphsClient = createApi({
       },
       providesTags: [FangraphsClientTag.FangraphsProjections],
     }),
-    getFangraphStats: builder.query<FangraphsPageOfPlayerStats | null, FangraphsPlayerStatsRequestBody>({
+    getFangraphStats: builder.query<FangraphsPageOfPlayerStats, FangraphsPlayerStatsRequestBody>({
       queryFn: async args => {
         const {
           pos,
           meta: { pageitems, pagenum },
           team,
           players,
+          statSplitPeriod,
         } = args;
 
         const params = new URLSearchParams();
@@ -51,6 +52,7 @@ export const fangraphsClient = createApi({
         params.append('pageitems', pageitems.toString() ?? '30');
         params.append('pagenum', pagenum.toString() ?? '1');
         params.append('team', team as unknown as string);
+        params.append('month', statSplitPeriod.toString());
         params.append('age', '');
         params.append('stats', 'bat');
         params.append('lg', 'all');
@@ -59,7 +61,6 @@ export const fangraphsClient = createApi({
         params.append('season1', '2024');
         params.append('startdate', '2024-03-01');
         params.append('enddate', '2024-11-01');
-        params.append('month', '0');
         params.append('hand', '');
         params.append('ind', '0');
         params.append('rost', '0');
@@ -74,24 +75,39 @@ export const fangraphsClient = createApi({
           },
         });
 
+        if (!data) return { data: { data: [], dateRange: '', dateRangeSeason: '', sortDir: '', sortStat: '', totalCount: 0 } };
         return { data };
       },
-      providesTags: [FangraphsClientTag.FangraphsProjections],
+      providesTags: [FangraphsClientTag.FangraphsStats],
     }),
-    getFangraphsApi: builder.query<FangraphsPageOfPlayerStats | null, FangraphsPlayerStatsRequestBody>({
-      queryFn: async args => {
-        const body = args;
-        const { data } = await supabase.functions.invoke<FangraphsPageOfPlayerStats>('fangraphs-api', {
+    refetchStats: builder.mutation<null, void>({
+      // The query is not relevant here, so a `null` returning `queryFn` is used
+      queryFn: () => ({ data: null }),
+      // This mutation takes advantage of tag invalidation behaviour to trigger
+      // any queries that provide the 'Post' or 'User' tags to re-fetch if the queries
+      // are currently subscribed to the cached data
+      invalidatesTags: [FangraphsClientTag.FangraphsStats],
+    }),
+    getStatPeriodSplitOptions: builder.query<{ label: string; value: number }[], void>({
+      queryFn: async () => {
+        const { data } = await supabase.functions.invoke<{ label: string; value: number }[]>('fangraphs-api', {
           body: {
             path: '/leaders/major-league/options/splits?seasonstart=2024&seasonend=2024&stats=bat&postseason=false',
           },
         });
 
+        if (!data) return { data: [] };
+
         return { data };
       },
-      providesTags: [FangraphsClientTag.FangraphsProjections],
     }),
   }),
 });
 
-export const { useGetFangraphProjectionsQuery, useGetFangraphStatsQuery, useGetFangraphsApiQuery } = fangraphsClient;
+export const {
+  useGetFangraphProjectionsQuery,
+  useGetFangraphStatsQuery,
+  useLazyGetFangraphStatsQuery,
+  useGetStatPeriodSplitOptionsQuery,
+  useRefetchStatsMutation,
+} = fangraphsClient;

@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { AuthenticationClient } from './@shared';
+import { FangraphsStatsFilterFormSlice } from './@shared/fangraphs';
 import { fangraphsClient } from './@shared/fangraphs/client/fangraphs.client';
 import { supabaseClient } from './@shared/supabase/supabase.client';
 import { AdminLeagueProgressionFormSlice } from './features/admin/slices/league-progression-form.slice';
@@ -13,6 +14,7 @@ export const AppStore = configureStore({
     [AdminLeagueProgressionFormSlice.reducerPath]: AdminLeagueProgressionFormSlice.reducer,
     [AuthenticationClient.reducerPath]: AuthenticationClient.reducer,
     [fangraphsClient.reducerPath]: fangraphsClient.reducer,
+    [FangraphsStatsFilterFormSlice.reducerPath]: FangraphsStatsFilterFormSlice.reducer,
     [supabaseClient.reducerPath]: supabaseClient.reducer,
     [baseballClient.reducerPath]: baseballClient.reducer,
     [baseballTeamSlice.reducerPath]: baseballTeamSlice.reducer,
