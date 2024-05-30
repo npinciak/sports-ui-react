@@ -86,7 +86,7 @@ export function AdminLeagueProgressionForm() {
         </div>
         <div className="row">
           <div className="col-12">
-            <div className="form-group">
+            <div>
               <label className={fieldStyles.inputLabel} htmlFor="totalPoints">
                 Total Points
               </label>
@@ -99,7 +99,7 @@ export function AdminLeagueProgressionForm() {
               />
             </div>
 
-            <div className="form-group">
+            <div>
               <label className={fieldStyles.inputLabel} htmlFor="rank">
                 Rank
               </label>
@@ -111,7 +111,7 @@ export function AdminLeagueProgressionForm() {
               />
             </div>
 
-            <div className="form-group">
+            <div>
               <label className={fieldStyles.inputLabel} htmlFor="leagueTeamId">
                 Team
               </label>

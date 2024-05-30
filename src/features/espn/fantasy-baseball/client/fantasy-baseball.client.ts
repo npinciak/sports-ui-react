@@ -5,6 +5,7 @@ import { ESPN_PARAM_FRAGMENTS, ESPN_VIEW_PARAM_FRAGMENTS } from '../../helpers/e
 import { clientLeagueToLeagueSettings } from '../../transformers';
 import { BaseballLeague } from '../models/baseball-league.model';
 import { BaseballTeam } from '../models/baseball-team.model';
+import { baseballTeamRosterAdapter } from '../slices/baseball-team-roster.slice';
 import { clientTeamToBaseballTeam, transformClientLeagueToBaseballLeagueV2 } from '../transformers';
 
 type FetchLeagueParams = {

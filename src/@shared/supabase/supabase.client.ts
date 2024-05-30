@@ -1,31 +1,16 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { createClient } from '@supabase/supabase-js';
-import {
-  FangraphsPageOfPlayerStats,
-  FangraphsPlayerProjectionEntity,
-  FangraphsPlayerProjectionsRequestBody,
-  FangraphsPlayerStatsRequestBody,
-} from '../fangraphs/models';
 import { Database } from './supabase-database.model';
-import { SupaClientEspnPlayerInsert, SupaClientFangraphsConstantsTable, SupaClientLeagueProgressionInsert } from './supabase-tables.model';
+import { SupaClientEspnPlayerInsert, SupaClientLeagueProgressionInsert } from './supabase-tables.model';
 
 export const supabase = createClient<Database>(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_KEY);
 
 const SupabaseClientTag = {
   GetLeagueProgression: 'GetLeagueProgression',
-  FangraphsProjections: 'FangraphsProjections',
-  FangraphsStats: 'FangraphsStats',
-  FangraphsConstants: 'FangraphsConstants',
   EspnPlayer: 'EspnPlayer',
 } as const;
 
-const SupabaseClientTagList = [
-  SupabaseClientTag.GetLeagueProgression,
-  SupabaseClientTag.FangraphsProjections,
-  SupabaseClientTag.FangraphsStats,
-  SupabaseClientTag.FangraphsConstants,
-  SupabaseClientTag.EspnPlayer,
-];
+const SupabaseClientTagList = [SupabaseClientTag.GetLeagueProgression, SupabaseClientTag.EspnPlayer];
 
 export const supabaseClient = createApi({
   reducerPath: 'supabaseApi',
@@ -58,38 +43,7 @@ export const supabaseClient = createApi({
         return { data };
       },
     }),
-    getFangraphsConstantsBySeason: builder.query<SupaClientFangraphsConstantsTable[], { seasonId: string }>({
-      queryFn: async args => {
-        const { data, error } = await supabase.from('fangraphs-constants').select().eq('season', args.seasonId);
-        if (error) return { error };
 
-        return { data };
-      },
-      providesTags: [SupabaseClientTag.FangraphsConstants],
-    }),
-    getFangraphProjections: builder.query<FangraphsPlayerProjectionEntity[], FangraphsPlayerProjectionsRequestBody>({
-      queryFn: async args => {
-        const body = args;
-        const { data } = await supabase.functions.invoke<FangraphsPlayerProjectionEntity[]>('fangraphs-projections', {
-          body,
-        });
-
-        if (!data) return { data: [] };
-        return { data };
-      },
-      providesTags: [SupabaseClientTag.FangraphsProjections],
-    }),
-    getFangraphStats: builder.query<FangraphsPageOfPlayerStats | null, FangraphsPlayerStatsRequestBody>({
-      queryFn: async args => {
-        const body = args;
-        const { data } = await supabase.functions.invoke<FangraphsPageOfPlayerStats>('fangraphs-stats', {
-          body,
-        });
-
-        return { data };
-      },
-      providesTags: [SupabaseClientTag.FangraphsProjections],
-    }),
     getProfile: builder.query({
       queryFn: async () => {
         const { data, error } = await supabase.from('profile').select().single();
@@ -117,9 +71,6 @@ export const supabaseClient = createApi({
 export const {
   useCreateLeagueProgressionEntityMutation,
   useGetLeagueProgressionQuery,
-  useGetFangraphProjectionsQuery,
-  useGetFangraphStatsQuery,
-  useGetFangraphsConstantsBySeasonQuery,
   useCreateEspnPlayerMutation,
   useGetProfileQuery,
   useGetProfileWithTeamsQuery,
