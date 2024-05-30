@@ -53,17 +53,13 @@ export const SportLeagueToImageLocationMap: { [key in SportLeague]: string } = {
 
 export type BaseEspnEndpointBuilderClass = {
   new (...args: unknown[]): unknown;
-  fantasyPlayerNews: string;
   espnEvents: string;
-  fantasyPlayerTransaction: string;
-  fantasyLeagueComms: string;
-  fantasyLeague: string;
   positions: string;
   oneFeed: string;
   staticScoreboard: string;
-  baseballStatsBatterVsPitcher: string;
   fantasyBaseV3Seasons: string;
-  fantasyBaseV3LeagueBySeasonById: (year: string, leagueId: string) => string;
   leagueClickout: string;
   matchupClickout: (teamId: string | number, matchupPeriodId: string | number) => string;
+  fantasyBaseV3SeasonByYear: (year: string) => string;
+  fantasyBaseV3LeagueBySeasonById: (year: string, leagueId: string) => string;
 };

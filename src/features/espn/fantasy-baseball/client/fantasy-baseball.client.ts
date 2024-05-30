@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { EspnClient } from 'sports-ui-sdk';
-import { generateLeagueParams, generateTeamParams } from '../../espn-helpers';
+import { SmartDate } from '../../../../@shared/helpers';
+import { generateEventParams, generateLeagueParams, generateTeamParams } from '../../espn-helpers';
 import { BaseEspnEndpointBuilder } from '../../helpers';
 import { FetchLeagueArgs, FetchTeamArgs } from '../../models';
 import { clientLeagueToLeagueSettings } from '../../transformers';
@@ -52,7 +53,24 @@ export const baseballClient = createApi({
         return clientTeamToBaseballTeam(team);
       },
     }),
+    fetchEvents: builder.query<EspnClient.EventList, void>({
+      query: () => {
+        const smartDate = new SmartDate();
+
+        const oneWeekAgoFromToday = smartDate.formatWithDelimiter({ date: smartDate.oneWeekAgoFromToday.getTime() });
+        const oneWeekFromToday = smartDate.formatWithDelimiter({ date: smartDate.oneWeekFromToday.getTime() });
+
+        const dateRange = `${oneWeekAgoFromToday}-${oneWeekFromToday}`;
+
+        const params = generateEventParams(dateRange);
+
+        return {
+          url: endpoints.espnEvents,
+          params,
+        };
+      },
+    }),
   }),
 });
 
-export const { useFetchLeagueByIdQuery, useFetchTeamByIdQuery } = baseballClient;
+export const { useFetchLeagueByIdQuery, useFetchTeamByIdQuery, useFetchEventsQuery } = baseballClient;

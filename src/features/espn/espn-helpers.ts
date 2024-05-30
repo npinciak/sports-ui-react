@@ -29,6 +29,30 @@ export function generateTeamParams(teamId: string): URLSearchParams {
 }
 
 /**
+ * Generates team params
+ * @param teamId
+ * @returns URLSearchParams
+ */
+export function generateEventParams(dateRange: string): URLSearchParams {
+  const params = new URLSearchParams();
+  params.append(ESPN_PARAM_FRAGMENTS.UseMap, 'true');
+  params.append(ESPN_PARAM_FRAGMENTS.Dates, dateRange);
+  params.append(ESPN_PARAM_FRAGMENTS.PbpOnly, 'true');
+  return params;
+}
+
+/**
+ * Generates team params
+ * @param teamId
+ * @returns URLSearchParams
+ */
+export function generateProTeamScheduleParams(): URLSearchParams {
+  const params = new URLSearchParams();
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.ProTeamSchedules);
+  return params;
+}
+
+/**
  * Sports to include in Fastcast
  *
  * @param id
