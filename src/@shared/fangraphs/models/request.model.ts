@@ -1,4 +1,4 @@
-import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from '../client';
+import { DEFAULT_META_DATA } from '../client/fangraphs.client.model';
 import { FangraphsPlayerStatEntity } from './player-stats.model';
 import { FangraphsPosition, FangraphsPositionType } from './positions.model';
 import { FangraphsProjectionType } from './projection-type.model';
@@ -26,9 +26,11 @@ export type FangraphsPlayerStatsRequestBody = {
   };
 };
 
-export const DEFAULT_META_DATA = {
-  pageitems: DEFAULT_PAGE_SIZE,
-  pagenum: DEFAULT_PAGE_NUMBER,
+export type FangraphsPlayerProjectionsRequestBody = {
+  type: FangraphsProjectionType;
+  team: FangraphsTeam;
+  pos: FangraphsPositionType;
+  players: number[];
 };
 
 export const INITIAL_STATS_REQUEST_BODY: FangraphsPlayerStatsRequestBody = {
@@ -37,10 +39,4 @@ export const INITIAL_STATS_REQUEST_BODY: FangraphsPlayerStatsRequestBody = {
   players: [],
   statSplitPeriod: 0,
   meta: DEFAULT_META_DATA,
-};
-
-export type FangraphsPlayerProjectionsRequestBody = {
-  type: FangraphsProjectionType;
-  team: FangraphsTeam;
-  pos: FangraphsPositionType;
 };

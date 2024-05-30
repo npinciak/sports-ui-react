@@ -12,3 +12,8 @@ export const FangraphsClientTagList = [
 
 export const DEFAULT_PAGE_SIZE = 100;
 export const DEFAULT_PAGE_NUMBER = 1;
+
+export const DEFAULT_META_DATA = {
+  pageitems: DEFAULT_PAGE_SIZE,
+  pagenum: DEFAULT_PAGE_NUMBER,
+};

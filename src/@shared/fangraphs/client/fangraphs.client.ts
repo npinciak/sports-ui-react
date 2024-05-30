@@ -5,6 +5,9 @@ import {
   FangraphsPlayerProjectionEntity,
   FangraphsPlayerProjectionsRequestBody,
   FangraphsPlayerStatsRequestBody,
+  FangraphsPosition,
+  FangraphsProjection,
+  FangraphsTeam,
 } from '../models';
 import { FangraphsClientTag, FangraphsClientTagList } from './fangraphs.client.model';
 
@@ -15,20 +18,35 @@ export const fangraphsClient = createApi({
   endpoints: builder => ({
     getFangraphProjections: builder.query<FangraphsPlayerProjectionEntity[], FangraphsPlayerProjectionsRequestBody>({
       queryFn: async args => {
-        const { type, pos, team } = args;
+        const { type, pos, team, players } = args;
 
-        const params = new URLSearchParams();
-        params.append('type', type);
-        params.append('pos', pos);
-        params.append('team', team as unknown as string);
-        params.append('players', '0');
-        params.append('lg', 'all');
-        params.append('z', '1714300977');
+        const body = {
+          type,
+          pos,
+          team,
+          players,
+        };
 
-        const { data } = await supabase.functions.invoke<FangraphsPlayerProjectionEntity[]>('fangraphs-api', {
-          body: {
-            path: `/projections?${params.toString()}`,
-          },
+        const { data } = await supabase.functions.invoke<FangraphsPlayerProjectionEntity[]>('fangraphs-projections', {
+          body,
+        });
+
+        if (!data) return { data: [] };
+        return { data };
+      },
+      providesTags: [FangraphsClientTag.FangraphsProjections],
+    }),
+    getFangraphPlayerList: builder.query<FangraphsPlayerProjectionEntity[], void>({
+      queryFn: async () => {
+        const body = {
+          type: FangraphsProjection.RestOfSeasonTheBatX,
+          pos: FangraphsPosition.All,
+          team: FangraphsTeam.AllTeams,
+          players: ['0'],
+        };
+
+        const { data } = await supabase.functions.invoke<FangraphsPlayerProjectionEntity[]>('fangraphs-projections', {
+          body,
         });
 
         if (!data) return { data: [] };
@@ -46,33 +64,16 @@ export const fangraphsClient = createApi({
           statSplitPeriod,
         } = args;
 
-        const params = new URLSearchParams();
-        params.append('pos', pos);
-        params.append('players', players.map(id => Number(id)).join(','));
-        params.append('pageitems', pageitems.toString() ?? '30');
-        params.append('pagenum', pagenum.toString() ?? '1');
-        params.append('team', team as unknown as string);
-        params.append('month', statSplitPeriod.toString());
-        params.append('age', '');
-        params.append('stats', 'bat');
-        params.append('lg', 'all');
-        params.append('qual', 'y');
-        params.append('season', '2024');
-        params.append('season1', '2024');
-        params.append('startdate', '2024-03-01');
-        params.append('enddate', '2024-11-01');
-        params.append('hand', '');
-        params.append('ind', '0');
-        params.append('rost', '0');
-        params.append('type', '8');
-        params.append('postseason', '');
-        params.append('sortdir', 'default');
-        params.append('sortstat', 'WAR');
+        const body = {
+          pos,
+          meta: { pageitems, pagenum },
+          team,
+          players,
+          statSplitPeriod,
+        };
 
-        const { data } = await supabase.functions.invoke<FangraphsPageOfPlayerStats>('fangraphs-api', {
-          body: {
-            path: `/leaders/major-league/data?${params.toString()}`,
-          },
+        const { data } = await supabase.functions.invoke<FangraphsPageOfPlayerStats>('fangraphs-stats', {
+          body,
         });
 
         if (!data) return { data: { data: [], dateRange: '', dateRangeSeason: '', sortDir: '', sortStat: '', totalCount: 0 } };

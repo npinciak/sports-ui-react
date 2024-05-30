@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { AuthenticationClient } from './@shared';
 import { FangraphsStatsFilterFormSlice } from './@shared/fangraphs';
 import { fangraphsClient } from './@shared/fangraphs/client/fangraphs.client';
+import { fangraphsPlayerSlice } from './@shared/fangraphs/slices/fangraphs-player.slice';
 import { supabaseClient } from './@shared/supabase/supabase.client';
 import { AdminLeagueProgressionFormSlice } from './features/admin/slices/league-progression-form.slice';
 import { baseballClient } from './features/espn/fantasy-baseball/client/fantasy-baseball.client';
@@ -20,6 +21,7 @@ export const AppStore = configureStore({
     [baseballTeamSlice.reducerPath]: baseballTeamSlice.reducer,
     [baseballTeamLiveSlice.reducerPath]: baseballTeamLiveSlice.reducer,
     [baseballLeagueSlice.reducerPath]: baseballLeagueSlice.reducer,
+    [fangraphsPlayerSlice.reducerPath]: fangraphsPlayerSlice.reducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware()

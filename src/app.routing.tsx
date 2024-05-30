@@ -1,5 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
+import { fangraphsClient } from './@shared/fangraphs';
+import { AppStore } from './app.store';
 import {
   ForgotPasswordPage,
   Home,
@@ -16,6 +18,7 @@ import {
   BaseballPlayer,
   BaseballTeam,
 } from './features/espn/fantasy-baseball';
+import { baseballClient } from './features/espn/fantasy-baseball/client/fantasy-baseball.client';
 import { ProfilePage } from './features/profile';
 
 export const AppRouter = createBrowserRouter([
@@ -85,6 +88,28 @@ export const AppRouter = createBrowserRouter([
                               {
                                 path: '',
                                 element: <BaseballTeam />,
+                                loader: async ({ params }) => {
+                                  await AppStore.dispatch(
+                                    baseballClient.endpoints.fetchTeamById.initiate(
+                                      {
+                                        year: params?.year ?? '',
+                                        leagueId: params?.leagueId ?? '',
+                                        teamId: params?.teamId ?? '',
+                                      }
+                                    )
+                                  );
+
+                                  const initialStatsFilter =
+                                    AppStore.getState()
+                                      .fangraphsStatsFilterForm;
+
+                                  await AppStore.dispatch(
+                                    fangraphsClient.endpoints.getFangraphPlayerList.initiate(
+                                      initialStatsFilter
+                                    )
+                                  );
+                                  return null;
+                                },
                               },
                               {
                                 path: 'batters',
