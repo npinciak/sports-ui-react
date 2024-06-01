@@ -14,7 +14,10 @@
     "deploy:fangraphs-api": "npx supabase functions deploy fangraphs-projections fangraphs-stats --project-ref tvzszyncqcrrsyekaodt"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@inovua/reactdatagrid-community": "^5.10.2",
+    "@mui/material": "^5.15.19",
     "@reduxjs/toolkit": "^2.2.1",
     "@supabase/supabase-js": "^2.42.0",
     "date-fns": "^3.3.1",
