@@ -1,3 +1,4 @@
+import Container from '@mui/material/Container';
 import { RouterProvider } from 'react-router-dom';
 import './App.css';
 import { AppRouter } from './app.routing';
@@ -7,9 +8,9 @@ function App() {
   return (
     <div className="App">
       <HeaderComponent />
-      <div className="mx-5 overflow-auto">
+      <Container maxWidth="xl">
         <RouterProvider router={AppRouter} />
-      </div>
+      </Container>
     </div>
   );
 }
