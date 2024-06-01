@@ -24,8 +24,8 @@ export const selectTeamStartingPitcherList = createSelector([selectTeamPitcherLi
   startingPlayersFilter(players, BASEBALL_LINEUP_MAP)
 );
 
-export const selectFangraphsToStartingBatters = createSelector(
-  [selectTeamStartingBatterList, selectFangraphsPlayerEntities],
+export const selectFangraphsToBatters = createSelector(
+  [selectTeamBatterList, selectFangraphsPlayerEntities],
   (players, fangraphsEntities) =>
     players.map(player => ({
       ...player,
@@ -33,12 +33,12 @@ export const selectFangraphsToStartingBatters = createSelector(
     }))
 );
 
-export const selectStartingBatterFangraphIds = createSelector([selectFangraphsToStartingBatters], players =>
+export const selectStartingBatterFangraphIds = createSelector([selectFangraphsToBatters], players =>
   players.map(p => Number(p.fangraphs?.playerid))
 );
 
-export const selectFangraphsToStartingPitchers = createSelector(
-  [selectTeamStartingPitcherList, selectFangraphsPlayerEntities],
+export const selectFangraphsToPitchers = createSelector(
+  [selectTeamPitcherList, selectFangraphsPlayerEntities],
   (players, fangraphsEntities) =>
     players.map(player => ({
       ...player,
