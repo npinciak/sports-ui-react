@@ -1,3 +1,11 @@
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  NativeSelect,
+  TextField,
+} from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import { ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SupaClientLeagueProgressionInsert } from '../../../@shared/supabase/supabase-tables.model';
@@ -13,6 +21,7 @@ import {
   selectTotalPoints,
 } from '../selectors/league-progression-form.selector';
 import {
+  resetForm,
   setEspnTeamId,
   setLeagueId,
   setLeagueTeamId,
@@ -44,7 +53,9 @@ export function AdminLeagueProgressionForm() {
   const [handleCreateLeagueProgressionEntity] =
     useCreateLeagueProgressionEntityMutation();
 
-  const handleCancel = () => {};
+  const handleCancel = () => {
+    dispatch(resetForm());
+  };
 
   const handleSubmit = () => {
     if (
@@ -57,11 +68,11 @@ export function AdminLeagueProgressionForm() {
       throw new Error('Missing required fields');
 
     const form: SupaClientLeagueProgressionInsert = {
-      espn_team_id: getEspnTeamId,
-      total_points: getTotalPoints,
+      espn_team_id: Number(getEspnTeamId),
+      total_points: Number(getTotalPoints),
       league_id: getLeagueId,
       league_team_id: getLeagueTeamId,
-      rank: getRank,
+      rank: Number(getRank),
     };
 
     handleCreateLeagueProgressionEntity(form);
@@ -78,78 +89,71 @@ export function AdminLeagueProgressionForm() {
 
   return (
     <>
-      <div className="container">
-        <div className="row">
-          <div className="col-12">
-            <h1>League Progression</h1>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-12">
-            <div>
-              <label className={fieldStyles.inputLabel} htmlFor="totalPoints">
-                Total Points
-              </label>
-              <input
-                type="number"
-                className={fieldStyles.input}
-                id="totalPoints"
-                step="0.001"
-                onChange={e => dispatch(setTotalPoints(e.target.value))}
-              />
-            </div>
-
-            <div>
-              <label className={fieldStyles.inputLabel} htmlFor="rank">
-                Rank
-              </label>
-              <input
-                type="number"
-                className={fieldStyles.input}
-                id="rank"
-                onChange={e => dispatch(setRank(e.target.value))}
-              />
-            </div>
-
-            <div>
-              <label className={fieldStyles.inputLabel} htmlFor="leagueTeamId">
-                Team
-              </label>
-              <select
-                className={fieldStyles.input}
-                id="leagueTeamId"
-                onChange={handleLeagueTeamIdChange}
-              >
-                <option value="">Select a team</option>
-                {teams.map(team => (
-                  <option
-                    key={team!.team!.id}
-                    value={team!.team!.league_team_id}
-                  >
-                    {team!.team!.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="mt-6 flex items-center justify-end gap-x-6">
-              <button
-                onClick={handleCancel}
-                type="button"
-                className="text-sm font-semibold leading-6 text-gray-900"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSubmit}
-                className={fieldStyles.submitButton}
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Grid container spacing={2}>
+        <Grid xs={4}>
+          <FormControl fullWidth>
+            <TextField
+              id="totalPoints"
+              label="Total Points"
+              variant="standard"
+              type="number"
+              onChange={e => dispatch(setTotalPoints(e.target.value))}
+              value={getTotalPoints}
+            />
+          </FormControl>
+        </Grid>
+        <Grid xs={4}>
+          <FormControl fullWidth>
+            <TextField
+              id="rank"
+              label="Rank"
+              variant="standard"
+              type="number"
+              onChange={e => dispatch(setRank(e.target.value))}
+            />
+          </FormControl>
+        </Grid>
+        <Grid xs={4}>
+          <FormControl fullWidth>
+            <InputLabel variant="standard" htmlFor="uncontrolled-native">
+              {/* Team */}
+            </InputLabel>
+            <NativeSelect
+              defaultValue={30}
+              inputProps={{
+                name: 'team',
+                id: 'uncontrolled-native',
+              }}
+              onChange={handleLeagueTeamIdChange}
+            >
+              <option value={''}>Select a team</option>
+              {teams.map(team => (
+                <option key={team!.team!.id} value={team!.team!.league_team_id}>
+                  {team!.team!.name}
+                </option>
+              ))}
+            </NativeSelect>
+          </FormControl>
+        </Grid>
+      </Grid>
+      <Grid
+        container
+        direction="row"
+        justifyContent="flex-end"
+        alignItems="center"
+        spacing={2}
+      >
+        <Grid xs={4}>
+          <Button variant="outlined" onClick={handleCancel}>
+            Cancel
+          </Button>
+        </Grid>
+        <Grid xs={4}>
+          <Button variant="contained" onClick={handleSubmit}>
+            Submit
+          </Button>
+        </Grid>
+      </Grid>
     </>
   );
 }

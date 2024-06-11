@@ -1,4 +1,5 @@
 import ReactDataGrid from '@inovua/reactdatagrid-community';
+import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import { SupaClientLeagueProgression } from '../../../@shared/supabase/supabase-tables.model';
 import { useGetLeagueProgressionQuery } from '../../../@shared/supabase/supabase.client';
 import { AdminLeagueProgressionForm } from '../components/league-progression-form.component';
@@ -29,19 +30,22 @@ export function AdminLeagueProgressionPage() {
 
   return (
     <>
-      <div className="grid grid-cols-3 text-left mb-5 mt-5">
-        <div>
+      <Grid container spacing={2}>
+        <Grid xs={12}>
+          <AdminLeagueProgressionForm />
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={2}>
+        <Grid xs={12}>
           <ReactDataGrid
             idProperty="playerId"
             columns={columns}
             dataSource={leagueProgression ?? []}
             style={gridStyle}
           />
-        </div>
-        <div>
-          <AdminLeagueProgressionForm />
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import StyledBadge from '@mui/material/Badge';
 import { BaseballPlayer } from '../../models/baseball-player.model';
@@ -16,10 +17,12 @@ export function BaseballLineupCard({ players }: { players: BaseballPlayer[] }) {
         </StyledBadge>
       </div>
       <div className="col-span-3">
-        {player.name}
+        <Typography variant="body1">{player.name}</Typography>
         <div className="text-xs">
-          {player.team}
-          <span className="font-bold"> {player.lineupSlot}</span>
+          <Typography variant="body2">
+            {player.team}
+            <span className="font-bold"> {player.lineupSlot}</span>
+          </Typography>
         </div>
       </div>
     </div>

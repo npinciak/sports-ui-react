@@ -1,6 +1,6 @@
 export function HeaderComponent() {
   return (
-    <div className="bg-slate-800 p-3">
+    <div className="bg-slate-800 p-3 mb-4">
       <div className="text-center">
         <span className="flex-auto">
           <h1>
