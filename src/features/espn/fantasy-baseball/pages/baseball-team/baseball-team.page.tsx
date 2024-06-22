@@ -32,7 +32,9 @@ import {
   selectPlayerIds,
   selectStartingBatterFangraphIds,
   selectTeamStartingBatterList,
+  selectTeamStartingBatterListWithEvents,
   selectTeamStartingPitcherList,
+  selectTeamStartingPitcherListWithEvents,
 } from '../../selectors/baseball-team-roster.selector';
 
 export function BaseballTeam() {
@@ -56,6 +58,14 @@ export function BaseballTeam() {
   const fangraphsPlayers = useSelector(selectFangraphsPlayerEntities);
   const mappedPlayerIds = useSelector(selectStartingBatterFangraphIds);
   const getStatSplitPeriod = useSelector(selectStatSplitPeriod);
+
+  const teamStartingBatterListWithEvents = useSelector(
+    selectTeamStartingBatterListWithEvents
+  );
+
+  const teamStartingPitcherListWithEvents = useSelector(
+    selectTeamStartingPitcherListWithEvents
+  );
 
   const projectionsFilter: FangraphsPlayerProjectionsRequestBody = {
     type: FangraphsProjection.RestOfSeasonTheBatX,
