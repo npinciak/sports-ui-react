@@ -1,21 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { EspnClient } from 'sports-ui-sdk';
+import { SmartDate } from '../../../../@shared/helpers';
+import { generateEventParams, generateLeagueParams, generateTeamParams } from '../../espn-helpers';
 import { BaseEspnEndpointBuilder } from '../../helpers';
-import { ESPN_PARAM_FRAGMENTS, ESPN_VIEW_PARAM_FRAGMENTS } from '../../helpers/endpoint-builder/endpoint-builder.const';
+import { FetchLeagueArgs, FetchTeamArgs } from '../../models';
 import { clientLeagueToLeagueSettings } from '../../transformers';
 import { BaseballLeague } from '../models/baseball-league.model';
 import { BaseballTeam } from '../models/baseball-team.model';
-import { baseballTeamRosterAdapter } from '../slices/baseball-team-roster.slice';
 import { clientTeamToBaseballTeam, transformClientLeagueToBaseballLeagueV2 } from '../transformers';
-
-type FetchLeagueParams = {
-  year: string;
-  leagueId: string;
-};
-
-type FetchTeamParams = FetchLeagueParams & {
-  teamId: string;
-};
 
 const endpoints = BaseEspnEndpointBuilder({});
 
@@ -25,16 +17,11 @@ export const baseballClient = createApi({
     baseUrl: endpoints.fantasyBaseV3Seasons,
   }),
   endpoints: builder => ({
-    fetchLeagueById: builder.query<BaseballLeague, FetchLeagueParams>({
+    fetchLeagueById: builder.query<BaseballLeague, FetchLeagueArgs>({
       query: args => {
         const { year, leagueId } = args;
 
-        const params = new URLSearchParams();
-        params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Settings);
-        params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.LiveScoring);
-        params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Scoreboard);
-        params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Status);
-        params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Team);
+        const params = generateLeagueParams();
 
         return {
           url: endpoints.fantasyBaseV3LeagueBySeasonById(year, leagueId),
@@ -47,14 +34,11 @@ export const baseballClient = createApi({
         return transformClientLeagueToBaseballLeagueV2(league, genericLeagueSettings);
       },
     }),
-    fetchTeamById: builder.query<BaseballTeam, FetchTeamParams>({
+    fetchTeamById: builder.query<BaseballTeam, FetchTeamArgs>({
       query: args => {
         const { year, leagueId, teamId } = args;
 
-        const params = new URLSearchParams();
-        params.append(ESPN_PARAM_FRAGMENTS.RosterForTeamId, teamId);
-        params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Team);
-        params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Roster);
+        const params = generateTeamParams(teamId);
 
         return {
           url: endpoints.fantasyBaseV3LeagueBySeasonById(year, leagueId),
@@ -69,7 +53,24 @@ export const baseballClient = createApi({
         return clientTeamToBaseballTeam(team);
       },
     }),
+    fetchEvents: builder.query<EspnClient.EventList, void>({
+      query: () => {
+        const smartDate = new SmartDate();
+
+        const oneWeekAgoFromToday = smartDate.formatWithDelimiter({ date: smartDate.oneWeekAgoFromToday.getTime() });
+        const oneWeekFromToday = smartDate.formatWithDelimiter({ date: smartDate.oneWeekFromToday.getTime() });
+
+        const dateRange = `${oneWeekAgoFromToday}-${oneWeekFromToday}`;
+
+        const params = generateEventParams(dateRange);
+
+        return {
+          url: endpoints.espnEvents,
+          params,
+        };
+      },
+    }),
   }),
 });
 
-export const { useFetchLeagueByIdQuery, useFetchTeamByIdQuery } = baseballClient;
+export const { useFetchLeagueByIdQuery, useFetchTeamByIdQuery, useFetchEventsQuery } = baseballClient;

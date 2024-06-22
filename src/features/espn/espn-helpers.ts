@@ -1,4 +1,56 @@
 import { PlayerStatsYear, ProLeagueType, SportType, getContrastRatio } from 'sports-ui-sdk';
+import { ESPN_PARAM_FRAGMENTS, ESPN_VIEW_PARAM_FRAGMENTS } from './helpers/endpoint-builder/endpoint-builder.const';
+
+/**
+ * Generates league params
+ * @returns URLSearchParams
+ */
+export function generateLeagueParams(): URLSearchParams {
+  const params = new URLSearchParams();
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Settings);
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.LiveScoring);
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Scoreboard);
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Status);
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Team);
+  return params;
+}
+
+/**
+ * Generates team params
+ * @param teamId
+ * @returns URLSearchParams
+ */
+export function generateTeamParams(teamId: string): URLSearchParams {
+  const params = new URLSearchParams();
+  params.append(ESPN_PARAM_FRAGMENTS.RosterForTeamId, teamId);
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Team);
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Roster);
+  return params;
+}
+
+/**
+ * Generates team params
+ * @param teamId
+ * @returns URLSearchParams
+ */
+export function generateEventParams(dateRange: string): URLSearchParams {
+  const params = new URLSearchParams();
+  params.append(ESPN_PARAM_FRAGMENTS.UseMap, 'true');
+  params.append(ESPN_PARAM_FRAGMENTS.Dates, dateRange);
+  params.append(ESPN_PARAM_FRAGMENTS.PbpOnly, 'true');
+  return params;
+}
+
+/**
+ * Generates team params
+ * @param teamId
+ * @returns URLSearchParams
+ */
+export function generateProTeamScheduleParams(): URLSearchParams {
+  const params = new URLSearchParams();
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.ProTeamSchedules);
+  return params;
+}
 
 /**
  * Sports to include in Fastcast

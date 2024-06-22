@@ -6,7 +6,10 @@ import {
 } from '@inovua/reactdatagrid-community/types';
 import { Link, useParams } from 'react-router-dom';
 import { BaseballStat } from 'sports-ui-sdk';
-import { useFetchLeagueByIdQuery } from '../../client/fantasy-baseball.client';
+import {
+  useFetchEventsQuery,
+  useFetchLeagueByIdQuery,
+} from '../../client/fantasy-baseball.client';
 import { BaseballTeam } from '../../models/baseball-team.model';
 
 export function BaseballHome() {
@@ -16,6 +19,8 @@ export function BaseballHome() {
     year: year ?? '',
     leagueId: leagueId ?? '',
   });
+
+  const { data: events } = useFetchEventsQuery();
 
   const defaultSortInfo: TypeSortInfo = [];
 

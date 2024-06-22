@@ -1,4 +1,4 @@
-import { API_BASE_V2, BASE_URL, COMMON_V3, FANTASY_BASE_V3, ONE_FEED_BASE } from '../../constants';
+import { API_BASE_V2, BASE_URL, COMMON_V3, FANTASY_BASE_V2, FANTASY_BASE_V3, ONE_FEED_BASE } from '../../constants';
 import { FANTASY_SPORTS_ABBREVIATION } from './endpoint-builder.const';
 import { BaseEspnEndpointBuilderClass, FantasySportToSportsMap, FantasySportsAbbreviation } from './endpoint-builder.model';
 
@@ -22,33 +22,14 @@ export function BaseEspnEndpointBuilder({
   return class BaseEspnEndpointBuilderClass {
     private static readonly espnBase = BASE_URL;
     private static readonly apiBaseV2 = API_BASE_V2;
+    private static readonly fantasyBaseV2 = FANTASY_BASE_V2;
     private static readonly fantasyBaseV3 = FANTASY_BASE_V3;
     private static readonly oneFeedBase = ONE_FEED_BASE;
     private static readonly commonV3 = COMMON_V3;
 
-    // static get fantasyPlayerNews(): string {
-    //   return `${this.fantasyBaseV3WithFragments}/news/players`;
-    // }
-
-    // static get espnEvents(): string {
-    //   return `${this.fantasyBaseV3WithFragments}/games`;
-    // }
-
-    // static get fantasyPlayerTransaction(): string {
-    //   return `${this.fantasyLeague}/transactions`;
-    // }
-
-    // static get fantasyLeagueComms(): string {
-    //   return `${this.fantasyLeague}/communication`;
-    // }
-
-    // static get fantasyLeague(): string {
-    //   return `${this.fantasyBaseV3WithFragments}/segments/0/leagues/${leagueId}`;
-    // }
-
-    // static get fantasyTeamByLeagueId(): string {
-    //   return `${this.fantasyBaseV3WithFragments}/segments/0/leagues/${leagueId}`;
-    // }
+    static get espnEvents(): string {
+      return `${BaseEspnEndpointBuilderClass.fantasyBaseV2WithFragments}/games`;
+    }
 
     static get positions(): string {
       return `${BaseEspnEndpointBuilderClass.commonV3}/${sport}/mlb/positions`;
@@ -70,20 +51,23 @@ export function BaseEspnEndpointBuilder({
       return `${this.espnBase}/${FantasySportToSportsMap[sport]}/boxscore?leagueId=${leagueId}&matchupPeriodId=${matchupPeriodId}&seasonId=${year}&teamId=${teamId}`;
     }
 
-    // static get baseballStatsBatterVsPitcher(): string {
-    //   return `${this.fantasyBaseV2WithStatsFragments}/${ESPN_PATH_FRAGMENTS.BatterVsPitcher}`;
-    // }
-
     static get fantasyBaseV3Seasons(): string {
       return `${BaseEspnEndpointBuilderClass.fantasyBaseV3}/games/${sport}/seasons`;
     }
 
     static fantasyBaseV3LeagueBySeasonById(year: string, leagueId: string): string {
-      return `${BaseEspnEndpointBuilderClass.fantasyBaseV3Seasons}/${year}/segments/0/leagues/${leagueId}`;
+      return `${BaseEspnEndpointBuilderClass.fantasyBaseV3SeasonByYear(year)}/segments/0/leagues/${leagueId}`;
     }
 
-    // private static get fantasyBaseV2WithStatsFragments(): string {
-    //   return `${this.fantasyBaseV3WithFragments}/${ESPN_PATH_FRAGMENTS.Stats}`;
-    // }
+    static fantasyBaseV3SeasonByYear(year: string): string {
+      return `${BaseEspnEndpointBuilderClass.fantasyBaseV3Seasons}/${year}`;
+    }
+
+    /**
+     * expect to be deprecated
+     */
+    private static get fantasyBaseV2WithFragments(): string {
+      return `${BaseEspnEndpointBuilderClass.fantasyBaseV2}/games/${sport}`;
+    }
   };
 }

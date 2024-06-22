@@ -1,3 +1,5 @@
+import { Avatar } from '@mui/material';
+import Skeleton from '@mui/material/Skeleton';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -12,6 +14,7 @@ import {
   setStatSplitPeriod,
 } from '../../../../../@shared/fangraphs/';
 import {
+  useGetFangraphProjectionsQuery,
   useGetFangraphStatsQuery,
   useGetStatPeriodSplitOptionsQuery,
   useRefetchStatsMutation,
@@ -29,7 +32,9 @@ import {
   selectPlayerIds,
   selectStartingBatterFangraphIds,
   selectTeamStartingBatterList,
+  selectTeamStartingBatterListWithEvents,
   selectTeamStartingPitcherList,
+  selectTeamStartingPitcherListWithEvents,
 } from '../../selectors/baseball-team-roster.selector';
 
 export function BaseballTeam() {
@@ -53,6 +58,14 @@ export function BaseballTeam() {
   const fangraphsPlayers = useSelector(selectFangraphsPlayerEntities);
   const mappedPlayerIds = useSelector(selectStartingBatterFangraphIds);
   const getStatSplitPeriod = useSelector(selectStatSplitPeriod);
+
+  const teamStartingBatterListWithEvents = useSelector(
+    selectTeamStartingBatterListWithEvents
+  );
+
+  const teamStartingPitcherListWithEvents = useSelector(
+    selectTeamStartingPitcherListWithEvents
+  );
 
   const projectionsFilter: FangraphsPlayerProjectionsRequestBody = {
     type: FangraphsProjection.RestOfSeasonTheBatX,
@@ -100,6 +113,9 @@ export function BaseballTeam() {
   const { data: fangraphsStats, isLoading: isFangraphsStatsLoading } =
     useGetFangraphStatsQuery(statsFilter);
 
+  const { data: fangraphsProj, isLoading: isFangraphsProjectionsLoading } =
+    useGetFangraphProjectionsQuery(projectionsFilter);
+
   const { data: statPeriodList, isLoading: statPeriodLoading } =
     useGetStatPeriodSplitOptionsQuery();
 
@@ -111,13 +127,9 @@ export function BaseballTeam() {
     refetch();
   }
 
-  if (
-    isLoading &&
-    // isFangraphsProjectionsLoading &&
-    isFangraphsStatsLoading &&
-    statPeriodLoading
-  )
-    return <div className="animate-pulse">Loading...</div>;
+  const loading = isLoading || isFangraphsStatsLoading || statPeriodLoading;
+
+  // if (loading) return <div className="animate-pulse">Loading...</div>;
 
   const statPeriodOptions = statPeriodList ?? [];
 
@@ -125,25 +137,44 @@ export function BaseballTeam() {
     <div key={team?.id}>
       <div className="grid sm:grid-cols-1 grid-cols-3 text-left mb-5 mt-5">
         <div>
-          <img
-            alt={team?.name}
-            role="presentation"
-            aria-roledescription="presentation"
-            src={team?.logo}
-          />
+          {loading ? (
+            <Skeleton variant="circular">
+              <Avatar src={team?.logo} alt={team?.name} />
+            </Skeleton>
+          ) : (
+            <Avatar src={team?.logo} alt={team?.name} />
+          )}
         </div>
         <div className="col-span-2">
-          <h1>
-            {team?.name} {team?.totalPoints}
-          </h1>
-          <div>
-            <span className="text-xs">Rank: {team?.currentRank}</span>
-          </div>
+          {loading ? (
+            <>
+              <Skeleton>
+                <h1>
+                  {team?.name} {team?.totalPoints}
+                </h1>
+              </Skeleton>
+
+              <Skeleton>
+                <div>
+                  <span className="text-xs">Rank: {team?.currentRank}</span>
+                </div>
+              </Skeleton>
+            </>
+          ) : (
+            <>
+              <h1>
+                {team?.name} {team?.totalPoints}
+              </h1>
+              <div>
+                <span className="text-xs">Rank: {team?.currentRank}</span>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
       <div className="flex flex-wrap text-left">
-        <div className="w-full xl:px-4 xl:w-4/12">
+        <div className="w-full xl:px-4 xl:w-3/12">
           <div className="font-bold">Starting Batters</div>
           <BaseballLineupCard players={startingBatters} />
           <div className="py-3"></div>
@@ -151,13 +182,13 @@ export function BaseballTeam() {
           <BaseballLineupCard players={startingPitchers} />
         </div>
 
-        <div className="w-full xl:px-4 xl:w-8/12">
+        <div className="w-full xl:px-4 xl:w-9/12">
           <div>
             <div className="my-3">Season</div>
-            <div>
+            <div className="my-3">
               <div className="flex justify-center">
                 <SelectComponent
-                  label="Stat Split"
+                  label=""
                   options={statPeriodList ?? []}
                   onHandleOptionChange={handleStatPeriodChange}
                 />
@@ -167,7 +198,7 @@ export function BaseballTeam() {
           </div>
           <div>
             <div className="my-3">Rest of Season</div>
-            <BaseballPlayerProjectionTable data={[]} />
+            <BaseballPlayerProjectionTable data={fangraphsProj ?? []} />
           </div>
         </div>
       </div>
