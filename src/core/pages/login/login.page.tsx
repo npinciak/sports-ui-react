@@ -1,44 +1,90 @@
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useLazyLoginWithPasswordQuery } from '../../../@shared/clients';
 
 export function LoginPage() {
-  const [login, { isSuccess }] = useLazyLoginWithPasswordQuery();
+  const [login, { data }] = useLazyLoginWithPasswordQuery();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
 
   const submitForm = async () => {
-    await login({ email, password });
-
-    if (isSuccess) navigate('/profile');
+    try {
+      await login({ email, password });
+      if (data) navigate('/profile');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold">Login</h1>
-      <div>
-        <label>Email</label>
-        <input
-          type="email"
-          onChange={e => setEmail(e.target.value)}
-          placeholder=""
-        />
-      </div>
-      <div>
-        <label>Password</label>
-        <input
-          type="password"
-          placeholder=""
-          onChange={e => setPassword(e.target.value)}
-        />
-        <Link to="/forgot-password">Forgot password?</Link>
-      </div>
-
-      <div>
-        <button onClick={submitForm}>Login</button>
-      </div>
-    </div>
+    <Container component="main" maxWidth="sm">
+      <Box
+        sx={{
+          px: 4,
+          py: 6,
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Sign in
+        </Typography>
+        <Box sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            onChange={e => setEmail(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            onChange={e => setPassword(e.target.value)}
+          />
+          {/* <FormControlLabel
+            control={<Checkbox value="remember" color="primary" />}
+            label="Remember me"
+          /> */}
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={submitForm}
+          >
+            Sign In
+          </Button>
+          <Grid container>
+            <Grid item xs>
+              <NavLink to="/forgot-password">Forgot password?</NavLink>
+            </Grid>
+            <Grid item>
+              Don't have an account? <NavLink to="/sign-up">Sign Up</NavLink>
+            </Grid>
+          </Grid>
+        </Box>
+      </Box>
+    </Container>
   );
 }

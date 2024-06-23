@@ -32,22 +32,6 @@ export const AppRouter = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: 'login',
-        element: <LoginPage />,
-      },
-      {
-        path: 'forgot-password',
-        element: <ForgotPasswordPage />,
-      },
-      {
-        path: 'reset-password',
-        element: <ResetPasswordPage />,
-      },
-      {
-        path: 'sign-up',
-        element: <SignUpPage />,
-      },
-      {
         path: 'profile',
         children: [
           {
@@ -167,6 +151,22 @@ export const AppRouter = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: 'login',
+    element: <LoginPage />,
+  },
+  {
+    path: 'forgot-password',
+    element: <ForgotPasswordPage />,
+  },
+  {
+    path: 'reset-password',
+    element: <ResetPasswordPage />,
+  },
+  {
+    path: 'sign-up',
+    element: <SignUpPage />,
   },
   { path: '*', element: <div>404</div> },
 ]);
