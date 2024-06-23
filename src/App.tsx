@@ -1,7 +1,6 @@
 import Container from '@mui/material/Container';
-import { RouterProvider } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import './App.css';
-import { AppRouter } from './app.routing';
 import { HeaderComponent } from './core';
 
 function App() {
@@ -9,7 +8,7 @@ function App() {
     <div className="App">
       <HeaderComponent />
       <Container maxWidth="xl">
-        <RouterProvider router={AppRouter} />
+        <Outlet />
       </Container>
     </div>
   );

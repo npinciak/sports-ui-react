@@ -1,10 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { fangraphsClient } from './@shared/fangraphs';
+import App from './App';
 import { AppStore } from './app.store';
 import {
   ForgotPasswordPage,
-  Home,
+  HomePage,
   LoginPage,
   ResetPasswordPage,
   SignUpPage,
@@ -24,10 +25,11 @@ import { ProfilePage } from './features/profile';
 export const AppRouter = createBrowserRouter([
   {
     path: '',
+    element: <App />,
     children: [
       {
         path: '',
-        element: <Home />,
+        element: <HomePage />,
       },
       {
         path: 'login',
