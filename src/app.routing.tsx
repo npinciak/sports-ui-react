@@ -7,6 +7,7 @@ import {
   ForgotPasswordPage,
   HomePage,
   LoginPage,
+  LogoutPage,
   ResetPasswordPage,
   SignUpPage,
 } from './core';
@@ -155,6 +156,10 @@ export const AppRouter = createBrowserRouter([
   {
     path: 'login',
     element: <LoginPage />,
+  },
+  {
+    path: 'logout',
+    element: <LogoutPage />,
   },
   {
     path: 'forgot-password',

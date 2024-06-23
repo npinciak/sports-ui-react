@@ -22,11 +22,9 @@ export const AuthenticationClient = createApi({
         return { data };
       },
     }),
-    logout: builder.query({
+    logout: builder.query<null, void>({
       queryFn: async () => {
-        const { error } = await supabase.auth.signOut();
-        if (error) return { error };
-
+        await supabase.auth.signOut();
         return { data: null };
       },
     }),
@@ -77,6 +75,7 @@ export const AuthenticationClient = createApi({
 });
 
 export const {
+  useLogoutQuery,
   useLazyLogoutQuery,
   useGetUserQuery,
   useLazyGetUserQuery,

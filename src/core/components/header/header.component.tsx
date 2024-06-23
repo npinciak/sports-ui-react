@@ -17,7 +17,6 @@ import { useNavigate } from 'react-router-dom';
 import { RoutesList } from '../../routes/routes.const';
 import { ApplicationRoute } from '../../routes/routes.model';
 
-const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export function HeaderComponent() {
