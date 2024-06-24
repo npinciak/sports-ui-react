@@ -7,9 +7,10 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useLazyLoginWithPasswordQuery } from '../../authentication';
+import { AuthenticationService } from '../../authentication/authentication.service';
 
 export function LoginPage() {
-  const [login, { data }] = useLazyLoginWithPasswordQuery();
+  const [login] = useLazyLoginWithPasswordQuery();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState<string | null>(null);
@@ -18,7 +19,8 @@ export function LoginPage() {
   const submitForm = async () => {
     try {
       await login({ email, password });
-      if (data) navigate('/profile');
+
+      if (AuthenticationService.hasValidAuthToken) navigate('/');
     } catch (error) {
       console.error(error);
     }
