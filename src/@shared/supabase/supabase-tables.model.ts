@@ -11,6 +11,8 @@ export type SupaClientTableRelationRow<T extends SupaClientTables> = Database['p
 export type SupaClientTableRelationInsert<T extends SupaClientTables> = Database['public']['Tables'][T]['Insert'];
 export type SupaClientTableRelationUpdate<T extends SupaClientTables> = Database['public']['Tables'][T]['Update'];
 
+export type SupaClientProfile = SupaClientTableRelationRow<'profile'>;
+
 export type SupaClientFangraphsConstantsTable = SupaClientTableRelationRow<'fangraphs-constants'>;
 export type SupaClientFangraphsConstantsRelationInsert = SupaClientTableRelationInsert<'fangraphs-constants'>;
 
