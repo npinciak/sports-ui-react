@@ -1,15 +1,18 @@
+import { ThemeProvider } from '@mui/material';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { RouterProvider } from 'react-router-dom';
-import { AppRouter } from './app.routing.tsx';
 import { AppStore } from './app.store.ts';
+import { AppTheme } from './app.theme';
+import { ApplicationRoutes } from './core/index.ts';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Provider store={AppStore}>
-      <RouterProvider router={AppRouter} />
-    </Provider>
+    <ThemeProvider theme={AppTheme}>
+      <Provider store={AppStore}>
+        <ApplicationRoutes />
+      </Provider>
+    </ThemeProvider>
   </React.StrictMode>
 );
