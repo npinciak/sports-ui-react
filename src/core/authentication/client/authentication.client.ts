@@ -1,5 +1,6 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
-import { supabase } from '../supabase/supabase.client';
+import { User } from '@supabase/supabase-js';
+import { supabase } from '../../../@shared/supabase';
 
 const AuthenticationClientTag = {
   User: 'User',
@@ -12,12 +13,9 @@ export const AuthenticationClient = createApi({
   endpoints: builder => ({
     loginWithPassword: builder.query({
       queryFn: async ({ email, password }: { email: string | null; password: string | null }) => {
-        if (!email || !password) return { error: 'Email and password are required' };
+        if (!email || !password) throw Error('Email and password are required');
 
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-        supabase.auth.resetPasswordForEmail;
-        if (error) return { error };
+        const { data } = await supabase.auth.signInWithPassword({ email, password });
 
         return { data };
       },
@@ -30,20 +28,18 @@ export const AuthenticationClient = createApi({
     }),
     resetPassword: builder.query({
       queryFn: async ({ email }: { email: string | null }) => {
-        if (!email) return { error: 'Email is required' };
+        if (!email) throw Error('Email is required');
 
-        const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: 'http://localhost:5173/reset-password',
+        const { data } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.hostname}/reset-password`,
         });
-        if (error) return { error };
 
         return { data };
       },
     }),
-    getUser: builder.query({
+    getUser: builder.query<{ user: User } | { user: null }, void>({
       queryFn: async () => {
-        const { data, error } = await supabase.auth.getUser();
-        if (error) return { error };
+        const { data } = await supabase.auth.getUser();
 
         return { data };
       },
@@ -63,10 +59,9 @@ export const AuthenticationClient = createApi({
     }),
     createAccount: builder.mutation({
       queryFn: async ({ email, password }: { email: string | null; password: string | null }) => {
-        if (!email || !password) return { error: 'Email and password are required' };
+        if (!email || !password) throw Error('Email and password are required');
 
-        const { data, error } = await supabase.auth.signUp({ email, password });
-        if (error) return { error };
+        const { data } = await supabase.auth.signUp({ email, password });
 
         return { data };
       },

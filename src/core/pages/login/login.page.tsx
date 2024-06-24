@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useLazyLoginWithPasswordQuery } from '../../../@shared/clients';
+import { useLazyLoginWithPasswordQuery } from '../../authentication';
 
 export function LoginPage() {
   const [login, { data }] = useLazyLoginWithPasswordQuery();

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useUpdateUserMutation } from '../../../@shared/clients';
+import { useUpdateUserMutation } from '../../authentication';
 
 export function ResetPasswordPage() {
   const [updateUser, { error, isSuccess }] = useUpdateUserMutation();

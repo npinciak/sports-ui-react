@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Container, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLogoutQuery } from '../../../@shared/clients';
+import { useLogoutQuery } from '../../authentication';
 
 export function LogoutPage() {
   const navigate = useNavigate();

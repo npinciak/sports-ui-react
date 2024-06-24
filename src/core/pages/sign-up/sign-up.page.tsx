@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCreateAccountMutation } from '../../../@shared/clients';
+import { useCreateAccountMutation } from '../../authentication';
 
 export function SignUpPage() {
   const [createAccount, { error }] = useCreateAccountMutation();

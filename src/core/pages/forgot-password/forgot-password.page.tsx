@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { useLazyResetPasswordQuery } from '../../../@shared/clients';
+import { useLazyResetPasswordQuery } from '../../authentication';
 
 export function ForgotPasswordPage() {
   const [resetPassword, { error, isSuccess }] = useLazyResetPasswordQuery();
