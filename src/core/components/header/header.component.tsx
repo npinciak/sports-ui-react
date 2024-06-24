@@ -14,12 +14,17 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RoutesList } from '../../routes/routes.const';
+import { useGetProfileQuery } from '../../../@shared';
+import {
+  NavigationLinks,
+  ProfileNavigationLinks,
+} from '../../routes/routes.const';
 import { ApplicationRoute } from '../../routes/routes.model';
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
 export function HeaderComponent() {
+  const { data: profile } = useGetProfileQuery();
+  const profileNavigationLinks = ProfileNavigationLinks;
+  const navigationLinks = NavigationLinks;
   const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -55,14 +60,14 @@ export function HeaderComponent() {
 
   return (
     <AppBar position="static">
-      <Container className="bg-slate-800 text-slate-200" maxWidth="xl">
+      <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href=""
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -106,7 +111,7 @@ export function HeaderComponent() {
               }}
             >
               <MenuList>
-                {RoutesList.map((route, key) => {
+                {navigationLinks.map((route, key) => {
                   return (
                     <MenuItem
                       key={key}
@@ -140,9 +145,8 @@ export function HeaderComponent() {
             Mobile
           </Typography>
 
-          
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {RoutesList.map((route, key) => (
+            {navigationLinks.map((route, key) => (
               <Button
                 key={key}
                 onClick={() => handleNavigationClick(route)}
@@ -156,7 +160,10 @@ export function HeaderComponent() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar
+                  alt={profile?.user_name}
+                  src="/static/images/avatar/2.jpg"
+                />
               </IconButton>
             </Tooltip>
             <Menu
@@ -175,11 +182,19 @@ export function HeaderComponent() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map(setting => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuList>
+                {profileNavigationLinks.map((route, key) => {
+                  return (
+                    <MenuItem
+                      key={key}
+                      onClick={() => handleNavigationClick(route)}
+                      selected={activeRoute(route.path)}
+                    >
+                      <ListItemText primary={route.navigationLabel} />
+                    </MenuItem>
+                  );
+                })}
+              </MenuList>
             </Menu>
           </Box>
         </Toolbar>

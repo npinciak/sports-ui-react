@@ -1,7 +1,14 @@
 import { Home, Login } from '@mui/icons-material';
 import { AdminLeagueProgressionPage } from '../../features';
 import { ProfilePage } from '../../features/profile';
-import { ForgotPasswordPage, HomePage, LoginPage, SignUpPage } from '../pages';
+import { AuthenticationService } from '../authentication/authentication.service';
+import {
+  ForgotPasswordPage,
+  HomePage,
+  LoginPage,
+  LogoutPage,
+  SignUpPage,
+} from '../pages';
 import { ApplicationRoute } from './routes.model';
 
 export const HomeRoute: ApplicationRoute = {
@@ -53,9 +60,33 @@ export const LeagueProgressionRoute: ApplicationRoute = {
   component: <AdminLeagueProgressionPage />,
 };
 
-export const RoutesList = [
+export const LogoutRoute: ApplicationRoute = {
+  path: 'logout',
+  navigationLabel: 'Logout',
+  icon: <Login />,
+  component: <LogoutPage />,
+};
+
+export const ProfileNavigationRoutes = [ProfileRoute, LogoutRoute];
+
+export const AuthenticatedNavigationRoutes = [
   HomeRoute,
-  ProfileRoute,
   LeagueProgressionRoute,
+];
+
+export const UnauthenticatedNavigationRoutes = [
   LoginRoute,
+  ForgotPasswordRoute,
+  ResetPasswordRoute,
+  SignUpRoute,
+];
+
+export const ProfileNavigationLinks = [
+  ...(!AuthenticationService.hasValidAuthToken ? [] : ProfileNavigationRoutes),
+];
+
+export const NavigationLinks = [
+  ...(!AuthenticationService.hasValidAuthToken
+    ? UnauthenticatedNavigationRoutes
+    : AuthenticatedNavigationRoutes),
 ];
