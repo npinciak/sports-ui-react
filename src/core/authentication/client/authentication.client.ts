@@ -1,5 +1,5 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
-import { User } from '@supabase/supabase-js';
+import { Session, User, WeakPassword } from '@supabase/supabase-js';
 import { supabase } from '../../../@shared/supabase';
 
 const AuthenticationClientTag = {
@@ -11,8 +11,22 @@ export const AuthenticationClient = createApi({
   baseQuery: fakeBaseQuery(),
   tagTypes: [AuthenticationClientTag.User],
   endpoints: builder => ({
-    loginWithPassword: builder.query({
-      queryFn: async ({ email, password }: { email: string | null; password: string | null }) => {
+    loginWithPassword: builder.query<
+      | {
+          user: User;
+          session: Session;
+          weakPassword?: WeakPassword | undefined;
+        }
+      | {
+          user: null;
+          session: null;
+          weakPassword?: null | undefined;
+        },
+      { email: string | null; password: string | null }
+    >({
+      queryFn: async args => {
+        const { email, password } = args;
+
         if (!email || !password) throw Error('Email and password are required');
 
         const { data } = await supabase.auth.signInWithPassword({ email, password });
