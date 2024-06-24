@@ -1,7 +1,7 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { createClient } from '@supabase/supabase-js';
 import { Database } from './supabase-database.model';
-import { SupaClientEspnPlayerInsert, SupaClientLeagueProgressionInsert } from './supabase-tables.model';
+import { SupaClientEspnPlayerInsert, SupaClientLeagueProgressionInsert, SupaClientProfile } from './supabase-tables.model';
 
 export const supabase = createClient<Database>(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_KEY);
 
@@ -19,8 +19,7 @@ export const supabaseClient = createApi({
   endpoints: builder => ({
     getLeagueProgression: builder.query({
       queryFn: async () => {
-        const { data, error } = await supabase.from('league-progression').select().order('date', { ascending: false });
-        if (error) return { error };
+        const { data } = await supabase.from('league-progression').select().order('date', { ascending: false });
 
         return { data };
       },
@@ -28,8 +27,7 @@ export const supabaseClient = createApi({
     }),
     createLeagueProgressionEntity: builder.mutation<null, SupaClientLeagueProgressionInsert>({
       queryFn: async args => {
-        const { data, error } = await supabase.from('league-progression').insert({ ...args });
-        if (error) return { error };
+        const { data } = await supabase.from('league-progression').insert({ ...args });
 
         return { data };
       },
@@ -37,30 +35,26 @@ export const supabaseClient = createApi({
     }),
     createEspnPlayer: builder.mutation<null, SupaClientEspnPlayerInsert[]>({
       queryFn: async player => {
-        const { data, error } = await supabase.from('espn_mlb_player').insert(player);
-        if (error) return { error };
+        const { data } = await supabase.from('espn_mlb_player').insert(player);
 
         return { data };
       },
     }),
-
-    getProfile: builder.query({
+    getProfile: builder.query<SupaClientProfile | null, void>({
       queryFn: async () => {
-        const { data, error } = await supabase.from('profile').select().single();
-        if (error) return { error };
+        const { data } = await supabase.from('profile').select().single();
 
         return { data };
       },
     }),
     getProfileWithTeams: builder.query({
       queryFn: async () => {
-        const { data, error } = await supabase
+        const { data } = await supabase
           .from('profile')
           .select(
             'id,user_name,first_name,last_name,bio,teams:profile_to_fantasy_team(team(*)),leagues:profile_to_fantasy_league(league(*))'
           )
           .single();
-        if (error) return { error };
 
         return { data };
       },

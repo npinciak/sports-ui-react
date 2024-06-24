@@ -1,16 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { AuthenticationClient } from './@shared';
-import { FangraphsStatsFilterFormSlice } from './@shared/fangraphs';
-import { fangraphsClient } from './@shared/fangraphs/client/fangraphs.client';
-import { fangraphsPlayerSlice } from './@shared/fangraphs/slices/fangraphs-player.slice';
+import { FangraphsStatsFilterFormSlice, fangraphsClient, fangraphsPlayerSlice } from './@shared/fangraphs';
 import { supabaseClient } from './@shared/supabase/supabase.client';
+import { AuthenticationClient } from './core/authentication';
 import { AdminLeagueProgressionFormSlice } from './features/admin/slices/league-progression-form.slice';
 import { baseballClient } from './features/espn/fantasy-baseball/client/fantasy-baseball.client';
 import { baseballTeamSlice } from './features/espn/fantasy-baseball/slices';
+import { baseballEventsSlice } from './features/espn/fantasy-baseball/slices/baseball-events.slice';
 import { baseballLeagueSlice } from './features/espn/fantasy-baseball/slices/baseball-league.slice';
 import { baseballTeamLiveSlice } from './features/espn/fantasy-baseball/slices/baseball-team-live.slice';
 import { baseballTeamRosterSlice } from './features/espn/fantasy-baseball/slices/baseball-team-roster.slice';
-import { baseballEventsSlice } from './features/espn/fantasy-baseball/slices/baseball-events.slice';
 
 export const AppStore = configureStore({
   reducer: {

@@ -1,58 +1,42 @@
-import { createBrowserRouter } from 'react-router-dom';
-
-import { fangraphsClient } from './@shared/fangraphs';
-import { AppStore } from './app.store';
+import { fangraphsClient } from '../../@shared';
+import { AppStore } from '../../app.store';
 import {
-  ForgotPasswordPage,
-  Home,
-  LoginPage,
-  ResetPasswordPage,
-  SignUpPage,
-} from './core';
-import { AdminLeagueProgressionPage } from './features';
-import {
+  AdminLeagueProgressionPage,
   BaseballBatters,
   BaseballFreeAgents,
   BaseballHome,
   BaseballPitchers,
   BaseballPlayer,
   BaseballTeam,
-} from './features/espn/fantasy-baseball';
-import { baseballClient } from './features/espn/fantasy-baseball/client/fantasy-baseball.client';
-import { ProfilePage } from './features/profile';
+} from '../../features';
+import { baseballClient } from '../../features/espn/fantasy-baseball/client';
+import { ProfilePage } from '../../features/profile';
+import {
+  ForgotPasswordPage,
+  HomePage,
+  LoginPage,
+  LogoutPage,
+  ResetPasswordPage,
+  SignUpPage,
+} from '../pages';
+import { ProtectedRoute } from './protected-route.component';
 
-export const AppRouter = createBrowserRouter([
+export const authenticatedRoutes = [
   {
     path: '',
+    element: <ProtectedRoute />,
     children: [
       {
         path: '',
-        element: <Home />,
+        element: <HomePage />,
       },
       {
-        path: 'login',
-        element: <LoginPage />,
-      },
-      {
-        path: 'forgot-password',
-        element: <ForgotPasswordPage />,
-      },
-      {
-        path: 'reset-password',
-        element: <ResetPasswordPage />,
-      },
-      {
-        path: 'sign-up',
-        element: <SignUpPage />,
+        path: 'logout',
+        element: <LogoutPage />,
       },
       {
         path: 'profile',
-        children: [
-          {
-            path: '',
-            element: <ProfilePage />,
-          },
-        ],
+        element: <ProfilePage />,
       },
       {
         path: 'admin',
@@ -88,7 +72,15 @@ export const AppRouter = createBrowserRouter([
                               {
                                 path: '',
                                 element: <BaseballTeam />,
-                                loader: async ({ params }) => {
+                                loader: async ({
+                                  params,
+                                }: {
+                                  params: {
+                                    year: string;
+                                    leagueId: string;
+                                    teamId: string;
+                                  };
+                                }) => {
                                   await AppStore.dispatch(
                                     baseballClient.endpoints.fetchTeamById.initiate(
                                       {
@@ -98,15 +90,8 @@ export const AppRouter = createBrowserRouter([
                                       }
                                     )
                                   );
-
-                                  const initialStatsFilter =
-                                    AppStore.getState()
-                                      .fangraphsStatsFilterForm;
-
                                   await AppStore.dispatch(
-                                    fangraphsClient.endpoints.getFangraphPlayerList.initiate(
-                                      initialStatsFilter
-                                    )
+                                    fangraphsClient.endpoints.getFangraphPlayerList.initiate()
                                   );
                                   return null;
                                 },
@@ -166,5 +151,29 @@ export const AppRouter = createBrowserRouter([
       },
     ],
   },
-  { path: '*', element: <div>404</div> },
-]);
+];
+
+export const publicRoutes = [
+  {
+    path: '',
+    element: <HomePage />,
+  },
+  {
+    path: 'login',
+    element: <LoginPage />,
+  },
+
+  {
+    path: 'forgot-password',
+    element: <ForgotPasswordPage />,
+  },
+  {
+    path: 'reset-password',
+    element: <ResetPasswordPage />,
+  },
+  {
+    path: 'sign-up',
+    element: <SignUpPage />,
+  },
+  { path: '*', element: <HomePage /> },
+];
