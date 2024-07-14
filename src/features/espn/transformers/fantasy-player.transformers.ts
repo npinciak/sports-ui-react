@@ -57,7 +57,7 @@ export function clientPlayerToFantasyPlayer({
     position: positionMap[defaultPositionId].abbrev,
     img: ImageBuilder({ sport, league }).headshotImgBuilder({ id }),
     lastNewsDate,
-    injured,
+    injured: injuryStatus === PLAYER_INJURY_STATUS.DTD || injured,
     stats,
     team,
     injuryStatus,

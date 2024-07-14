@@ -57,8 +57,8 @@ export const baseballClient = createApi({
       query: () => {
         const smartDate = new SmartDate();
 
-        const oneWeekAgoFromToday = smartDate.formatWithDelimiter({ date: smartDate.oneWeekAgoFromToday.getTime() });
-        const oneWeekFromToday = smartDate.formatWithDelimiter({ date: smartDate.oneWeekFromToday.getTime() });
+        const oneWeekAgoFromToday = smartDate.formatWithDelimiter({ date: smartDate.today.getTime() });
+        const oneWeekFromToday = smartDate.formatWithDelimiter({ date: smartDate.today.getTime() });
 
         const dateRange = `${oneWeekAgoFromToday}-${oneWeekFromToday}`;
 

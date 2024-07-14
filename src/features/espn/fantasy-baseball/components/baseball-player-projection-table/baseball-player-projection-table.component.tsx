@@ -32,42 +32,52 @@ export function BaseballPlayerProjectionTable({
       header: 'H',
       defaultFlex: 1,
       sortable: true,
-      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) => data?.H,
+      type: 'number',
+      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
+        data?.H.toFixed(2),
     },
     {
       name: 'PA',
       header: 'PA',
       defaultFlex: 1,
       sortable: true,
-      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) => data?.PA,
+      type: 'number',
+      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
+        data?.PA.toFixed(2),
     },
     {
       name: 'HR',
       header: 'HR',
       defaultFlex: 1,
       sortable: true,
-      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) => data?.HR,
+      type: 'number',
+      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
+        data?.HR.toFixed(2),
     },
     {
       name: 'R',
       header: 'R',
       defaultFlex: 1,
       sortable: true,
-      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) => data?.R,
+      type: 'number',
+      render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
+        data?.R.toFixed(2),
     },
     {
       name: 'RBI',
       header: 'RBI',
       defaultFlex: 1,
       sortable: true,
+      type: 'number',
       render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
-        data?.RBI,
+        data?.RBI.toFixed(2),
     },
     {
       name: 'AVG',
       header: 'AVG',
       defaultFlex: 1,
       sortable: true,
+      type: 'number',
       render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
         data?.AVG.toFixed(3),
     },
@@ -76,6 +86,7 @@ export function BaseballPlayerProjectionTable({
       header: 'BABIP',
       defaultFlex: 1,
       sortable: true,
+      type: 'number',
       render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
         data.BABIP.toFixed(3),
     },
@@ -84,6 +95,7 @@ export function BaseballPlayerProjectionTable({
       header: 'WAR',
       defaultFlex: 1,
       sortable: true,
+      type: 'number',
       render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
         data?.WAR.toFixed(3),
     },
@@ -92,6 +104,7 @@ export function BaseballPlayerProjectionTable({
       header: 'wOBA',
       defaultFlex: 1,
       sortable: true,
+      type: 'number',
       render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
         data?.wOBA.toFixed(3),
     },
@@ -100,6 +113,7 @@ export function BaseballPlayerProjectionTable({
       header: 'wRC+',
       defaultFlex: 1,
       sortable: true,
+      type: 'number',
       render: ({ data }: { data: FangraphsPlayerProjectionEntity }) =>
         data?.['wRC+'].toFixed(3),
     },

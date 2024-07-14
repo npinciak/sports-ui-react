@@ -55,6 +55,13 @@ export const authenticatedRoutes = [
             children: [
               {
                 path: 'league',
+                loader: async () => {
+                  await AppStore.dispatch(
+                    baseballClient.endpoints.fetchEvents.initiate()
+                  );
+
+                  return null;
+                },
                 children: [
                   {
                     path: ':leagueId',

@@ -11,7 +11,7 @@ import { BaseballPlayer, BaseballPlayerStatsRow } from '../models/baseball-playe
  * @returns
  */
 export function startingPlayersFilter<T extends BaseballPlayer>(players: T[], lineupMap: EspnClient.LineupEntityMap): T[] {
-  const playerList = players.filter(p => !lineupMap[p.lineupSlotId].bench && p.lineupSlotId !== 21 && !p.injured);
+  const playerList = players.filter(p => !lineupMap[p.lineupSlotId].bench && p.lineupSlotId !== 21);
   return sortPlayersByLineupSlotDisplayOrder(playerList, lineupMap);
 }
 

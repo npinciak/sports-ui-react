@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { BASEBALL_LINEUP_MAP } from 'sports-ui-sdk';
+import { BASEBALL_LINEUP_MAP, PLAYER_INJURY_STATUS } from 'sports-ui-sdk';
 import { FangraphsPlayerProjectionEntity } from '../../../../@shared/fangraphs';
 import { selectFangraphsPlayerEntities } from '../../../../@shared/fangraphs/selectors';
 import { RootState } from '../../../../app.store';
@@ -22,15 +22,27 @@ export const selectTeamStartingBatterList = createSelector([selectTeamBatterList
 export const selectTeamStartingBatterListWithEvents = createSelector(
   [selectTeamStartingBatterList, selectEventIdSet],
   (players, eventIds) => {
-    players.map(player => {
-      if (player.starterStatusByProGame) {
-        const test = Object.keys(player.starterStatusByProGame);
-        test.map(t => {
-          if (eventIds.has(t)) {
-            console.log(player.name, player.starterStatusByProGame![t]);
-          }
-        });
+    return players.map(player => {
+      const playerGames = player.starterStatusByProGame;
+
+      let playerStartingStatus = '';
+      if (playerGames) {
+        const hasGames = Object.entries(playerGames).length > 0;
+
+        if (!hasGames) {
+          playerStartingStatus = PLAYER_INJURY_STATUS.NotStarting;
+        } else if (hasGames) {
+          const [_, startingStatus] = Object.entries(playerGames)[0];
+          playerStartingStatus = startingStatus ?? PLAYER_INJURY_STATUS.UNKNOWN;
+        }
       }
+
+      const isStarting = playerStartingStatus === PLAYER_INJURY_STATUS.Starting ? true : false;
+
+      return {
+        ...player,
+        isStarting,
+      };
     });
   }
 );
@@ -45,11 +57,25 @@ export const selectTeamStartingPitcherList = createSelector([selectTeamPitcherLi
 export const selectTeamStartingPitcherListWithEvents = createSelector(
   [selectTeamStartingPitcherList, selectEventIdSet],
   (players, eventIds) => {
-    players.map(player => {
+    return players.map(player => {
+      let playerStartingStatus = '';
+
       if (player.starterStatusByProGame) {
-        const test = Object.keys(player.starterStatusByProGame);
-        console.log(test);
+        const playerGames = player.starterStatusByProGame;
+
+        Object.entries(playerGames).map(([gameId, startingStatus]) => {
+          if (eventIds.has(gameId)) {
+            playerStartingStatus = startingStatus === PLAYER_INJURY_STATUS.Probable ? PLAYER_INJURY_STATUS.Starting : startingStatus;
+          }
+        });
       }
+
+      const isStarting = playerStartingStatus === PLAYER_INJURY_STATUS.Starting ? true : false;
+
+      return {
+        ...player,
+        isStarting,
+      };
     });
   }
 );

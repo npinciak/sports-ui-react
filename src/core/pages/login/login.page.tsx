@@ -20,7 +20,7 @@ export function LoginPage() {
     try {
       await login({ email, password });
 
-      if (AuthenticationService.hasValidAuthToken) navigate('/');
+      if (AuthenticationService.hasValidAuthToken) navigate('/profile');
     } catch (error) {
       console.error(error);
     }

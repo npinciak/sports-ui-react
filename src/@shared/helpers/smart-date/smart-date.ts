@@ -21,6 +21,10 @@ export class SmartDate {
     return DateFns.addDays(new Date(), 1);
   }
 
+  get today(): Date {
+    return DateFns.startOfDay(new Date());
+  }
+
   get oneWeekFromToday(): Date {
     return DateFns.addDays(new Date(), 7);
   }

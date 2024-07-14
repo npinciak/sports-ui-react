@@ -67,6 +67,11 @@ export function BaseballTeam() {
     selectTeamStartingPitcherListWithEvents
   );
 
+  console.warn(
+    'teamStartingPitcherListWithEvents',
+    teamStartingPitcherListWithEvents
+  );
+
   const projectionsFilter: FangraphsPlayerProjectionsRequestBody = {
     type: FangraphsProjection.RestOfSeasonTheBatX,
     team: FangraphsTeam.AllTeams,
@@ -176,10 +181,10 @@ export function BaseballTeam() {
       <div className="flex flex-wrap text-left">
         <div className="w-full xl:px-4 xl:w-3/12">
           <div className="font-bold">Starting Batters</div>
-          <BaseballLineupCard players={startingBatters} />
+          <BaseballLineupCard players={teamStartingBatterListWithEvents} />
           <div className="py-3"></div>
           <div className="font-bold">Starting Pitchers</div>
-          <BaseballLineupCard players={startingPitchers} />
+          <BaseballLineupCard players={teamStartingPitcherListWithEvents} />
         </div>
 
         <div className="w-full xl:px-4 xl:w-9/12">

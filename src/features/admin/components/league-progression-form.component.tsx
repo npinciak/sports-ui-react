@@ -5,7 +5,7 @@ import {
   NativeSelect,
   TextField,
 } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import Grid from '@mui/material/Grid';
 import { ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SupaClientLeagueProgressionInsert } from '../../../@shared/supabase/supabase-tables.model';
