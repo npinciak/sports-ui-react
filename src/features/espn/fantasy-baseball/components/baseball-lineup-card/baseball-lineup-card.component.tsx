@@ -1,3 +1,4 @@
+import { LocalHospital } from '@mui/icons-material';
 import { Tooltip, Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import StyledBadge from '@mui/material/Badge';
@@ -24,7 +25,7 @@ export function BaseballLineupCard({ players }: { players: BaseballPlayer[] }) {
       </div>
       <div className="col-span-3">
         <Typography variant="body1">
-          {player.name} {player.injured ? '!' : ''}
+          {player.name} {player.injured ? <LocalHospital /> : ''}
         </Typography>
         <div className="text-xs">
           <Typography variant="body2">
