@@ -3,7 +3,7 @@ import { FangraphsStatsFilterFormSlice, fangraphsClient, fangraphsPlayerSlice } 
 import { supabaseClient } from './@shared/supabase/supabase.client';
 import { AuthenticationClient } from './core/authentication';
 import { AdminLeagueProgressionFormSlice } from './features/admin/slices/league-progression-form.slice';
-import { baseballClient } from './features/espn/fantasy-baseball/client/fantasy-baseball.client';
+import { baseballHandler } from './features/espn/fantasy-baseball/handler/fantasy-baseball.handler';
 import { baseballTeamSlice } from './features/espn/fantasy-baseball/slices';
 import { baseballEventsSlice } from './features/espn/fantasy-baseball/slices/baseball-events.slice';
 import { baseballLeagueSlice } from './features/espn/fantasy-baseball/slices/baseball-league.slice';
@@ -17,7 +17,7 @@ export const AppStore = configureStore({
     [fangraphsClient.reducerPath]: fangraphsClient.reducer,
     [FangraphsStatsFilterFormSlice.reducerPath]: FangraphsStatsFilterFormSlice.reducer,
     [supabaseClient.reducerPath]: supabaseClient.reducer,
-    [baseballClient.reducerPath]: baseballClient.reducer,
+    [baseballHandler.reducerPath]: baseballHandler.reducer,
     [baseballEventsSlice.reducerPath]: baseballEventsSlice.reducer,
     [baseballTeamRosterSlice.reducerPath]: baseballTeamRosterSlice.reducer,
     [baseballTeamSlice.reducerPath]: baseballTeamSlice.reducer,
@@ -28,7 +28,7 @@ export const AppStore = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware()
       .concat(AuthenticationClient.middleware)
-      .concat(baseballClient.middleware)
+      .concat(baseballHandler.middleware)
       .concat(supabaseClient.middleware)
       .concat(fangraphsClient.middleware),
 });

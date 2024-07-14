@@ -9,7 +9,7 @@ import {
   BaseballPlayer,
   BaseballTeam,
 } from '../../features';
-import { baseballClient } from '../../features/espn/fantasy-baseball/client';
+import { baseballHandler } from '../../features/espn/fantasy-baseball/handler';
 import { ProfilePage } from '../../features/profile';
 import {
   ForgotPasswordPage,
@@ -57,7 +57,7 @@ export const authenticatedRoutes = [
                 path: 'league',
                 loader: async () => {
                   await AppStore.dispatch(
-                    baseballClient.endpoints.fetchEvents.initiate()
+                    baseballHandler.endpoints.fetchEvents.initiate()
                   );
 
                   return null;
@@ -89,7 +89,7 @@ export const authenticatedRoutes = [
                                   };
                                 }) => {
                                   await AppStore.dispatch(
-                                    baseballClient.endpoints.fetchTeamById.initiate(
+                                    baseballHandler.endpoints.fetchTeamById.initiate(
                                       {
                                         year: params?.year ?? '',
                                         leagueId: params?.leagueId ?? '',

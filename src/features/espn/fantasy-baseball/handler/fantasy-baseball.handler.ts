@@ -11,8 +11,8 @@ import { clientTeamToBaseballTeam, transformClientLeagueToBaseballLeagueV2 } fro
 
 const endpoints = BaseEspnEndpointBuilder({});
 
-export const baseballClient = createApi({
-  reducerPath: 'baseballClient',
+export const baseballHandler = createApi({
+  reducerPath: 'baseballhandler',
   baseQuery: fetchBaseQuery({
     baseUrl: endpoints.fantasyBaseV3Seasons,
   }),
@@ -70,7 +70,23 @@ export const baseballClient = createApi({
         };
       },
     }),
+    fetchFreeAgents: builder.query<BaseballLeague, FetchLeagueArgs>({
+      query: args => {
+        const { year, leagueId } = args;
+
+        const params = generateLeagueParams();
+
+        const headers = new Headers();
+        headers.append('X-Fantasy-Filter', JSON.stringify({}));
+
+        return {
+          url: endpoints.fantasyBaseV3LeagueBySeasonById(year, leagueId),
+          params,
+          headers,
+        };
+      },
+    }),
   }),
 });
 
-export const { useFetchLeagueByIdQuery, useFetchTeamByIdQuery, useFetchEventsQuery } = baseballClient;
+export const { useFetchLeagueByIdQuery, useFetchTeamByIdQuery, useFetchEventsQuery } = baseballHandler;
