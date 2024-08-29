@@ -3,6 +3,7 @@ import { FangraphsStatsFilterFormSlice, fangraphsClient, fangraphsPlayerSlice } 
 import { supabaseClient } from './@shared/supabase/supabase.client';
 import { AuthenticationClient } from './core/authentication';
 import { AdminLeagueProgressionFormSlice } from './features/admin/slices/league-progression-form.slice';
+import { lineupHeadquartersHandler } from './features/daily-fantasy/handlers/lineup-hq.handler';
 import { baseballHandler } from './features/espn/fantasy-baseball/handler/fantasy-baseball.handler';
 import { baseballTeamSlice } from './features/espn/fantasy-baseball/slices';
 import { baseballEventsSlice } from './features/espn/fantasy-baseball/slices/baseball-events.slice';
@@ -24,13 +25,15 @@ export const AppStore = configureStore({
     [baseballTeamLiveSlice.reducerPath]: baseballTeamLiveSlice.reducer,
     [baseballLeagueSlice.reducerPath]: baseballLeagueSlice.reducer,
     [fangraphsPlayerSlice.reducerPath]: fangraphsPlayerSlice.reducer,
+    [lineupHeadquartersHandler.reducerPath]: lineupHeadquartersHandler.reducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware()
       .concat(AuthenticationClient.middleware)
       .concat(baseballHandler.middleware)
       .concat(supabaseClient.middleware)
-      .concat(fangraphsClient.middleware),
+      .concat(fangraphsClient.middleware)
+      .concat(lineupHeadquartersHandler.middleware),
 });
 
 export type RootState = ReturnType<typeof AppStore.getState>;

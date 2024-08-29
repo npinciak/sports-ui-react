@@ -19,6 +19,12 @@ export function DfsEndpointBuilder() {
       return `${this.baseAws}/lineuphq/slate-definitions-v1.json`;
     }
 
+    static get lineupHeadquartersPlayers(): string {
+      const date = new SmartDate().formatWithDelimiter({ date: new Date().getTime(), delimiter: '-' });
+
+      return `${this.baseAws}/lineuphq/v1.00/${date}`;
+    }
+
     protected static get baseAws() {
       return `https://${DfsEndpointBuilderClass.awsBase}/${DfsEndpointBuilderClass.dailyFantasyJsonBase}`;
     }
