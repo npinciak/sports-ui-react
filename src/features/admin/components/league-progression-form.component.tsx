@@ -1,12 +1,12 @@
 import {
   Button,
   FormControl,
-  InputLabel,
-  NativeSelect,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   TextField,
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SupaClientLeagueProgressionInsert } from '../../../@shared/supabase/supabase-tables.model';
 import {
@@ -70,7 +70,7 @@ export function AdminLeagueProgressionForm() {
     handleCreateLeagueProgressionEntity(form);
   };
 
-  function handleLeagueTeamIdChange(e: ChangeEvent<HTMLSelectElement>): void {
+  function handleLeagueTeamIdChange(e: SelectChangeEvent): void {
     const espnTeamId = Number(e.target.value.split('-')[1]);
     const leagueId = e.target.value.split('-')[0];
 
@@ -79,10 +79,14 @@ export function AdminLeagueProgressionForm() {
     dispatch(setLeagueTeamId(e.target.value));
   }
 
+  const rankList = Array.from({ length: 10 }, (_, i) => {
+    return { value: i + 1, label: `${i + 1}` };
+  });
+
   return (
     <>
       <Grid container spacing={2}>
-        <Grid xs={4}>
+        <Grid item xs={12}>
           <FormControl fullWidth>
             <TextField
               id="totalPoints"
@@ -94,54 +98,41 @@ export function AdminLeagueProgressionForm() {
             />
           </FormControl>
         </Grid>
-        <Grid xs={4}>
+        <Grid item xs={12}>
           <FormControl fullWidth>
-            <TextField
-              id="rank"
-              label="Rank"
-              variant="standard"
-              type="number"
-              onChange={e => dispatch(setRank(e.target.value))}
-            />
-          </FormControl>
-        </Grid>
-        <Grid xs={4}>
-          <FormControl fullWidth>
-            <InputLabel variant="standard" htmlFor="uncontrolled-native">
-              {/* Team */}
-            </InputLabel>
-            <NativeSelect
-              defaultValue={30}
-              inputProps={{
-                name: 'team',
-                id: 'uncontrolled-native',
-              }}
-              onChange={handleLeagueTeamIdChange}
-            >
-              <option value={''}>Select a team</option>
-              {teams.map(team => (
-                <option key={team!.team!.id} value={team!.team!.league_team_id}>
-                  {team!.team!.name}
-                </option>
+            <Select onChange={e => dispatch(setRank(e.target.value))}>
+              {rankList.map(place => (
+                <MenuItem key={place.value} value={place.value}>
+                  {place.label}
+                </MenuItem>
               ))}
-            </NativeSelect>
+            </Select>
           </FormControl>
         </Grid>
-      </Grid>
-      <Grid
-        container
-        direction="row"
-        justifyContent="flex-end"
-        alignItems="center"
-        spacing={2}
-      >
-        <Grid xs={4}>
-          <Button variant="outlined" onClick={handleCancel}>
+        <Grid item xs={12}>
+          <FormControl fullWidth>
+            <Select onChange={handleLeagueTeamIdChange}>
+              <MenuItem value={''}>
+                <em>None</em>
+              </MenuItem>
+              {teams.map(team => (
+                <MenuItem
+                  key={team!.team!.id}
+                  value={team!.team!.league_team_id}
+                >
+                  {team!.team!.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12}>
+          <Button fullWidth variant="outlined" onClick={handleCancel}>
             Cancel
           </Button>
         </Grid>
-        <Grid xs={4}>
-          <Button variant="contained" onClick={handleSubmit}>
+        <Grid item xs={12}>
+          <Button fullWidth variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
         </Grid>

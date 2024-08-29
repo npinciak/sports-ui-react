@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { baseballClient } from '../client/fantasy-baseball.client';
+import { baseballHandler } from '../handler/fantasy-baseball.handler';
 import { BaseballPlayer } from '../models/baseball-player.model';
 
 export const baseballTeamRosterAdapter = createEntityAdapter({
@@ -17,7 +17,7 @@ export const baseballTeamRosterSlice = createSlice({
     teamRemoved: baseballTeamRosterAdapter.removeOne,
   },
   extraReducers: builder => {
-    builder.addMatcher(baseballClient.endpoints.fetchTeamById.matchFulfilled, (state, action) => {
+    builder.addMatcher(baseballHandler.endpoints.fetchTeamById.matchFulfilled, (state, action) => {
       baseballTeamRosterAdapter.setAll(state, action.payload.roster);
     });
   },

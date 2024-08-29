@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { baseballClient } from '../client/fantasy-baseball.client';
+import { baseballHandler } from '../handler/fantasy-baseball.handler';
 
 export interface FantasyLeagueBaseStateModel {
   id: string | null;
@@ -36,7 +36,7 @@ export const baseballLeagueSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addMatcher(baseballClient.endpoints.fetchLeagueById.matchFulfilled, (state, action) => {
+    builder.addMatcher(baseballHandler.endpoints.fetchLeagueById.matchFulfilled, (state, action) => {
       const { id, scoringPeriodId, matchupPeriodCount, firstScoringPeriod, finalScoringPeriod, seasonId } = action.payload;
 
       const store = { id, scoringPeriodId, matchupPeriodCount, firstScoringPeriod, finalScoringPeriod, seasonId };

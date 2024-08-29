@@ -1,5 +1,5 @@
 import ReactDataGrid from '@inovua/reactdatagrid-community';
-import { Box, Container } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { SupaClientLeagueProgression } from '../../../@shared/supabase/supabase-tables.model';
 import { useGetLeagueProgressionQuery } from '../../../@shared/supabase/supabase.client';
 import { AdminLeagueProgressionForm } from '../components/league-progression-form.component';
@@ -29,30 +29,30 @@ export function AdminLeagueProgressionPage() {
   const gridStyle = { minHeight: 500 };
 
   return (
-    <Container component="main">
-      <Box
-        sx={{
-          marginTop: 6,
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <AdminLeagueProgressionForm />
-      </Box>
-      <Box
-        sx={{
-          marginTop: 6,
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <ReactDataGrid
-          idProperty="playerId"
-          columns={columns}
-          dataSource={leagueProgression ?? []}
-          style={gridStyle}
-        />
-      </Box>
-    </Container>
+    <Box
+      sx={{
+        marginTop: 6,
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Typography variant="h4">League Progression</Typography>
+        </Grid>
+
+        <Grid item xs={12}>
+          <AdminLeagueProgressionForm />
+        </Grid>
+        <Grid item xs={12}>
+          <ReactDataGrid
+            idProperty="playerId"
+            columns={columns}
+            dataSource={leagueProgression ?? []}
+            style={gridStyle}
+          />
+        </Grid>
+      </Grid>
+    </Box>
   );
 }

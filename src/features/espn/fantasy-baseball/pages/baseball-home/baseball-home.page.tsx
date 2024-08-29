@@ -9,7 +9,7 @@ import { BaseballStat } from 'sports-ui-sdk';
 import {
   useFetchEventsQuery,
   useFetchLeagueByIdQuery,
-} from '../../client/fantasy-baseball.client';
+} from '../../handler/fantasy-baseball.handler';
 import { BaseballTeam } from '../../models/baseball-team.model';
 
 export function BaseballHome() {

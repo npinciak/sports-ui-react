@@ -22,12 +22,12 @@ import {
 import { FangraphsPosition } from '../../../../../@shared/fangraphs/models';
 import { selectFangraphsPlayerEntities } from '../../../../../@shared/fangraphs/selectors';
 import { selectStatSplitPeriod } from '../../../../../@shared/fangraphs/selectors/stats-filter.selector';
-import { useFetchTeamByIdQuery } from '../../client/fantasy-baseball.client';
 import {
   BaseballLineupCard,
   BaseballPlayerProjectionTable,
   BaseballPlayerStatsTable,
 } from '../../components';
+import { useFetchTeamByIdQuery } from '../../handler/fantasy-baseball.handler';
 import {
   selectPlayerIds,
   selectStartingBatterFangraphIds,
