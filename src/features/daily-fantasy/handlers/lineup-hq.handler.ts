@@ -9,9 +9,7 @@ export const lineupHeadquartersHandler = createApi({
     baseUrl: endpoints.lineupHeadquartersPlayers,
   }),
   endpoints: builder => ({
-    fetchLineupHeadquarterPlayersBySport: builder.query<{
-      
-    }, { sport: 'nfl' | 'mlb' | 'nhl' }>({
+    fetchLineupHeadquarterPlayersBySport: builder.query<{}, { sport: 'nfl' | 'mlb' | 'nhl' }>({
       query: args => {
         const { sport } = args;
 

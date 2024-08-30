@@ -6,9 +6,13 @@ export function DfsEndpointBuilder() {
     protected static readonly dailyFantasyBase = import.meta.env.VITE_DAILY_FANTASY_BASE;
     protected static readonly awsBase = import.meta.env.VITE_AWS_BASE;
 
-    static getSlateMasterBySport(sport: string) {
+    static get masterSlates() {
       const date = new SmartDate().formatWithDelimiter({ date: new Date().getTime(), delimiter: '/' });
-      return `${DfsEndpointBuilderClass.baseAws}/v2.00/${date}/slates/${sport}-master.json`;
+      return `${DfsEndpointBuilderClass.baseAws}/v2.00/${date}/slates`;
+    }
+
+    static get slates() {
+      return `${DfsEndpointBuilderClass.baseAws}/v2.00/slates`;
     }
 
     static slateGameAttributesBySport(sport: string) {
