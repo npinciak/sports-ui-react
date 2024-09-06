@@ -1,28 +1,61 @@
+import ReactDataGrid from '@inovua/reactdatagrid-community';
+import { TypeColumn } from '@inovua/reactdatagrid-community/types';
+import { FilterList } from '@mui/icons-material';
 import {
-  Avatar,
   Box,
-  Card,
-  CardHeader,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
   Grid,
+  IconButton,
   ListItemButton,
   ListItemText,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  TextField,
   Typography,
 } from '@mui/material';
-import { ReactNode, useEffect, useState } from 'react';
-import { FixedSizeList } from 'react-window';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useFetchLineupHeadquarterPlayersBySportQuery } from '../../handlers/lineup-hq.handler';
 import { useFetchMasterSlatesBySportQuery } from '../../handlers/master-slate.handler';
-import { useLazyFetchSlateByDfsSiteBySlateIdQuery } from '../../handlers/slate.handler';
+import { useLazyFetchSlateByDfsSiteBySlateIdQuery } from '../../handlers/slate-player.handler';
 import { SlatePlayerEntity } from '../../models';
 import { DFS_SITES } from '../../models/dfs-site.model';
-import { NFL_TEAM_ID_MAP } from '../models';
+import { TeamGameAttributes } from '../../models/game-attributes.model';
+import {
+  getSlatePlayerListWithGameAttributes,
+  getUniqueSlatePlayerStatGroupList,
+  getUniqueSlatePlayerTeamList,
+} from '../../selectors/slate-player.selector';
+import { PlayerTableFilter } from '../components/player-filter.component';
+import { useLazyFetchGameAttributesQuery } from '../handlers/game-attributes.handler';
 
 export function FootballHomePage() {
   const site = DFS_SITES.DraftKings;
+
+  const slatePlayerTeamList = useSelector(getUniqueSlatePlayerTeamList);
+  const slateStatGroupList = useSelector(getUniqueSlatePlayerStatGroupList);
+  const slatePlayerListWithGameAttributes = useSelector(
+    getSlatePlayerListWithGameAttributes
+  );
+
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+  function handleDialogOpen() {
+    setDialogOpen(true);
+  }
+
+  function handleDialogClose() {
+    setDialogOpen(false);
+  }
+
+  const [selectedStatGroup, setSelectedStatGroup] = useState<string>('');
+  const [selectedTeam, setSelectedTeam] = useState<string>('');
+
+  const [filteredPlayers, setFilteredSlatePlayers] = useState<
+    (SlatePlayerEntity & TeamGameAttributes)[]
+  >([]);
+
+  const [fetchSlate] = useLazyFetchSlateByDfsSiteBySlateIdQuery();
 
   const { data: lineupHeadquarterPlayers } =
     useFetchLineupHeadquarterPlayersBySportQuery({
@@ -34,97 +67,87 @@ export function FootballHomePage() {
     sport: 'nfl',
   });
 
-  const [selectedStatGroup, setSelectedStatGroup] = useState<string>('qb');
-  const [filteredPlayers, setFilteredSlatePlayers] = useState<
-    SlatePlayerEntity[]
-  >([]);
+  const [fetchGameAttributes] = useLazyFetchGameAttributesQuery();
 
-  const [fetchSlate, { data: slateData }] =
-    useLazyFetchSlateByDfsSiteBySlateIdQuery();
+  function handleStatGroupChange(statgroup: string) {
+    setSelectedStatGroup(statgroup as string);
 
-  const statGroup = new Set(slateData?.map(slate => slate.stat_group));
+    const filteredSlateData = slatePlayerListWithGameAttributes?.filter(
+      slate => {
+        if (statgroup === '') return true;
 
-  const statGroupList = Array.from(statGroup).sort((a, b) =>
-    a.localeCompare(b)
-  );
-
-  const team = new Set(slateData?.map(slate => slate.player.team_id));
-
-  const teamList = Array.from(team).sort((a, b) => a.localeCompare(b));
-
-  function handleStatGroupChange(
-    event: SelectChangeEvent<unknown>,
-    _: ReactNode
-  ) {
-    setSelectedStatGroup(event.target.value as string);
-
-    const filteredSlateData = slateData?.filter(slate => {
-      if (event.target.value === '') return true;
-
-      return slate.stat_group === event.target.value;
-    });
+        return slate.stat_group === statgroup;
+      }
+    );
 
     setFilteredSlatePlayers(filteredSlateData ?? []);
   }
 
-  function handleTeamChange(event: SelectChangeEvent<unknown>, _: ReactNode) {
-    const filteredSlateData = slateData?.filter(slate => {
-      if (event.target.value === '') return true;
+  function handleTeamChange(team: string) {
+    setSelectedTeam(team as string);
 
-      return slate.player.team_id === event.target.value;
-    });
+    const filteredSlateData = slatePlayerListWithGameAttributes?.filter(
+      slate => {
+        if (team === '') return true;
 
-    setFilteredSlatePlayers(filteredSlateData ?? []);
-  }
-
-  function handleSearchChange(event: React.KeyboardEvent<HTMLInputElement>) {
-    const searchValue = (event.target as HTMLInputElement).value;
-
-    const filteredSlateData = slateData?.filter(slate => {
-      if (searchValue === '') return true;
-
-      return (
-        slate.player.first_name
-          .trim()
-          .toLowerCase()
-          .includes(searchValue.toLowerCase()) ||
-        slate.player.last_name
-          .trim()
-          .toLowerCase()
-          .includes(searchValue.toLowerCase())
-      );
-    });
+        return slate.player.team_id === team;
+      }
+    );
 
     setFilteredSlatePlayers(filteredSlateData ?? []);
   }
 
-  useEffect(() => {
-    if (slateData) {
-      setFilteredSlatePlayers(slateData);
-    }
-  }, [slateData]);
+  function handleSearchChange(searchTerm: string) {
+    const filteredSlateData = slatePlayerListWithGameAttributes?.filter(
+      slate => {
+        if (searchTerm === '') return true;
 
-  const Row = ({ index, key, style }) => (
-    <Card key={key} style={style}>
-      <CardHeader
-        title={
-          <Typography variant="h5">
-            {filteredPlayers[index]?.player.first_name}{' '}
-            {filteredPlayers[index]?.player.last_name}
-          </Typography>
-        }
-        subheader={`${filteredPlayers[index]?.schedule.team_away.name} @ ${filteredPlayers[index]?.schedule.team_home.name}`}
-        avatar={<Avatar>{filteredPlayers[index]?.player.position}</Avatar>}
-        action={
-          <>
-            <Typography variant="h6">
-              {filteredPlayers[index]?.schedule.salaries[0].salary}
-            </Typography>
-          </>
-        }
-      />
-    </Card>
-  );
+        return (
+          slate.player.first_name
+            .trim()
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          slate.player.last_name
+            .trim()
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        );
+      }
+    );
+
+    setFilteredSlatePlayers(filteredSlateData ?? []);
+  }
+
+  const columns: TypeColumn[] = [
+    {
+      name: 'name',
+      header: 'Name',
+      minWidth: 250,
+      defaultFlex: 1,
+      sortable: true,
+      render: ({
+        data,
+      }: {
+        data: SlatePlayerEntity & { teamData: TeamGameAttributes };
+      }) => (
+        <Typography variant="h5">
+          {data?.player.first_name} {data?.player.last_name}
+        </Typography>
+      ),
+    },
+    {
+      name: 'salary',
+      header: 'Salary',
+      defaultFlex: 1,
+      sortable: true,
+      render: ({
+        data,
+      }: {
+        data: SlatePlayerEntity & { teamData: TeamGameAttributes };
+      }) => data.schedule.salaries[0].salary,
+    },
+  ];
+
   return (
     <Box marginTop={2}>
       <Grid container spacing={2}>
@@ -132,7 +155,10 @@ export function FootballHomePage() {
           {masterSlates?.map(slate => (
             <ListItemButton
               key={slate.importId}
-              onClick={() => fetchSlate({ site, slateId: slate.importId })}
+              onClick={() => {
+                fetchSlate({ site, slateId: slate.importId }),
+                  fetchGameAttributes({ site, slateId: slate.importId });
+              }}
             >
               <ListItemText primary={slate.name} secondary={slate.type} />
             </ListItemButton>
@@ -140,45 +166,29 @@ export function FootballHomePage() {
         </Grid>
 
         <Grid item xs={12}>
-          <TextField
-            id="search"
-            label="Search"
-            variant="outlined"
-            onKeyUp={handleSearchChange}
-            fullWidth
-          />
+          <IconButton onClick={handleDialogOpen}>
+            <FilterList />
+          </IconButton>
+          <ReactDataGrid columns={columns} dataSource={filteredPlayers} />
         </Grid>
-
         <Grid item xs={12}>
-          <Select onChange={handleStatGroupChange} fullWidth>
-            <MenuItem value="">All Positions</MenuItem>
-            {statGroupList.map(statGroup => (
-              <MenuItem key={statGroup} value={statGroup}>
-                {statGroup}
-              </MenuItem>
-            ))}
-          </Select>
-
-          <Select onChange={handleTeamChange} fullWidth>
-            <MenuItem value="">All Teams</MenuItem>
-            {teamList.map(team => (
-              <MenuItem key={team} value={team}>
-                {NFL_TEAM_ID_MAP[team]}
-              </MenuItem>
-            ))}
-          </Select>
+          <Dialog fullWidth open={dialogOpen}>
+            <DialogContent>
+              <PlayerTableFilter
+                selectedTeam={selectedTeam}
+                teamList={slatePlayerTeamList}
+                selectedStatGroup={selectedStatGroup}
+                statGroupList={slateStatGroupList}
+                onSearchChange={handleSearchChange}
+                onStatGroupChange={handleStatGroupChange}
+                onTeamChange={handleTeamChange}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleDialogClose}>Close</Button>
+            </DialogActions>
+          </Dialog>
         </Grid>
-
-        <Grid item xs={12}>
-          <FixedSizeList
-            height={700}
-            itemCount={filteredPlayers?.length}
-            itemSize={120}
-          >
-            {Row}
-          </FixedSizeList>
-        </Grid>
-        <Grid item xs={12}></Grid>
       </Grid>
     </Box>
   );

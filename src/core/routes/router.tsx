@@ -158,7 +158,7 @@ export const authenticatedRoutes = [
         ],
       },
       {
-        path: 'dfs',
+        path: 'daily-fantasy',
         children: [
           {
             path: 'nfl',
