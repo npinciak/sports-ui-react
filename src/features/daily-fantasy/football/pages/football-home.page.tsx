@@ -23,6 +23,7 @@ import { DFS_SITES } from '../../models/dfs-site.model';
 import { TeamGameAttributes } from '../../models/game-attributes.model';
 import {
   getSlatePlayerListWithGameAttributes,
+  getTeamsWithHighestValue,
   getUniqueSlatePlayerStatGroupList,
   getUniqueSlatePlayerTeamList,
 } from '../../selectors/slate-player.selector';
@@ -37,6 +38,8 @@ export function FootballHomePage() {
   const slatePlayerListWithGameAttributes = useSelector(
     getSlatePlayerListWithGameAttributes
   );
+
+  const highestValueTeams = useSelector(getTeamsWithHighestValue);
 
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
@@ -70,8 +73,6 @@ export function FootballHomePage() {
   const [fetchGameAttributes] = useLazyFetchGameAttributesQuery();
 
   function handleStatGroupChange(statgroup: string) {
-    setSelectedStatGroup(statgroup as string);
-
     const filteredSlateData = slatePlayerListWithGameAttributes?.filter(
       slate => {
         if (statgroup === '') return true;
@@ -80,12 +81,11 @@ export function FootballHomePage() {
       }
     );
 
+    setSelectedStatGroup(statgroup as string);
     setFilteredSlatePlayers(filteredSlateData ?? []);
   }
 
   function handleTeamChange(team: string) {
-    setSelectedTeam(team as string);
-
     const filteredSlateData = slatePlayerListWithGameAttributes?.filter(
       slate => {
         if (team === '') return true;
@@ -94,6 +94,7 @@ export function FootballHomePage() {
       }
     );
 
+    setSelectedTeam(team as string);
     setFilteredSlatePlayers(filteredSlateData ?? []);
   }
 
@@ -115,8 +116,12 @@ export function FootballHomePage() {
         return firstNameMatch || lastNameMatch;
       }
     );
-
     setFilteredSlatePlayers(filteredSlateData ?? []);
+  }
+
+  async function onSlateSelection(slateId: string) {
+    await fetchSlate({ site, slateId });
+    await fetchGameAttributes({ site, slateId });
   }
 
   const columns: TypeColumn[] = [
@@ -125,7 +130,6 @@ export function FootballHomePage() {
       header: 'Name',
       minWidth: 250,
       defaultFlex: 1,
-      sortable: true,
       render: ({
         data,
       }: {
@@ -140,7 +144,7 @@ export function FootballHomePage() {
       name: 'salary',
       header: 'Salary',
       defaultFlex: 1,
-      sortable: true,
+      type: 'number',
       render: ({
         data,
       }: {
@@ -153,16 +157,25 @@ export function FootballHomePage() {
     <Box marginTop={2}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          {masterSlates?.map(slate => (
-            <ListItemButton
-              key={slate.importId}
-              onClick={() => {
-                fetchSlate({ site, slateId: slate.importId }),
-                  fetchGameAttributes({ site, slateId: slate.importId });
-              }}
-            >
-              <ListItemText primary={slate.name} secondary={slate.type} />
-            </ListItemButton>
+          {masterSlates?.map(slate => {
+            if (slate.type === 'classic') {
+              return (
+                <ListItemButton
+                  key={slate.importId}
+                  onClick={() => onSlateSelection(slate.importId)}
+                >
+                  <ListItemText primary={slate.name} secondary={slate.type} />
+                </ListItemButton>
+              );
+            }
+          })}
+        </Grid>
+
+        <Grid item xs={12}>
+          {highestValueTeams.map(team => (
+            <Typography key={team.teamName}>
+              {team.teamName} - {team.value.toFixed(2)}
+            </Typography>
           ))}
         </Grid>
 
