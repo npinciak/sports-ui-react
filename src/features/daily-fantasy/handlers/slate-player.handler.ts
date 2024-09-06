@@ -4,8 +4,8 @@ import { SlatePlayerEntity } from '../models';
 
 const endpoints = DfsEndpointBuilder();
 
-export const slateHandler = createApi({
-  reducerPath: 'slateHandler',
+export const slatePlayerHandler = createApi({
+  reducerPath: 'slatePlayerHandler',
   baseQuery: fetchBaseQuery({
     baseUrl: endpoints.slates,
   }),
@@ -24,4 +24,4 @@ export const slateHandler = createApi({
   }),
 });
 
-export const { useFetchSlateByDfsSiteBySlateIdQuery, useLazyFetchSlateByDfsSiteBySlateIdQuery } = slateHandler;
+export const { useFetchSlateByDfsSiteBySlateIdQuery, useLazyFetchSlateByDfsSiteBySlateIdQuery } = slatePlayerHandler;

@@ -15,7 +15,11 @@ export function DfsEndpointBuilder() {
       return `${DfsEndpointBuilderClass.baseAws}/v2.00/slates`;
     }
 
-    static slateGameAttributesBySport(sport: string) {
+    static get schedules() {
+      return `${DfsEndpointBuilderClass.dailyFantasyBase}/schedules`;
+    }
+
+    static gameAttributesBySport(sport: string) {
       return `${this.dailyFantasyBase}/schedules/${sport}/game-attributes`;
     }
 
