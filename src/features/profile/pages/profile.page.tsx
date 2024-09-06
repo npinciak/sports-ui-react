@@ -12,8 +12,6 @@ import { useGetProfileWithTeamsQuery } from '../../../@shared/supabase/supabase.
 export function ProfilePage() {
   const { data: profile, isLoading } = useGetProfileWithTeamsQuery({});
 
-  if (isLoading) return <div className="animate-pulse">Loading...</div>;
-
   const navigate = useNavigate();
 
   // const { teamByIdByLeagueIdRoute } = RouteBuilder();
@@ -41,6 +39,8 @@ export function ProfilePage() {
     if (!leagueId || !sport) return;
     navigate(`/${sport}/${season}/league/${leagueId}`);
   }
+
+  if (isLoading) return <div className="animate-pulse">Loading...</div>;
 
   return (
     <Box marginTop={2}>
