@@ -100,18 +100,19 @@ export function FootballHomePage() {
   function handleSearchChange(searchTerm: string) {
     const filteredSlateData = slatePlayerListWithGameAttributes?.filter(
       slate => {
-        if (searchTerm === '') return true;
+        if (searchTerm == '') return true;
 
-        return (
-          slate.player.first_name
-            .trim()
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          slate.player.last_name
-            .trim()
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
-        );
+        const firstNameMatch = slate.player.first_name
+          .trim()
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+
+        const lastNameMatch = slate.player.last_name
+          .trim()
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+
+        return firstNameMatch || lastNameMatch;
       }
     );
 
