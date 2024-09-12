@@ -20,7 +20,17 @@ function AuthenticationServiceBase() {
     }
 
     private static get authToken(): string | null {
-      return localStorage.getItem(AuthenticationServiceBaseClass.LOCAL_STORAGE_KEY_AUTH_TOKEN);
+      return AuthenticationServiceBaseClass.hasValidProjectId
+        ? localStorage.getItem(AuthenticationServiceBaseClass.LOCAL_STORAGE_KEY_AUTH_TOKEN)
+        : null;
+    }
+
+    private static get hasValidProjectId() {
+      if (!import.meta.env.VITE_SUPABASE_PROJECT_ID) {
+        throw new Error('Environment variable VITE_SUPABASE_PROJECT_ID is not defined. Please ensure it is set in your .env file.');
+      }
+
+      return true;
     }
   };
 }
