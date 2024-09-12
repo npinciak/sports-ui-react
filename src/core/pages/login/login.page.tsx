@@ -63,10 +63,6 @@ export function LoginPage() {
             autoComplete="current-password"
             onChange={e => setPassword(e.target.value)}
           />
-          {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          /> */}
           <Button
             type="submit"
             fullWidth
@@ -79,9 +75,6 @@ export function LoginPage() {
           <Grid container>
             <Grid item xs>
               <NavLink to="/forgot-password">Forgot password?</NavLink>
-            </Grid>
-            <Grid item>
-              Don't have an account? <NavLink to="/sign-up">Sign Up</NavLink>
             </Grid>
           </Grid>
         </Box>
