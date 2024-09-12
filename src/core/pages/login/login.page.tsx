@@ -7,10 +7,9 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useLazyLoginWithPasswordQuery } from '../../authentication';
-import { AuthenticationService } from '../../authentication/authentication.service';
 
 export function LoginPage() {
-  const [login] = useLazyLoginWithPasswordQuery();
+  const [login, { isFetching, isLoading }] = useLazyLoginWithPasswordQuery();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState<string | null>(null);
@@ -18,9 +17,9 @@ export function LoginPage() {
 
   const submitForm = async () => {
     try {
-      await login({ email, password });
+      const { data } = await login({ email, password });
 
-      if (AuthenticationService.hasValidAuthToken) navigate('/profile');
+      if (data?.session?.access_token) navigate('/profile');
     } catch (error) {
       console.error(error);
     }
@@ -75,7 +74,7 @@ export function LoginPage() {
             sx={{ mt: 3, mb: 2 }}
             onClick={submitForm}
           >
-            Sign In
+            {isLoading && isFetching ? 'Signing in ...' : 'Sign in'}
           </Button>
           <Grid container>
             <Grid item xs>
