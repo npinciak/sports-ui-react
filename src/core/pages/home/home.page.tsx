@@ -12,7 +12,7 @@ export function HomePage() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Home
+          Homen
         </Typography>
       </Box>
     </Container>
