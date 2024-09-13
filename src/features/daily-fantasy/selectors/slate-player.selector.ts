@@ -35,6 +35,7 @@ export const getSlatePlayerListWithGameAttributes = createSelector(
       });
 
       return {
+        id: slatePlayer.player.id,
         ...slatePlayer,
         ...teamAttributes,
         valueTargetGPPs,

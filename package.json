@@ -19,6 +19,8 @@
     "@inovua/reactdatagrid-community": "^5.10.2",
     "@mui/icons-material": "^5.16.1",
     "@mui/material": "^5.15.19",
+    "@mui/styled-engine-sc": "^6.1.0",
+    "@mui/x-data-grid": "^7.16.0",
     "@reduxjs/toolkit": "^2.2.1",
     "@supabase/supabase-js": "^2.42.0",
     "date-fns": "^3.3.1",
@@ -28,7 +30,8 @@
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.22.2",
     "react-window": "^1.8.10",
-    "sports-ui-sdk": "git+https://github.com/npinciak/sports-ui-sdk.git"
+    "sports-ui-sdk": "git+https://github.com/npinciak/sports-ui-sdk.git",
+    "styled-components": "^6.1.13"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",

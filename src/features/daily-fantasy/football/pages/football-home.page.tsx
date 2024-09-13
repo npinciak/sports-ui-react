@@ -1,6 +1,3 @@
-import ReactDataGrid from '@inovua/reactdatagrid-community';
-import { TypeColumn } from '@inovua/reactdatagrid-community/types';
-import { FilterList } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -8,19 +5,18 @@ import {
   DialogActions,
   DialogContent,
   Grid,
-  IconButton,
   ListItemButton,
   ListItemText,
   Typography,
 } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid/DataGrid';
+import { GridColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useFetchLineupHeadquarterPlayersBySportQuery } from '../../handlers/lineup-hq.handler';
 import { useFetchMasterSlatesBySportQuery } from '../../handlers/master-slate.handler';
 import { useLazyFetchSlateByDfsSiteBySlateIdQuery } from '../../handlers/slate-player.handler';
-import { SlatePlayerEntity } from '../../models';
 import { DFS_SITES } from '../../models/dfs-site.model';
-import { TeamGameAttributes } from '../../models/game-attributes.model';
 import {
   getSlatePlayerListWithGameAttributes,
   getTeamsWithHighestValue,
@@ -29,6 +25,7 @@ import {
 } from '../../selectors/slate-player.selector';
 import { PlayerTableFilter } from '../components/player-filter.component';
 import { useLazyFetchGameAttributesQuery } from '../handlers/game-attributes.handler';
+import { NFL_TEAM_ID_TO_ABBREV_MAP } from '../models';
 
 export function FootballHomePage() {
   const site = DFS_SITES.DraftKings;
@@ -54,9 +51,7 @@ export function FootballHomePage() {
   const [selectedStatGroup, setSelectedStatGroup] = useState<string>('');
   const [selectedTeam, setSelectedTeam] = useState<string>('');
 
-  const [filteredPlayers, setFilteredSlatePlayers] = useState<
-    (SlatePlayerEntity & TeamGameAttributes)[]
-  >([]);
+  const [filteredPlayers, setFilteredSlatePlayers] = useState<unknown[]>([]);
 
   const [fetchSlate] = useLazyFetchSlateByDfsSiteBySlateIdQuery();
 
@@ -124,32 +119,46 @@ export function FootballHomePage() {
     await fetchGameAttributes({ site, slateId });
   }
 
-  const columns: TypeColumn[] = [
+  const columns: GridColDef<
+    (typeof slatePlayerListWithGameAttributes)[number]
+  >[] = [
     {
-      name: 'name',
-      header: 'Name',
-      minWidth: 250,
-      defaultFlex: 1,
-      render: ({
-        data,
-      }: {
-        data: SlatePlayerEntity & { teamData: TeamGameAttributes };
-      }) => (
-        <Typography variant="h5">
-          {data?.player.first_name} {data?.player.last_name}
-        </Typography>
-      ),
+      field: 'name',
+      headerName: 'name',
+      sortable: false,
+      width: 160,
+      valueGetter: (value, row) =>
+        `${row.player.first_name || ''} ${row.player.last_name || ''}`,
     },
     {
-      name: 'salary',
-      header: 'Salary',
-      defaultFlex: 1,
-      type: 'number',
-      render: ({
-        data,
-      }: {
-        data: SlatePlayerEntity & { teamData: TeamGameAttributes };
-      }) => data.schedule.salaries[0].salary,
+      field: 'team',
+      headerName: 'team',
+      sortable: true,
+      valueGetter: (value, row) =>
+        NFL_TEAM_ID_TO_ABBREV_MAP[row.player.team_id],
+    },
+    {
+      field: 'stat_group',
+      headerName: 'Pos',
+      sortable: true,
+      valueGetter: (value, row) => row.stat_group,
+    },
+
+    {
+      field: 'salary',
+      headerName: 'sal',
+      sortable: true,
+      valueGetter: (value, row) => row.schedule.salaries[0].salary,
+    },
+    {
+      field: 'valueTargetGPPs',
+      headerName: 'GPP Value',
+      sortable: true,
+    },
+    {
+      field: 'targetValueDiffGPPs',
+      headerName: 'GPP Value Diff',
+      sortable: true,
     },
   ];
 
@@ -180,10 +189,18 @@ export function FootballHomePage() {
         </Grid>
 
         <Grid item xs={12}>
-          <IconButton onClick={handleDialogOpen}>
-            <FilterList />
-          </IconButton>
-          <ReactDataGrid columns={columns} dataSource={filteredPlayers} />
+          <DataGrid
+            rows={slatePlayerListWithGameAttributes}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },
+              },
+            }}
+            pageSizeOptions={[5, 10, 20, 50]}
+          />
         </Grid>
         <Grid item xs={12}>
           <Dialog fullWidth open={dialogOpen}>
