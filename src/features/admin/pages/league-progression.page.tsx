@@ -1,5 +1,15 @@
-import ReactDataGrid from '@inovua/reactdatagrid-community';
-import { Box, Grid, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 import { SupaClientLeagueProgression } from '../../../@shared/supabase/supabase-tables.model';
 import { useGetLeagueProgressionQuery } from '../../../@shared/supabase/supabase.client';
 import { AdminLeagueProgressionForm } from '../components/league-progression-form.component';
@@ -38,19 +48,36 @@ export function AdminLeagueProgressionPage() {
     >
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography variant="h4">League Progression</Typography>
+          <Card>
+            <CardContent>
+              <AdminLeagueProgressionForm />
+            </CardContent>
+          </Card>
         </Grid>
-
         <Grid item xs={12}>
-          <AdminLeagueProgressionForm />
-        </Grid>
-        <Grid item xs={12}>
-          <ReactDataGrid
-            idProperty="playerId"
-            columns={columns}
-            dataSource={leagueProgression ?? []}
-            style={gridStyle}
-          />
+          <Card>
+            <CardHeader title="League Progression" />
+            <CardContent>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>date</TableCell>
+                    <TableCell>rank</TableCell>
+                    <TableCell>totalPoints</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {leagueProgression?.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{row.date}</TableCell>
+                      <TableCell>{row.rank}</TableCell>
+                      <TableCell>{row.total_points}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
     </Box>

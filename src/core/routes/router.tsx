@@ -9,6 +9,7 @@ import {
   BaseballPlayer,
   BaseballTeam,
 } from '../../features';
+import { FootballHomePage } from '../../features/daily-fantasy/football/pages';
 import { baseballHandler } from '../../features/espn/fantasy-baseball/handler';
 import { ProfilePage } from '../../features/profile';
 import {
@@ -153,6 +154,15 @@ export const authenticatedRoutes = [
                 ],
               },
             ],
+          },
+        ],
+      },
+      {
+        path: 'daily-fantasy',
+        children: [
+          {
+            path: 'nfl',
+            element: <FootballHomePage />,
           },
         ],
       },

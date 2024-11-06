@@ -3,6 +3,13 @@ import { FangraphsStatsFilterFormSlice, fangraphsClient, fangraphsPlayerSlice } 
 import { supabaseClient } from './@shared/supabase/supabase.client';
 import { AuthenticationClient } from './core/authentication';
 import { AdminLeagueProgressionFormSlice } from './features/admin/slices/league-progression-form.slice';
+import { footballGameAttributesHandler } from './features/daily-fantasy/football/handlers/game-attributes.handler';
+import { dfsFootballPlayerGameAttributesSlice } from './features/daily-fantasy/football/slices/football-player-game-attributes.slice';
+import { dfsFootballTeamGameAttributesSlice } from './features/daily-fantasy/football/slices/football-team-game-attributes.slice';
+import { lineupHeadquartersHandler } from './features/daily-fantasy/handlers/lineup-hq.handler';
+import { masterSlateHandler } from './features/daily-fantasy/handlers/master-slate.handler';
+import { slatePlayerHandler } from './features/daily-fantasy/handlers/slate-player.handler';
+import { slatePlayersSlice } from './features/daily-fantasy/slices/slate-player.slice';
 import { baseballHandler } from './features/espn/fantasy-baseball/handler/fantasy-baseball.handler';
 import { baseballTeamSlice } from './features/espn/fantasy-baseball/slices';
 import { baseballEventsSlice } from './features/espn/fantasy-baseball/slices/baseball-events.slice';
@@ -24,13 +31,24 @@ export const AppStore = configureStore({
     [baseballTeamLiveSlice.reducerPath]: baseballTeamLiveSlice.reducer,
     [baseballLeagueSlice.reducerPath]: baseballLeagueSlice.reducer,
     [fangraphsPlayerSlice.reducerPath]: fangraphsPlayerSlice.reducer,
+    [lineupHeadquartersHandler.reducerPath]: lineupHeadquartersHandler.reducer,
+    [masterSlateHandler.reducerPath]: masterSlateHandler.reducer,
+    [slatePlayerHandler.reducerPath]: slatePlayerHandler.reducer,
+    [footballGameAttributesHandler.reducerPath]: footballGameAttributesHandler.reducer,
+    [dfsFootballPlayerGameAttributesSlice.reducerPath]: dfsFootballPlayerGameAttributesSlice.reducer,
+    [dfsFootballTeamGameAttributesSlice.reducerPath]: dfsFootballTeamGameAttributesSlice.reducer,
+    [slatePlayersSlice.reducerPath]: slatePlayersSlice.reducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware()
       .concat(AuthenticationClient.middleware)
       .concat(baseballHandler.middleware)
       .concat(supabaseClient.middleware)
-      .concat(fangraphsClient.middleware),
+      .concat(fangraphsClient.middleware)
+      .concat(lineupHeadquartersHandler.middleware)
+      .concat(masterSlateHandler.middleware)
+      .concat(footballGameAttributesHandler.middleware)
+      .concat(slatePlayerHandler.middleware),
 });
 
 export type RootState = ReturnType<typeof AppStore.getState>;

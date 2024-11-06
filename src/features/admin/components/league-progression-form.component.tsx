@@ -1,6 +1,7 @@
 import {
   Button,
   FormControl,
+  InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -91,7 +92,7 @@ export function AdminLeagueProgressionForm() {
             <TextField
               id="totalPoints"
               label="Total Points"
-              variant="standard"
+              variant="outlined"
               type="number"
               onChange={e => dispatch(setTotalPoints(e.target.value))}
               value={getTotalPoints}
@@ -100,7 +101,12 @@ export function AdminLeagueProgressionForm() {
         </Grid>
         <Grid item xs={12}>
           <FormControl fullWidth>
-            <Select onChange={e => dispatch(setRank(e.target.value))}>
+            <InputLabel id="rank-select-label">Rank</InputLabel>
+
+            <Select
+              label="Rank"
+              onChange={e => dispatch(setRank(e.target.value))}
+            >
               {rankList.map(place => (
                 <MenuItem key={place.value} value={place.value}>
                   {place.label}
@@ -111,7 +117,9 @@ export function AdminLeagueProgressionForm() {
         </Grid>
         <Grid item xs={12}>
           <FormControl fullWidth>
-            <Select onChange={handleLeagueTeamIdChange}>
+            <InputLabel id="team-select-label">Team</InputLabel>
+
+            <Select label="Team" onChange={handleLeagueTeamIdChange}>
               <MenuItem value={''}>
                 <em>None</em>
               </MenuItem>

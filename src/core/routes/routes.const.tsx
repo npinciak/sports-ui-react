@@ -60,6 +60,13 @@ export const LeagueProgressionRoute: ApplicationRoute = {
   component: <AdminLeagueProgressionPage />,
 };
 
+export const DailyFantasyNflRoute: ApplicationRoute = {
+  path: 'daily-fantasy/nfl',
+  navigationLabel: 'NFL Dfs',
+  icon: <></>,
+  component: <></>,
+};
+
 export const LogoutRoute: ApplicationRoute = {
   path: 'logout',
   navigationLabel: 'Logout',
@@ -71,6 +78,7 @@ export const ProfileNavigationRoutes = [ProfileRoute, LogoutRoute];
 
 export const AuthenticatedNavigationRoutes = [
   HomeRoute,
+  DailyFantasyNflRoute,
   LeagueProgressionRoute,
 ];
 
