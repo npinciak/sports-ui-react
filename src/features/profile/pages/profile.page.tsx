@@ -17,14 +17,18 @@ export function ProfilePage() {
   // const { teamByIdByLeagueIdRoute } = RouteBuilder();
 
   function handleToNavigateToTeam({
+    sport,
+    season,
     leagueId,
     teamId,
   }: {
+    sport: string | null;
+    season: string | null;
     leagueId: number | null;
     teamId: number | null;
   }) {
     if (!leagueId || !teamId) return;
-    // navigate(teamByIdByLeagueIdRoute(teamId, leagueId));
+    navigate(`/${sport}/${season}/league/${leagueId}/team/${teamId}`);
   }
 
   function handleToNavigateToLeague({
