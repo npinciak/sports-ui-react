@@ -29,7 +29,7 @@ import { PlayerTableFilter } from '../components/player-filter.component';
 import { useLazyFetchGameAttributesQuery } from '../handlers/game-attributes.handler';
 import { NFL_TEAM_ID_TO_ABBREV_MAP } from '../models';
 
-export function FootballHomePage() {
+export function DfsFootballHomePage() {
   const site = DFS_SITES.DraftKings;
 
   const slatePlayerTeamList = useSelector(getUniqueSlatePlayerTeamList);
