@@ -1,10 +1,12 @@
 import {
   Box,
   Button,
+  Card,
   Dialog,
   DialogActions,
   DialogContent,
   Grid,
+  ListItem,
   ListItemButton,
   ListItemText,
   Typography,
@@ -166,26 +168,32 @@ export function FootballHomePage() {
     <Box marginTop={2}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          {masterSlates?.map(slate => {
-            if (slate.type === 'classic') {
-              return (
-                <ListItemButton
-                  key={slate.importId}
-                  onClick={() => onSlateSelection(slate.importId)}
-                >
-                  <ListItemText primary={slate.name} secondary={slate.type} />
-                </ListItemButton>
-              );
-            }
-          })}
+          <Card>
+            {masterSlates?.map(slate => {
+              if (slate.type === 'classic') {
+                return (
+                  <ListItemButton
+                    key={slate.importId}
+                    onClick={() => onSlateSelection(slate.importId)}
+                  >
+                    <ListItemText primary={slate.name} secondary={slate.type} />
+                  </ListItemButton>
+                );
+              }
+            })}
+          </Card>
         </Grid>
 
         <Grid item xs={12}>
-          {highestValueTeams.map(team => (
-            <Typography key={team.teamName}>
-              {team.teamName} - {team.value.toFixed(2)}
-            </Typography>
-          ))}
+          <Card>
+            {highestValueTeams.map(team => (
+              <ListItem>
+                <Typography key={team.teamName}>
+                  {team.teamName} - {team.value.toFixed(2)}
+                </Typography>
+              </ListItem>
+            ))}
+          </Card>
         </Grid>
 
         <Grid item xs={12}>
