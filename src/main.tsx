@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@mui/material';
+import { Box, ThemeProvider } from '@mui/material';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -11,7 +11,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ThemeProvider theme={AppTheme}>
       <Provider store={AppStore}>
-        <ApplicationRoutes />
+        <Box
+          suppressHydrationWarning
+          className={`min-h-dvh overscroll-none`}
+          component={'body'}
+          sx={{ backgroundColor: 'background.default' }}
+        >
+          <ApplicationRoutes />
+        </Box>
       </Provider>
     </ThemeProvider>
   </React.StrictMode>
