@@ -11,6 +11,7 @@ import {
 } from '../../features';
 import { DfsFootballHomePage } from '../../features/daily-fantasy/football/pages';
 import { baseballHandler } from '../../features/espn/fantasy-baseball/handler';
+import { FootballHomePage } from '../../features/espn/fantasy-football/pages';
 import { ProfilePage } from '../../features/profile';
 import {
   ForgotPasswordPage,
@@ -148,6 +149,32 @@ export const authenticatedRoutes = [
                             ],
                           },
                         ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: 'football',
+
+        children: [
+          {
+            path: ':year',
+            children: [
+              {
+                path: 'league',
+
+                children: [
+                  {
+                    path: ':leagueId',
+                    children: [
+                      {
+                        path: '',
+                        element: <FootballHomePage />,
                       },
                     ],
                   },

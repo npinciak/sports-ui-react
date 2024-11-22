@@ -1,14 +1,18 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { EspnClient, FootballTeam } from 'sports-ui-sdk';
-import { FootballLeague } from 'sports-ui-sdk/src/lib/espn/models/espn-client.model';
+import { EspnClient } from 'sports-ui-sdk';
 import { SmartDate } from '../../../../@shared/helpers';
 import { generateEventParams, generateLeagueParams, generateTeamParams } from '../../espn-helpers';
 import { BaseEspnEndpointBuilder } from '../../helpers';
+import { FANTASY_SPORTS_ABBREVIATION } from '../../helpers/endpoint-builder/endpoint-builder.const';
 import { FetchLeagueArgs, FetchTeamArgs } from '../../models';
 import { clientLeagueToLeagueSettings } from '../../transformers';
-import { clientLeagueToFootballLeague } from '../transformers/football-league.transformers';
+import { FootballLeague } from '../models/football-league.model';
+import { FootballTeam } from '../models/football-team.model';
+import { clientLeagueToFootballLeague, clientTeamToFootballTeam } from '../transformers/football-league.transformers';
 
-const endpoints = BaseEspnEndpointBuilder({});
+const endpoints = BaseEspnEndpointBuilder({
+  sport: FANTASY_SPORTS_ABBREVIATION.Football,
+});
 
 export const footballClient = createApi({
   reducerPath: 'footballClient',
@@ -47,7 +51,7 @@ export const footballClient = createApi({
       transformResponse: (league: EspnClient.FootballLeague, _, args) => {
         const { teamId } = args;
 
-        const team = league.teams.find(t => t.id.toString() === teamId) as EspnClient.Team;
+        const team = league.teams.find(t => t.id.toString() === teamId) as EspnClient.FootballTeam;
 
         return clientTeamToFootballTeam(team);
       },

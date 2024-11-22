@@ -16,6 +16,7 @@ import { baseballEventsSlice } from './features/espn/fantasy-baseball/slices/bas
 import { baseballLeagueSlice } from './features/espn/fantasy-baseball/slices/baseball-league.slice';
 import { baseballTeamLiveSlice } from './features/espn/fantasy-baseball/slices/baseball-team-live.slice';
 import { baseballTeamRosterSlice } from './features/espn/fantasy-baseball/slices/baseball-team-roster.slice';
+import { footballClient } from './features/espn/fantasy-football/client';
 
 export const AppStore = configureStore({
   reducer: {
@@ -23,6 +24,7 @@ export const AppStore = configureStore({
     [AuthenticationClient.reducerPath]: AuthenticationClient.reducer,
     [fangraphsClient.reducerPath]: fangraphsClient.reducer,
     [FangraphsStatsFilterFormSlice.reducerPath]: FangraphsStatsFilterFormSlice.reducer,
+    [footballClient.reducerPath]: footballClient.reducer,
     [supabaseClient.reducerPath]: supabaseClient.reducer,
     [baseballHandler.reducerPath]: baseballHandler.reducer,
     [baseballEventsSlice.reducerPath]: baseballEventsSlice.reducer,
@@ -44,6 +46,7 @@ export const AppStore = configureStore({
       .concat(AuthenticationClient.middleware)
       .concat(baseballHandler.middleware)
       .concat(supabaseClient.middleware)
+      .concat(footballClient.middleware)
       .concat(fangraphsClient.middleware)
       .concat(lineupHeadquartersHandler.middleware)
       .concat(masterSlateHandler.middleware)

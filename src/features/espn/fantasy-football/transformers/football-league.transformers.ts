@@ -13,26 +13,20 @@ import { FantasyPlayer } from '../../models';
 import { FantasyLeague } from '../../models/fantasy-league.model';
 import { clientPlayerToFantasyPlayer } from '../../transformers/fantasy-player.transformers';
 import { FantasyFootballImageBuilder } from '../fantasy-football-image-builder';
-import { FootballPlayer, FootballPlayerFreeAgent } from '../models';
-import { FootballLeague } from '../models/football-league.model';
-import { FootballTeam } from '../models/football-team.model';
+import { FootballLeague, FootballPlayer, FootballPlayerFreeAgent, FootballTeam } from '../models';
 
 export function clientLeagueToFootballLeague(res: EspnClient.FootballLeague, genericLeagueSettings: FantasyLeague): FootballLeague {
   const { schedule } = res;
   const teams = res.teams.map(t => clientTeamListToTeamList(t));
-  const freeAgents = clientFreeAgentToFootballPlayer(res.players);
 
   return {
     ...genericLeagueSettings,
     teams,
     schedule,
-    freeAgents,
   };
 }
 
-export function clientTeamListToTeamList(team: EspnClient.FootballTeam): FootballTeam {
-  const roster = team.roster.entries.map(p => clientPlayerToFootballPlayer(p));
-
+export function clientTeamToFootballTeam(team: EspnClient.FootballTeam): FootballTeam {
   const {
     id,
     abbrev,
@@ -52,7 +46,33 @@ export function clientTeamListToTeamList(team: EspnClient.FootballTeam): Footbal
     wins,
     losses,
     ties,
-    roster,
+    pointsAgainst,
+    percentage,
+    pointsFor,
+    currentRank,
+  };
+}
+
+export function clientTeamListToTeamList(team: EspnClient.FootballTeam): FootballTeam {
+  const {
+    id,
+    abbrev,
+    logo,
+    name,
+    playoffSeed: currentRank,
+    record: {
+      overall: { wins, losses, ties, pointsAgainst, percentage, pointsFor },
+    },
+  } = team;
+
+  return {
+    id: id.toString(),
+    name,
+    abbrev,
+    logo,
+    wins,
+    losses,
+    ties,
     pointsAgainst,
     percentage,
     pointsFor,
@@ -112,20 +132,5 @@ export function clientPlayerToFootballPlayer(player: TeamRosterEntry): FootballP
     lineupSlotId,
     img,
     lineupSlot: FOOTBALL_LINEUP_MAP[lineupSlotId].abbrev,
-  };
-}
-
-export function clientTeamToFootballTeam(team: EspnClient.Team): FootballTeam {
-  const {
-    roster: { entries },
-  } = team;
-
-  const basicTeam = clientLeagueTeamListToLeagueTeamList(team);
-
-  const roster = clientPlayerToBaseballPlayer(entries);
-
-  return {
-    ...basicTeam,
-    roster,
   };
 }

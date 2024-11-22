@@ -7,5 +7,8 @@ type FootballTeamAttributes = Pick<EspnClient.RecordEntity, 'wins' | 'losses' | 
 export type FootballTeam = TeamEntity &
   FootballTeamAttributes & {
     currentRank: number;
-    roster: FootballPlayer[];
   };
+
+export type FootballTeamWithRoster = FootballTeam & {
+  roster: FootballPlayer[];
+};
