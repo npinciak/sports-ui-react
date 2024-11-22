@@ -18,6 +18,7 @@ import { baseballTeamLiveSlice } from './features/espn/fantasy-baseball/slices/b
 import { baseballTeamRosterSlice } from './features/espn/fantasy-baseball/slices/baseball-team-roster.slice';
 import { footballClient } from './features/espn/fantasy-football/client';
 import { footballLeagueSlice } from './features/espn/fantasy-football/slices/football-league.slice';
+import { footballTeamSlice } from './features/espn/fantasy-football/slices/football-team.slice';
 
 export const AppStore = configureStore({
   reducer: {
@@ -27,6 +28,7 @@ export const AppStore = configureStore({
     [FangraphsStatsFilterFormSlice.reducerPath]: FangraphsStatsFilterFormSlice.reducer,
     [footballClient.reducerPath]: footballClient.reducer,
     [footballLeagueSlice.reducerPath]: footballLeagueSlice.reducer,
+    [footballTeamSlice.reducerPath]: footballTeamSlice.reducer,
     [supabaseClient.reducerPath]: supabaseClient.reducer,
     [baseballHandler.reducerPath]: baseballHandler.reducer,
     [baseballEventsSlice.reducerPath]: baseballEventsSlice.reducer,
