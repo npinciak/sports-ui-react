@@ -1,13 +1,10 @@
 import { Card, CardContent } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import PageWrapper from '../../../../../core/components/page-wrapper/page-wrapper.component';
 import { useFetchLeagueByIdQuery } from '../../client/fantasy-football.client';
 import {
-  getTeamList,
   getTeamStandingsList,
   getTopThreeScoringTeamsList,
 } from '../../selectors/football-team.selector';
@@ -15,7 +12,6 @@ import {
 export function FootballHomePage() {
   const { year, leagueId } = useParams<{ year: string; leagueId: string }>();
 
-  const teams = useSelector(getTeamList);
   const topThreeScoringTeams = useSelector(getTopThreeScoringTeamsList);
   const teamStandingsList = useSelector(getTeamStandingsList);
 
@@ -29,12 +25,9 @@ export function FootballHomePage() {
       title="Football Home"
       subTitle="Welcome to the football home page"
     >
-      <div>
-        <h1>Football Home Page</h1>
-      </div>
-      <Card title="Top 3 Scoring Team">
+      <Card title="Top 3 Scoring Teams">
         <CardContent>
-          {topThreeScoringTeams.map((team, i) => (
+          {topThreeScoringTeams.map(team => (
             <div key={team.id}>
               {team.name} - {team.pointsFor.toFixed(0)}
             </div>
@@ -43,7 +36,7 @@ export function FootballHomePage() {
       </Card>
       <Card title="Standings">
         <CardContent>
-          {teamStandingsList.map((team, i) => (
+          {teamStandingsList.map(team => (
             <Grid container>
               <Grid display="flex" alignItems="center">
                 <img
@@ -71,14 +64,3 @@ export function FootballHomePage() {
     </PageWrapper>
   );
 }
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  ...theme.applyStyles('dark', {
-    backgroundColor: '#1A2027',
-  }),
-}));
