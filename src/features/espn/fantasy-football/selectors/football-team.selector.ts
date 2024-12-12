@@ -17,3 +17,9 @@ export const getEntityList = createSelector(
 );
 
 export const getTeamList = createSelector([getEntityList], entityList => entityList);
+
+export const getTeamStandingsList = createSelector([getEntityList], entityList => entityList.sort((a, b) => b.wins - a.wins));
+
+export const getTopThreeScoringTeamsList = createSelector([getEntityList], entityList => {
+  return entityList.sort((a, b) => b.pointsFor - a.pointsFor).slice(0, 3);
+});
