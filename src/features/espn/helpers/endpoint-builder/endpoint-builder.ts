@@ -1,4 +1,4 @@
-import { API_BASE_V2, BASE_URL, COMMON_V3, FANTASY_BASE_V2, FANTASY_BASE_V3, ONE_FEED_BASE } from '../../constants';
+import { API_BASE_V2, BASE_URL, COMMON_V3, FANTASY_BASE_V2, FANTASY_BASE_V3, FASTCAST_WS_HOST, ONE_FEED_BASE } from '../../constants';
 import { FANTASY_SPORTS_ABBREVIATION } from './endpoint-builder.const';
 import { BaseEspnEndpointBuilderClass, FantasySportToSportsMap, FantasySportsAbbreviation } from './endpoint-builder.model';
 
@@ -26,6 +26,11 @@ export function BaseEspnEndpointBuilder({
     private static readonly fantasyBaseV3 = FANTASY_BASE_V3;
     private static readonly oneFeedBase = ONE_FEED_BASE;
     private static readonly commonV3 = COMMON_V3;
+    private static readonly webSocketHost = FASTCAST_WS_HOST;
+
+    static get espnFastcastWebSocketHost(): string {
+      return `${BaseEspnEndpointBuilderClass.webSocketHost}`;
+    }
 
     static get espnEvents(): string {
       return `${BaseEspnEndpointBuilderClass.fantasyBaseV2WithFragments}/games`;

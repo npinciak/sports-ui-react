@@ -59,6 +59,7 @@ export type BaseEspnEndpointBuilderClass = {
   staticScoreboard: string;
   fantasyBaseV3Seasons: string;
   leagueClickout: string;
+  espnFastcastWebSocketHost: string;
   matchupClickout: (teamId: string | number, matchupPeriodId: string | number) => string;
   fantasyBaseV3SeasonByYear: (year: string) => string;
   fantasyBaseV3LeagueBySeasonById: (year: string, leagueId: string) => string;

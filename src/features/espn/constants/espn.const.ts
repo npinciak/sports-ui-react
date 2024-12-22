@@ -25,7 +25,8 @@ export const ICON_PATH = `${CDN_REDESIGN_IMG}/sprites/transitional-secondary-nav
 
 export const NO_LOGO = `${CDN_COMBINER}?img=/i/teamlogos/default-team-logo-500.png&h=100&scale=crop&w=100&location=origin`;
 
-export function fastcastURIBuilder(eventType: string | null, messageId: string) {
+export function fastcastURIBuilder(eventType: string | null, messageId: string | undefined) {
+  if (!messageId) return '';
   return `${FASTCAST_BASE}/${eventType}/message/${messageId}/checkpoint`;
 }
 
