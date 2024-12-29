@@ -3,8 +3,7 @@ export const ESPN_TEXT: Record<string, string> = {
 };
 
 export const BASE_URL = import.meta.env.VITE_ESPN_BASE;
-export const API_BASE = import.meta.env.VITE_ESPN_API_BASE;
-export const API_BASE_V2 = API_BASE + '/v2';
+export const BASE_URL_V2 = import.meta.env.VITE_ESPN_BASE + '/v2';
 
 export const CDN = import.meta.env.VITE_ESPN_CDN;
 export const CDN_COMBINER = CDN + 'combiner/i';
