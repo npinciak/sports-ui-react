@@ -1,6 +1,6 @@
 import { EspnClient, exists } from 'sports-ui-sdk';
 import { FangraphsPlayerProjectionEntity } from '../../../../@shared/fangraphs';
-import { FantasyLeague } from '../../models';
+import { IFantasyLeague } from '../../models';
 import { BaseballLeague } from '../models/baseball-league.model';
 import { BaseballPlayer } from '../models/baseball-player.model';
 import { BaseballTeam, BaseballTeamLive } from '../models/baseball-team.model';
@@ -19,7 +19,7 @@ export function clientScheduleTeamListToTeamListV2(team: EspnClient.ScheduleTeam
 
 export function transformClientLeagueToBaseballLeagueV2(
   client: EspnClient.BaseballLeague,
-  genericLeagueSettings: FantasyLeague
+  genericLeagueSettings: IFantasyLeague
 ): BaseballLeague {
   // const schedule = client.schedule[0];
 

@@ -11,7 +11,7 @@ import {
   TeamRosterEntry,
   exists,
 } from 'sports-ui-sdk';
-import { FantasyLeague } from '../../models';
+import { IFantasyLeague } from '../../models';
 import { clientPlayerToFantasyPlayer } from '../../transformers/fantasy-player.transformers';
 import { BaseballLeague } from '../models/baseball-league.model';
 import { BaseballPlayer } from '../models/baseball-player.model';
@@ -20,7 +20,7 @@ import { BaseballTeam, BaseballTeamLive } from '../models/baseball-team.model';
 /** @deprecated use transformClientLeagueToBaseballLeagueV2 */
 export function transformClientLeagueToBaseballLeague(
   client: EspnClient.BaseballLeague,
-  genericLeagueSettings: FantasyLeague
+  genericLeagueSettings: IFantasyLeague
 ): BaseballLeague {
   const schedule = client.schedule[0];
 
