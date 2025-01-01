@@ -1,16 +1,16 @@
-import { SportType, exists } from 'sports-ui-sdk';
-import { CDN_COMBINER, CDN_REDESIGN_IMG } from '../../constants';
+import { exists } from 'sports-ui-sdk';
+import { CDN_COMBINER } from '../../constants';
 
-export function ImageBuilder({ sport, league }: { sport: SportType; league: string }) {
+export function ImageBuilder({ league, sport }: { league?: string; sport?: string }) {
   return class ImageBuilderClass {
     private static readonly _cdn = CDN_COMBINER;
-    private static readonly _cdnRedesign = CDN_REDESIGN_IMG;
+    private static readonly _cdnCombiner = CDN_COMBINER;
 
     private static _sport = sport;
     private static _league = league;
 
     static get sportIconImgBuilder(): string {
-      return `${this._cdnRedesign}?img=/redesign/assets/img/icons/ESPN-icon-${this._sport}.png&h=100&w=100`;
+      return `${this._cdnCombiner}?img=/redesign/assets/img/icons/ESPN-icon-${this._sport?.toLowerCase().replace('ice ', '')}.png&h=100&w=100`;
     }
 
     static logoImgBuilder({ id, width, height }: ImageBuilderInput): string {

@@ -1,4 +1,4 @@
-import { PlayerStatsYear, ProLeagueType, SportType, getContrastRatio } from 'sports-ui-sdk';
+import { PlayerStatsYear, ProLeagueType, SportTypeId, getContrastRatio } from 'sports-ui-sdk';
 import { ESPN_PARAM_FRAGMENTS, ESPN_VIEW_PARAM_FRAGMENTS } from './helpers/endpoint-builder/endpoint-builder.const';
 
 /**
@@ -143,7 +143,7 @@ export function transformUidToLeagueId(uid: string | null): string | null {
   return uid.split('~')[1].replace('l:', '');
 }
 
-export function transformIdToUid(sportType: SportType | null, leagueId: ProLeagueType | null, teamId: string | number | null): string {
+export function transformIdToUid(sportType: SportTypeId | null, leagueId: ProLeagueType | null, teamId: string | number | null): string {
   if (!sportType || !leagueId || !teamId) return '';
   return `s:${sportType}~l:${leagueId}~t:${teamId}`;
 }

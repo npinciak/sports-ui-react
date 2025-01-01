@@ -7,7 +7,6 @@ import {
   MLB_TEAM_MAP,
   PITCHING_LINEUP_IDS,
   ProLeagueType,
-  SPORT_TYPE,
   TeamRosterEntry,
   exists,
 } from 'sports-ui-sdk';
@@ -16,6 +15,7 @@ import { clientPlayerToFantasyPlayer } from '../../transformers/fantasy-player.t
 import { BaseballLeague } from '../models/baseball-league.model';
 import { BaseballPlayer } from '../models/baseball-player.model';
 import { BaseballTeam, BaseballTeamLive } from '../models/baseball-team.model';
+import { SPORT_TYPE_ID } from '../../models/sport-type.model';
 
 /** @deprecated use transformClientLeagueToBaseballLeagueV2 */
 export function transformClientLeagueToBaseballLeague(
@@ -47,7 +47,7 @@ export function transformEspnFreeAgentToBaseballPlayer(freeAgents: FreeAgent[]):
 
     const playerInfo = clientPlayerToFantasyPlayer({
       clientPlayer: player,
-      sport: SPORT_TYPE.Baseball,
+      sportId: SPORT_TYPE_ID.Baseball,
       leagueId: ProLeagueType.MLB,
       teamMap: MLB_TEAM_MAP,
       positionMap: MLB_POSITION_MAP,
@@ -86,7 +86,7 @@ export function clientPlayerToBaseballPlayer(players: TeamRosterEntry[]): Baseba
 
     const playerInfo = clientPlayerToFantasyPlayer({
       clientPlayer: player.playerPoolEntry.player,
-      sport: SPORT_TYPE.Baseball,
+      sportId: SPORT_TYPE_ID.Baseball,
       leagueId: ProLeagueType.MLB,
       teamMap: MLB_TEAM_MAP,
       positionMap: MLB_POSITION_MAP,
@@ -160,4 +160,3 @@ export function clientTeamListToTeamList(team: EspnClient.Team): BaseballTeam {
     pointsByStat,
   };
 }
-

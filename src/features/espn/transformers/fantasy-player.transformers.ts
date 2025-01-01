@@ -4,7 +4,7 @@ import {
   PlayerInfo,
   PlayerOutlooksMap,
   ProLeagueType,
-  SportType,
+  SportTypeId,
   exists,
 } from 'sports-ui-sdk';
 import { PositionEntityMap } from '../../../@shared/models';
@@ -29,13 +29,13 @@ export function clientPlayerOutlook(outlooks?: PlayerOutlooksMap) {
 
 export function clientPlayerToFantasyPlayer({
   clientPlayer,
-  sport,
+  sportId,
   leagueId,
   teamMap,
   positionMap,
 }: {
   clientPlayer: PlayerInfo;
-  sport: SportType;
+  sportId: SportTypeId;
   leagueId: ProLeagueType;
   teamMap: Record<string, string>;
   positionMap: PositionEntityMap;
@@ -53,9 +53,9 @@ export function clientPlayerToFantasyPlayer({
     sportsUiId: `name=${normalizeName(fullName)}~team=${team.toLowerCase()}`,
     name: fullName,
     teamId: proTeamId.toString(),
-    teamUid: transformIdToUid(sport, leagueId, proTeamId),
+    teamUid: transformIdToUid(sportId, leagueId, proTeamId),
     position: positionMap[defaultPositionId].abbrev,
-    img: ImageBuilder({ sport, league }).headshotImgBuilder({ id }),
+    img: ImageBuilder({ league }).headshotImgBuilder({ id }),
     lastNewsDate,
     injured: injuryStatus === PLAYER_INJURY_STATUS.DTD || injured,
     stats,
