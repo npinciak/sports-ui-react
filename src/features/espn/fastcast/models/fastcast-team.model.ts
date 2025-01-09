@@ -8,12 +8,12 @@ type FastcastEventTeamPropsStringNullable = { [key in FastcastEventTeamAttribute
 type FastcastEventTeamProperties = FastcastEventTeamPropsStringNullable & {
   eventIds: ParsedUid | null;
   isWinner: boolean;
-  isHome: string;
+  isHome: boolean;
   winPct: number | null;
   record: string | null;
 };
 
 export type FastcastEventTeam = TeamEntity &
-  Pick<ICompetitorsEntity, 'uid' | 'rank' | 'seriesRecord' | 'aggregateScore'> &
+  Pick<ICompetitorsEntity, 'uid' | 'rank' | 'seriesRecord' | 'aggregateScore' | 'logoDark'> &
   FastcastEventTeamProperties;
 export type FastcastEventTeamMap = Record<string, FastcastEventTeam>;

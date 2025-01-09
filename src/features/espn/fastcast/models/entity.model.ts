@@ -1,10 +1,8 @@
-interface IEntityBaseAttributes<T> {
-  id: T;
-  uid: T;
-  name: T;
-  shortName: T;
-  abbreviation: T;
-  slug: T;
+export interface IEntityBase {
+  id: string;
+  uid: string;
+  name: string;
+  shortName: string;
+  abbreviation: string;
+  slug: string;
 }
-
-export type EntityBase = IEntityBaseAttributes<string>;

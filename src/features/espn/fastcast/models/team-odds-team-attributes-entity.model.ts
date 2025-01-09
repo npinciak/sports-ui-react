@@ -1,3 +1,3 @@
-import { EntityBase } from './entity.model';
+import { IEntityBase } from './entity.model';
 
-export interface ITeamOddsTeamAttributesEntity extends Pick<EntityBase, 'id' | 'abbreviation'> {}
+export interface ITeamOddsTeamAttributesEntity extends Pick<IEntityBase, 'id' | 'abbreviation'> {}

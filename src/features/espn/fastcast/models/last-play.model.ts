@@ -1,8 +1,8 @@
-import { BaseAthleteEntity } from './athlete-entity.model';
-import { EntityBase } from './entity.model';
+import { IBaseAthleteEntity } from './athlete-entity.model';
+import { IEntityBase } from './entity.model';
 import { ITeamAttributesEntity } from './team-attributes.model';
 
-export interface ILastPlayEntity extends Pick<EntityBase, 'id'> {
+export interface ILastPlayEntity extends Pick<IEntityBase, 'id'> {
   type: ILastPlayType;
   text: string;
   scoreValue: number;
@@ -10,11 +10,11 @@ export interface ILastPlayEntity extends Pick<EntityBase, 'id'> {
   athletesInvolved?: IAthletesInvolvedEntity[] | null;
 }
 
-export interface ILastPlayType extends Pick<EntityBase, 'id'> {
+export interface ILastPlayType extends Pick<IEntityBase, 'id'> {
   text: string;
   abbreviation?: string | null;
 }
 
-export interface IAthletesInvolvedEntity extends BaseAthleteEntity<string> {
+export interface IAthletesInvolvedEntity extends IBaseAthleteEntity<string> {
   team: Pick<ITeamAttributesEntity, 'id'>;
 }

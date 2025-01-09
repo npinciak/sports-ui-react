@@ -7,6 +7,7 @@ import { OddsEntity } from './odds-entity.model';
 import { ISituationEntity } from './situation.model';
 
 interface IFastcastEventAttributes {
+  id: string;
   timestamp: number;
   state: string | null;
   status: EventStatus | null;
@@ -17,7 +18,7 @@ interface IFastcastEventAttributes {
   period: number | null;
   teams: Record<string, FastcastEventTeam> | null;
   isHalftime: boolean;
-  mlbSituation: MlbSituation | null;
+  baseballSituation: BaseballSituation | null;
   footballSituation: FootballSituation | null;
   isTournament: boolean;
 }
@@ -28,10 +29,14 @@ export type FastcastEvent = IFastcastEventAttributes &
   Pick<IFullStatus, 'completed'> & {
     odds: OddsEntity | null;
     eventIds: ParsedUid | null;
+    teams: Record<string, FastcastEventTeam | null> | null;
   };
 
 export type FastcastEventMap = Record<string, FastcastEvent>;
 
-export type MlbSituation = Pick<ISituationEntity, 'balls' | 'strikes' | 'outs' | 'onFirst' | 'onSecond' | 'onThird' | 'batter' | 'pitcher'>;
+export type BaseballSituation = Pick<
+  ISituationEntity,
+  'balls' | 'strikes' | 'outs' | 'onFirst' | 'onSecond' | 'onThird' | 'batter' | 'pitcher'
+>;
 
 export type FootballSituation = Pick<ISituationEntity, 'isRedZone' | 'possession' | 'shortDownDistanceText' | 'possessionText'>;

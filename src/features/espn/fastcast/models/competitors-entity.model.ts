@@ -1,13 +1,13 @@
-import { IGoalieSummaryEntity, IScoringEntity } from './athlete-action-entity.model';
-import { EntityBase } from './entity.model';
+import { IAthleteActionEntity } from './athlete-action-entity.model';
+import { IEntityBase } from './entity.model';
 import { ILeaderEntity } from './leader.model';
 import { IRecordEntity } from './record-entity.model';
 import { IUniformEntity } from './uniform.model';
 
-export interface ICompetitorsEntity extends Omit<EntityBase, 'slug' | 'shortName'> {
+export interface ICompetitorsEntity extends Omit<IEntityBase, 'slug' | 'shortName'> {
   type: string;
   order: number;
-  homeAway: string;
+  homeAway: 'home' | 'away';
   score: string;
   aggregateScore?: number;
   record?: string | IRecordEntity[];
@@ -23,9 +23,9 @@ export interface ICompetitorsEntity extends Omit<EntityBase, 'slug' | 'shortName
   competitionIdNext?: string | null;
   rank?: number | null;
   leaders?: ILeaderEntity[] | null;
-  goalieSummary?: IGoalieSummaryEntity[] | null;
+  goalieSummary?: IAthleteActionEntity[] | null;
   shortenedRecord?: string | null;
-  scoringSummary?: IScoringEntity[] | null;
+  scoringSummary?: IAthleteActionEntity[] | null;
   advance?: boolean | null;
   form?: string | null;
   isNational?: boolean | null;
