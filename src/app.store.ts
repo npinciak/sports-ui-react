@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { FangraphsStatsFilterFormSlice, fangraphsClient, fangraphsPlayerSlice } from './@shared/fangraphs';
+import { fangraphsClient, fangraphsPlayerSlice, FangraphsStatsFilterFormSlice } from './@shared/fangraphs';
 import { supabaseClient } from './@shared/supabase/supabase.client';
 import { AuthenticationClient } from './core/authentication';
 import { AdminLeagueProgressionFormSlice } from './features/admin/slices/league-progression-form.slice';
@@ -16,7 +16,11 @@ import { baseballEventsSlice } from './features/espn/fantasy-baseball/slices/bas
 import { baseballLeagueSlice } from './features/espn/fantasy-baseball/slices/baseball-league.slice';
 import { baseballTeamLiveSlice } from './features/espn/fantasy-baseball/slices/baseball-team-live.slice';
 import { baseballTeamRosterSlice } from './features/espn/fantasy-baseball/slices/baseball-team-roster.slice';
-import { fastcastClient } from './features/espn/fastcast/client/fastcast.client';
+import { FastcastStaticClient } from './features/espn/fastcast/client/fastcast-static.client';
+import { FastcastClient } from './features/espn/fastcast/client/fastcast.client';
+import { FastcastEventsSlice } from './features/espn/fastcast/slices/fastcast-event.slice';
+import { FastcastLeaguesSlice } from './features/espn/fastcast/slices/fastcast-league.slice';
+import { FastcastSportsSlice } from './features/espn/fastcast/slices/fastcast-sport.slice';
 
 export const AppStore = configureStore({
   reducer: {
@@ -24,7 +28,6 @@ export const AppStore = configureStore({
     [AuthenticationClient.reducerPath]: AuthenticationClient.reducer,
     [fangraphsClient.reducerPath]: fangraphsClient.reducer,
     [FangraphsStatsFilterFormSlice.reducerPath]: FangraphsStatsFilterFormSlice.reducer,
-    [fastcastClient.reducerPath]: fastcastClient.reducer,
     [supabaseClient.reducerPath]: supabaseClient.reducer,
     [baseballHandler.reducerPath]: baseballHandler.reducer,
     [baseballEventsSlice.reducerPath]: baseballEventsSlice.reducer,
@@ -32,6 +35,11 @@ export const AppStore = configureStore({
     [baseballTeamSlice.reducerPath]: baseballTeamSlice.reducer,
     [baseballTeamLiveSlice.reducerPath]: baseballTeamLiveSlice.reducer,
     [baseballLeagueSlice.reducerPath]: baseballLeagueSlice.reducer,
+    [FastcastClient.reducerPath]: FastcastClient.reducer,
+    [FastcastStaticClient.reducerPath]: FastcastStaticClient.reducer,
+    [FastcastEventsSlice.reducerPath]: FastcastEventsSlice.reducer,
+    [FastcastSportsSlice.reducerPath]: FastcastSportsSlice.reducer,
+    [FastcastLeaguesSlice.reducerPath]: FastcastLeaguesSlice.reducer,
     [fangraphsPlayerSlice.reducerPath]: fangraphsPlayerSlice.reducer,
     [lineupHeadquartersHandler.reducerPath]: lineupHeadquartersHandler.reducer,
     [masterSlateHandler.reducerPath]: masterSlateHandler.reducer,
@@ -47,7 +55,8 @@ export const AppStore = configureStore({
       .concat(baseballHandler.middleware)
       .concat(supabaseClient.middleware)
       .concat(fangraphsClient.middleware)
-      .concat(fastcastClient.middleware)
+      .concat(FastcastClient.middleware)
+      .concat(FastcastStaticClient.middleware)
       .concat(lineupHeadquartersHandler.middleware)
       .concat(masterSlateHandler.middleware)
       .concat(footballGameAttributesHandler.middleware)

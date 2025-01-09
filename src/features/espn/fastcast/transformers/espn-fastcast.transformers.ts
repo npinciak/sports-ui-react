@@ -1,23 +1,20 @@
-import { EVENT_STATUS_TYPE } from 'sports-ui-sdk';
+import { EVENT_STATUS, EVENT_STATUS_TYPE, SEASON_TYPE, SEASON_TYPE_LIST } from 'sports-ui-sdk';
 import { NO_LOGO } from '../../constants';
-import { includeSports, parseEventUidStringToId, parseTeamUidStringToId, teamColorHandler } from '../../espn-helpers';
+import { includeLeagues, includeSports, parseEventUidStringToId, parseTeamUidStringToId } from '../../espn-helpers';
+import { EspnDateHelper } from '../helpers/espn-date-helper';
 import { FASTCAST_EVENT_TYPE, ICompetitorsEntity, IEventsEntity, ILeaguesEntity, ISportsEntity } from '../models';
 import { IFastcastCheckpoint } from '../models/fastcast-checkpoint.model';
-import { FastcastEvent, FootballSituation, MlbSituation } from '../models/fastcast-event.model';
-import { FastcastLeague } from '../models/fastcast-league.model';
+import { EventSummaryBySeasonTypeByEventStatus } from '../models/fastcast-event-summary.model';
+import { BaseballSituation, FastcastEvent, FootballSituation } from '../models/fastcast-event.model';
+import { UIFastcastLeague } from '../models/fastcast-league.model';
 import { IFastcastSportEntity } from '../models/fastcast-sport.model';
 import { FastcastEventTeam } from '../models/fastcast-team.model';
-
-export function flatten<T extends Object>(arr: T[][]): T[] {
-  if (arr == undefined) return [];
-  return ([] as T[]).concat(...arr);
-}
 
 function exists(value: any): boolean {
   return value != undefined || value != null;
 }
 
-export function clientFastcastToFastcast(response: IFastcastCheckpoint) {
+export function transformFastcastCheckpointToUIFastcast(response: IFastcastCheckpoint) {
   const { sports } = response;
 
   const fastcastSports: IFastcastSportEntity[] = [];
@@ -26,17 +23,17 @@ export function clientFastcastToFastcast(response: IFastcastCheckpoint) {
   sports.forEach(sport => {
     const { id } = sport;
     if (includeSports(id)) {
-      fastcastSports.push(clientSportsEntityToSport(sport));
+      fastcastSports.push(transformISportsEntityToSport(sport));
       leagueList.push(...sport.leagues);
     }
   });
 
-  const fastcastLeagues: FastcastLeague[] = [];
+  const fastcastLeagues: UIFastcastLeague[] = [];
   const fastcastEvents: FastcastEvent[] = [];
 
   leagueList.forEach(league => {
-    fastcastLeagues.push(clientLeagueImportToFastcastLeague(league));
-    if (league.events != undefined && league.events != null) {
+    fastcastLeagues.push(transformILeaguesImportToUIFastcastLeague(league));
+    if (league.events != undefined && league.events != null && includeLeagues(league.id)) {
       league.events.forEach(event => {
         fastcastEvents.push(clientEventToFastcastEvent(event));
       });
@@ -50,7 +47,7 @@ export function clientFastcastToFastcast(response: IFastcastCheckpoint) {
   };
 }
 
-export function clientSportsEntityToSport(sportsEntity: ISportsEntity): Pick<ISportsEntity, 'id' | 'uid' | 'name' | 'slug'> {
+export function transformISportsEntityToSport(sportsEntity: ISportsEntity): Pick<ISportsEntity, 'id' | 'uid' | 'name' | 'slug'> {
   const { id, uid, name, slug } = sportsEntity;
   return {
     id,
@@ -60,7 +57,7 @@ export function clientSportsEntityToSport(sportsEntity: ISportsEntity): Pick<ISp
   };
 }
 
-export function clientLeagueImportToFastcastLeague(leagueImport: ILeaguesEntity): FastcastLeague {
+export function transformILeaguesImportToUIFastcastLeague(leagueImport: ILeaguesEntity): UIFastcastLeague {
   const { id, uid, name, slug, isTournament, abbreviation, shortName } = leagueImport;
   return {
     id,
@@ -70,16 +67,15 @@ export function clientLeagueImportToFastcastLeague(leagueImport: ILeaguesEntity)
     isTournament,
     abbreviation: abbreviation ?? name,
     shortName: shortName ?? name,
-    sport: '',
   };
 }
 
-export function clientCompetitorToFastcastTeam(eventUid: string, data: ICompetitorsEntity): FastcastEventTeam | null {
-  if (!data) return null;
+export function clientCompetitorToFastcastTeam(data: ICompetitorsEntity): FastcastEventTeam {
+  const { id, uid, name, winner, score, logo, logoDark, abbreviation, homeAway, alternateColor, rank, seriesRecord, color } = data;
 
-  const { id, uid, name, winner, score, logo, abbreviation, homeAway, alternateColor, rank, seriesRecord } = data;
+  const record = typeof data.record === 'string' ? data.record : (data.record?.[0]?.displayValue ?? null);
 
-  const record = data.record == undefined ? null : typeof data.record === 'string' ? data.record : data.record[0].displayValue;
+  const isHome = homeAway === 'home';
 
   return {
     id,
@@ -87,50 +83,66 @@ export function clientCompetitorToFastcastTeam(eventUid: string, data: ICompetit
     eventIds: parseTeamUidStringToId(uid),
     score,
     abbrev: abbreviation,
-    isHome: homeAway,
-    logo: logo.length > 0 ? logo : NO_LOGO,
+    isHome,
+    logo: logo && logo.length > 0 ? logo : NO_LOGO,
+    logoDark: logoDark ? logoDark : NO_LOGO,
     isWinner: winner,
     name: name ?? abbreviation,
-    color: teamColorHandler(data),
+    color: `#${color ?? ''}`,
     altColor: alternateColor ? `#${alternateColor}` : null,
     record,
     rank: rank ?? null,
     winPct: null,
-    seriesRecord,
+    seriesRecord: seriesRecord ?? null,
   };
 }
 
+export function addFootballSituationToFastcastEvent(event: IEventsEntity): FootballSituation | null {
+  const { situation } = event;
+  if (!situation) return null;
+
+  return {
+    shortDownDistanceText: situation.shortDownDistanceText ?? null,
+    possessionText: situation.possessionText ?? null,
+    isRedZone: situation.isRedZone ?? false,
+    possession: situation.possession ?? null,
+  };
+}
+
+export function addBaseballSituationToFastcastEvent(event: IEventsEntity): BaseballSituation | null {
+  const { situation } = event;
+  if (!situation) return null;
+
+  return {
+    batter: situation.batter ?? null,
+    pitcher: situation.pitcher ?? null,
+    balls: situation.balls ?? null,
+    strikes: situation.strikes ?? null,
+    outs: situation.outs ?? null,
+    onFirst: situation.onFirst ?? null,
+    onSecond: situation.onSecond ?? null,
+    onThird: situation.onThird ?? null,
+  };
+}
+
+export function addCompetitorsToFastcastEvent(event: IEventsEntity): Record<string, FastcastEventTeam> | null {
+  const { competitors } = event;
+  if (!competitors) return null;
+
+  return competitors.reduce(
+    (obj, val) => {
+      const { homeAway } = val;
+      obj[homeAway] = clientCompetitorToFastcastTeam(val);
+      return obj;
+    },
+    {} as Record<string, FastcastEventTeam>
+  );
+}
+
 export function clientEventToFastcastEvent(event: IEventsEntity): FastcastEvent {
-  // if (!event) return null;
-
-  const mlbSituation = {} as MlbSituation;
-
-  // mlbSituation.batter = event?.situation?.batter;
-  // mlbSituation.pitcher = event?.situation?.pitcher;
-  // mlbSituation.balls = event?.situation?.balls;
-  // mlbSituation.strikes = event?.situation?.strikes;
-  // mlbSituation.outs = event?.situation?.outs;
-  // mlbSituation.onFirst = event?.situation?.onFirst;
-  // mlbSituation.onSecond = event?.situation?.onSecond;
-  // mlbSituation.onThird = event?.situation?.onThird;
-
-  const footballSituation = {} as FootballSituation;
-
-  footballSituation['shortDownDistanceText'] = event?.situation?.shortDownDistanceText ?? '';
-  footballSituation['possessionText'] = event?.situation?.possessionText ?? '';
-  footballSituation['isRedZone'] = false;
-  footballSituation['possession'] = event?.situation?.possession ?? '';
-
-  const teams = exists(event.competitors)
-    ? event.competitors.reduce(
-        (obj, val) => {
-          const { homeAway } = val;
-          obj[homeAway] = clientCompetitorToFastcastTeam(event.uid, val);
-          return obj;
-        },
-        {} as Record<string, FastcastEventTeam | null>
-      )
-    : null;
+  const baseballSituation = addBaseballSituationToFastcastEvent(event);
+  const footballSituation = addFootballSituationToFastcastEvent(event);
+  const teams = addCompetitorsToFastcastEvent(event);
 
   const {
     id,
@@ -145,7 +157,7 @@ export function clientEventToFastcastEvent(event: IEventsEntity): FastcastEvent 
     link,
     date,
     fullStatus: {
-      type: { state, completed },
+      type: { state, completed, id: statusId },
     },
     odds,
     note,
@@ -153,6 +165,8 @@ export function clientEventToFastcastEvent(event: IEventsEntity): FastcastEvent 
     seriesSummary,
     situation,
   } = event;
+
+  const isHalftime = event?.fullStatus.type?.id ? event?.fullStatus.type.id === EVENT_STATUS_TYPE.Halftime : false;
 
   return {
     id,
@@ -162,7 +176,7 @@ export function clientEventToFastcastEvent(event: IEventsEntity): FastcastEvent 
     state,
     completed,
     status,
-    statusId: event.fullStatus.type.id,
+    statusId,
     name,
     seasonType,
     shortName,
@@ -173,11 +187,11 @@ export function clientEventToFastcastEvent(event: IEventsEntity): FastcastEvent 
     period,
     isTournament: false,
     note: note ?? null,
-    isHalftime: event?.fullStatus.type?.id ? event?.fullStatus.type.id === EVENT_STATUS_TYPE.Halftime : false,
+    isHalftime,
     lastPlay: situation?.lastPlay ?? null,
     link,
     odds: odds ?? null,
-    mlbSituation,
+    baseballSituation,
     footballSituation,
     teams,
   };
@@ -201,7 +215,7 @@ export function clientEventToFastcastEvent(event: IEventsEntity): FastcastEvent 
  *
  */
 export function transformEventToLiveFastcastEventType({ sport, league, gameId }: { sport: string; league: string; gameId: string }) {
-  return `${FASTCAST_EVENT_TYPE.LiveGame}-${sport}-${league}-${gameId}`;
+  return `${FASTCAST_EVENT_TYPE.LIVE_GAME}-${sport}-${league}-${gameId}`;
 }
 
 /**
@@ -223,8 +237,64 @@ export function transformEventToLiveFastcastEventType({ sport, league, gameId }:
 export function transformSportToFastcastEventType({ sport }: { sport: string }): string;
 export function transformSportToFastcastEventType({ sport, league }: { sport: string; league: string }): string;
 export function transformSportToFastcastEventType({ sport, league }: { sport: string; league?: string }): string {
-  if (!exists(league)) {
-    `${FASTCAST_EVENT_TYPE.Event}-${sport}`;
-  }
-  return `${FASTCAST_EVENT_TYPE.Event}-${sport}-${league}`;
+  if (!exists(league)) return `${FASTCAST_EVENT_TYPE.EVENT}-${sport}`;
+
+  return `${FASTCAST_EVENT_TYPE.EVENT}-${sport}-${league}`;
+}
+
+/**
+ * Returns fastcast event summary
+ *
+ * @param event
+ * @returns
+ */
+export function fastcastEventSummary(event: FastcastEvent): string | null {
+  const { status, statusId, seasonType, note, timestamp, summary } = event;
+
+  const tickerDate = new EspnDateHelper().tickerDate;
+
+  const defaultPregame = tickerDate(timestamp);
+  const defaultInProgress = statusId === EVENT_STATUS_TYPE.RainDelay ? `Rain Delay, ${summary}` : summary;
+
+  const postSeasonPregame = exists(note) ? `${note} | ${tickerDate(timestamp)}` : tickerDate(timestamp);
+  const postSeasonPostgame = exists(note) ? `${note}, ${summary}` : summary;
+
+  const eventSummary: EventSummaryBySeasonTypeByEventStatus = {
+    [SEASON_TYPE.Preseason]: {
+      [EVENT_STATUS.Pre]: defaultPregame,
+      [EVENT_STATUS.InProgress]: defaultInProgress,
+      [EVENT_STATUS.Postgame]: summary,
+    },
+    [SEASON_TYPE.Regular]: {
+      [EVENT_STATUS.Pre]: defaultPregame,
+      [EVENT_STATUS.InProgress]: defaultInProgress,
+      [EVENT_STATUS.Postgame]: summary,
+    },
+    [SEASON_TYPE.Postseason]: {
+      [EVENT_STATUS.Pre]: postSeasonPregame,
+      [EVENT_STATUS.InProgress]: defaultInProgress,
+      [EVENT_STATUS.Postgame]: postSeasonPostgame,
+    },
+    [SEASON_TYPE.AllStar]: {
+      [EVENT_STATUS.Pre]: postSeasonPregame,
+      [EVENT_STATUS.InProgress]: defaultInProgress,
+      [EVENT_STATUS.Postgame]: postSeasonPostgame,
+    },
+    [SEASON_TYPE.OffSeason]: {
+      [EVENT_STATUS.Pre]: postSeasonPregame,
+      [EVENT_STATUS.InProgress]: defaultInProgress,
+      [EVENT_STATUS.Postgame]: postSeasonPostgame,
+    },
+    [SEASON_TYPE.Unknown]: {
+      [EVENT_STATUS.Pre]: postSeasonPregame,
+      [EVENT_STATUS.InProgress]: defaultInProgress,
+      [EVENT_STATUS.Postgame]: postSeasonPostgame,
+    },
+  };
+
+  if (!exists(seasonType)) throw new Error('Season type unavailable');
+
+  const seasonTypeValid = SEASON_TYPE_LIST.includes(seasonType);
+
+  return eventSummary[seasonTypeValid ? seasonType : SEASON_TYPE.Unknown][status ?? EVENT_STATUS.Pre];
 }

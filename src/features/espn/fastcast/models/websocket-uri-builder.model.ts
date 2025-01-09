@@ -1,25 +1,25 @@
 import { WebSocketConnectionInfo } from './websocket.model';
 
-export class WebSocketUriBuilder {
-  private static _protocol = 'wss://';
+export function WebSocketUriBuilder({ websocketConnectionInfo }: { websocketConnectionInfo: WebSocketConnectionInfo | undefined }) {
+  return class WebSocketUriBuilderClass {
+    private static _protocol = 'wss://';
+    private static _path = '/FastcastService/pubsub/profiles/12000';
 
-  private _path = '';
-  private _websocket: WebSocketConnectionInfo;
+    static get websocketUri() {
+      if (!websocketConnectionInfo) return null;
 
-  constructor(websocket: WebSocketConnectionInfo, path: string) {
-    this._websocket = websocket;
-    this._path = path;
-  }
+      return `${this._protocolIpPort}${this._path}?${this._params}`;
+    }
 
-  get websocketUri() {
-    return `${this._protocolIpPort}${this._path}?${this._params}`;
-  }
+    private static get _params() {
+      if (!websocketConnectionInfo) return null;
 
-  private get _params() {
-    return `TrafficManager-Token=${this._websocket.token}`;
-  }
+      return `TrafficManager-Token=${websocketConnectionInfo?.token}`;
+    }
 
-  private get _protocolIpPort() {
-    return `${WebSocketUriBuilder._protocol}${this._websocket.ip}:${this._websocket.securePort}`;
-  }
+    private static get _protocolIpPort() {
+      if (!websocketConnectionInfo) return null;
+      return `${this._protocol}${websocketConnectionInfo?.ip}:${websocketConnectionInfo?.securePort}`;
+    }
+  };
 }
