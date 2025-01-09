@@ -1,4 +1,4 @@
-import { API_BASE_V2, BASE_URL, COMMON_V3, FANTASY_BASE_V2, FANTASY_BASE_V3, FASTCAST_WS_HOST, ONE_FEED_BASE } from '../../constants';
+import { BASE_URL, BASE_URL_V2, COMMON_V3, FANTASY_BASE_V2, FANTASY_BASE_V3, FASTCAST_WS_HOST, ONE_FEED_BASE } from '../../constants';
 import { FANTASY_SPORTS_ABBREVIATION } from './endpoint-builder.const';
 import { BaseEspnEndpointBuilderClass, FantasySportToSportsMap, FantasySportsAbbreviation } from './endpoint-builder.model';
 
@@ -21,7 +21,7 @@ export function BaseEspnEndpointBuilder({
 }): BaseEspnEndpointBuilderClass {
   return class BaseEspnEndpointBuilderClass {
     private static readonly espnBase = BASE_URL;
-    private static readonly apiBaseV2 = API_BASE_V2;
+    private static readonly apiBaseV2 = BASE_URL_V2;
     private static readonly fantasyBaseV2 = FANTASY_BASE_V2;
     private static readonly fantasyBaseV3 = FANTASY_BASE_V3;
     private static readonly oneFeedBase = ONE_FEED_BASE;
