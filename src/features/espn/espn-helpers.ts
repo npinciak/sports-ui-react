@@ -165,7 +165,7 @@ export function parseEventUidStringToId(str: string): ParsedUid | null {
     return null;
   });
 
-  if (s && l && e && c) return { sportType: s, leagueId: l, eventId: e, competitionId: c };
+  if (s && l && e && c) return { sportTypeId: s, leagueId: l, eventId: e, competitionId: c };
 
   return null;
 }
@@ -181,13 +181,13 @@ export function parseTeamUidStringToId(str: string): ParsedUid | null {
     return null;
   });
 
-  if (s && l && t) return { sportType: s, leagueId: l, teamId: t };
+  if (s && l && t) return { sportTypeId: s, leagueId: l, teamId: t };
 
   return null;
 }
 
 export type ParsedUid = {
-  sportType: string;
+  sportTypeId: string;
   leagueId: string;
   eventId?: string;
   competitionId?: string;

@@ -11,5 +11,5 @@ export const selectEventEntities = createSelector([fastcastEventsSlice], state =
 export const selectEventEntityList = createSelector([selectEventEntities], entities => Object.values(entities));
 export const selecttEventEntityListBySport = createSelector(
   [selectEventEntityList],
-  events => (sport: string) => events.filter(event => event.eventIds?.sportType === sport)
+  events => (sportTypeId: string) => events.filter(event => event.eventIds?.sportTypeId === sportTypeId)
 );
