@@ -15,14 +15,9 @@ import {
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { fastcastURIBuilder } from '../../constants';
 import { FastcastStaticClient } from '../client/fastcast-static.client';
 import { FastcastClient } from '../client/fastcast.client';
-import {
-  FASTCAST_EVENT_TYPE,
-  OPERATION_CODE,
-  WebSocketMessage,
-} from '../models';
+import { FastcastWebSocketHandler } from '../helpers/websocket.handler';
 import { WebSocketUriBuilder } from '../models/websocket-uri-builder.model';
 import {
   selectEventEntityList,
@@ -41,19 +36,18 @@ export function FastcastWrapperComponent() {
 
   const [sportFilter, setSportFilter] = useState<string>('20');
 
-  const { data: fastcastdata } =
-    FastcastStaticClient.useGetStaticScoreboardQuery();
-  console.log(fastcastdata);
+  FastcastStaticClient.useGetStaticScoreboardQuery();
 
   const [getConnectionInfo] =
     FastcastClient.useLazyGetFastCastWebsocketConnectionInfoQuery();
 
-  const [connectToFastCast, { data }] =
-    FastcastClient.useLazyGetFastcastQuery();
+  const [connectToFastCast] = FastcastClient.useLazyGetFastcastQuery();
 
   const sportList = useSelector(selectSportEntityList);
   const eventList = useSelector(selectEventEntityList);
   const eventListBySport = useSelector(selecttEventEntityListBySport);
+
+  const fastcastWebsocket = FastcastWebSocketHandler();
 
   async function onConnectionClick() {
     const { data } = await getConnectionInfo();
@@ -61,75 +55,24 @@ export function FastcastWrapperComponent() {
       websocketConnectionInfo: data,
     });
 
-    const eventType = FASTCAST_EVENT_TYPE.TOP_EVENTS;
+    fastcastWebsocket.websocket = websocketUri;
 
-    const web = new WebSocket(websocketUri ?? '');
-
-    web.onopen = () => {
-      web.send(JSON.stringify({ op: OPERATION_CODE.CONNECT }));
-    };
-
-    web.onmessage = event => {
-      const { op, sid, mid, pl, rc } = JSON.parse(
-        event.data
-      ) as WebSocketMessage;
-
-      switch (op) {
-        case OPERATION_CODE.B:
-          break;
-        case OPERATION_CODE.CONNECT: {
-          const message = { op: OPERATION_CODE.SUCCESS, sid, tc: eventType! };
-          web.send(JSON.stringify(message));
-          break;
-        }
-        case OPERATION_CODE.PING:
-          //   if (rc === 403) {
-          //     web.close();
-          //   }
-          const message = {
-            op: OPERATION_CODE.PING,
-            sid,
-            pl,
-            tc: eventType,
-            mid,
-          };
-          // web.send(JSON.stringify(message));
-
-          break;
-        case OPERATION_CODE.HEARTBEAT: {
-          connectToFastCast({ url: pl });
-          break;
-        }
-        case OPERATION_CODE.INIT: {
-          const uri = fastcastURIBuilder(eventType, mid);
-          connectToFastCast({ url: uri });
-          break;
-        }
-        case OPERATION_CODE.RECONNECT: {
-          // web.close();
-          break;
-        }
-        case OPERATION_CODE.Error:
-          web.close();
-          break;
-        default:
-          break;
-      }
-    };
+    fastcastWebsocket.openConnection();
+    fastcastWebsocket.listenToMessages(connectToFastCast);
   }
 
-  function navigationClick(eventId: string | undefined) {
-    if (!eventId) return;
-    navigate(`/fastcast/${eventId}`);
-  }
+  const onDisconnectClick = () => {
+    fastcastWebsocket.disconnect();
+  };
 
-  function handleSportSelection(value: string) {
+  const handleSportSelection = (value: string) => {
     setSportFilter(value);
-  }
+  };
 
   return (
     <>
       <Button onClick={onConnectionClick}>Connect</Button>
+      <Button onClick={onDisconnectClick}>Disconnect</Button>
       {/* <FastcastSportFilterComponent
         sportList={sportList}
         handleSportSelection={handleSportSelection}
