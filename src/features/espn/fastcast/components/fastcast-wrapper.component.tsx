@@ -10,8 +10,7 @@ import {
   selecttEventEntityListBySport,
 } from '../selector/fastcast-event.selectors';
 import { selectSportEntityList } from '../selector/fastcast-sport.selectors';
-import { fastcastEventSummary } from '../transformers/espn-fastcast.transformers';
-import { FastcastTeamComponent } from './fastcast-team.component';
+import { FastcastEventComponent } from './fastcast-event.component';
 
 export function FastcastWrapperComponent() {
   const [open, setOpen] = useState(false);
@@ -59,25 +58,7 @@ export function FastcastWrapperComponent() {
       <Button onClick={onConnectionClick}>Connect</Button>
       <Button onClick={onDisconnectClick}>Disconnect</Button>
 
-      {eventListBySport(sportFilter)?.map(event => (
-        <div className="mb-4 w-full" key={event.uid}>
-          <Card sx={{ borderRadius: '20px' }}>
-            <CardContent>
-              <Grid
-                container
-                className="w-full mb-2 text-xs font-semibold truncate"
-              >
-                {fastcastEventSummary(event)}
-              </Grid>
-              <Grid container className="w-full mb-2">
-                <FastcastTeamComponent team={event.teams?.away} />
-                <Divider />
-                <FastcastTeamComponent team={event.teams?.home} />
-              </Grid>
-            </CardContent>
-          </Card>
-        </div>
-      ))}
+      {eventListBySport?.map(event => <FastcastEventComponent event={event} />)}
     </>
   );
 }
