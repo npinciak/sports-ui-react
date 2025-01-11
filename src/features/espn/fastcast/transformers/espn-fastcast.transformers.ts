@@ -78,15 +78,12 @@ export function clientCompetitorToFastcastTeam(data: ICompetitorsEntity, event: 
   const isHome = homeAway === 'home';
 
   const situation = event.situation ?? null;
-
   const lastPlay = situation?.lastPlay ?? null;
-
   const probability = lastPlay?.probability ?? null;
+  const homeWinPercentage = probability?.homeWinPercentage ?? 0;
+  const awayWinPercentage = probability?.awayWinPercentage ?? 0;
 
-  const homeWinPercentage = probability?.homeWinPercentage ?? null;
-  const awayWinPercentage = probability?.awayWinPercentage ?? null;
-
-  const chanceToWinPct = isHome ? homeWinPercentage : awayWinPercentage;
+  const chanceToWinPct = isHome ? homeWinPercentage * 100 : awayWinPercentage * 100;
 
   return {
     id,
@@ -265,7 +262,8 @@ export function fastcastEventSummary(event: FastcastEvent): string | null {
   const tickerDate = new EspnDateHelper().tickerDate;
 
   const defaultPregame = tickerDate(timestamp);
-  const defaultInProgress = statusId === EVENT_STATUS_TYPE.RainDelay ? `Rain Delay, ${summary}` : summary;
+  const defaultInProgress =
+    statusId === EVENT_STATUS_TYPE.RainDelay ? `Rain Delay, ${summary}` : statusId === EVENT_STATUS_TYPE.Halftime ? 'Halftime' : summary;
 
   const postSeasonPregame = exists(note) ? `${note} | ${tickerDate(timestamp)}` : tickerDate(timestamp);
   const postSeasonPostgame = exists(note) ? `${note}, ${summary}` : summary;
