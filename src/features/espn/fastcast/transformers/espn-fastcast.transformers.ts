@@ -70,12 +70,23 @@ export function transformILeaguesImportToUIFastcastLeague(leagueImport: ILeagues
   };
 }
 
-export function clientCompetitorToFastcastTeam(data: ICompetitorsEntity): FastcastEventTeam {
+export function clientCompetitorToFastcastTeam(data: ICompetitorsEntity, event: IEventsEntity): FastcastEventTeam {
   const { id, uid, name, winner, score, logo, logoDark, abbreviation, homeAway, alternateColor, rank, seriesRecord, color } = data;
 
   const record = typeof data.record === 'string' ? data.record : (data.record?.[0]?.displayValue ?? null);
 
   const isHome = homeAway === 'home';
+
+  const situation = event.situation ?? null;
+
+  const lastPlay = situation?.lastPlay ?? null;
+
+  const probability = lastPlay?.probability ?? null;
+
+  const homeWinPercentage = probability?.homeWinPercentage ?? null;
+  const awayWinPercentage = probability?.awayWinPercentage ?? null;
+
+  const chanceToWinPct = isHome ? homeWinPercentage : awayWinPercentage;
 
   return {
     id,
@@ -85,14 +96,14 @@ export function clientCompetitorToFastcastTeam(data: ICompetitorsEntity): Fastca
     abbrev: abbreviation,
     isHome,
     logo: logo && logo.length > 0 ? logo : NO_LOGO,
-    logoDark: logoDark ? logoDark : NO_LOGO,
+    logoDark: logoDark ?? NO_LOGO,
     isWinner: winner,
     name: name ?? abbreviation,
     color: `#${color ?? ''}`,
     altColor: alternateColor ? `#${alternateColor}` : null,
     record,
     rank: rank ?? null,
-    winPct: null,
+    chanceToWinPct,
     seriesRecord: seriesRecord ?? null,
   };
 }
@@ -132,7 +143,7 @@ export function addCompetitorsToFastcastEvent(event: IEventsEntity): Record<stri
   return competitors.reduce(
     (obj, val) => {
       const { homeAway } = val;
-      obj[homeAway] = clientCompetitorToFastcastTeam(val);
+      obj[homeAway] = clientCompetitorToFastcastTeam(val, event);
       return obj;
     },
     {} as Record<string, FastcastEventTeam>

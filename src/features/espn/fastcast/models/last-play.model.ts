@@ -8,6 +8,12 @@ export interface ILastPlayEntity extends Pick<IEntityBase, 'id'> {
   scoreValue: number;
   team?: Pick<ITeamAttributesEntity, 'id'> | null;
   athletesInvolved?: IAthletesInvolvedEntity[] | null;
+  probability: {
+    awayWinPercentage: number;
+    homeWinPercentage: number;
+    tiePercentage: number;
+    secondsLeft: number;
+  };
 }
 
 export interface ILastPlayType extends Pick<IEntityBase, 'id'> {
@@ -15,6 +21,6 @@ export interface ILastPlayType extends Pick<IEntityBase, 'id'> {
   abbreviation?: string | null;
 }
 
-export interface IAthletesInvolvedEntity extends IBaseAthleteEntity<string> {
+export interface IAthletesInvolvedEntity extends IBaseAthleteEntity {
   team: Pick<ITeamAttributesEntity, 'id'>;
 }

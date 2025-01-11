@@ -9,7 +9,7 @@ type FastcastEventTeamProperties = FastcastEventTeamPropsStringNullable & {
   eventIds: ParsedUid | null;
   isWinner: boolean;
   isHome: boolean;
-  winPct: number | null;
+  chanceToWinPct: number | null;
   record: string | null;
 };
 
