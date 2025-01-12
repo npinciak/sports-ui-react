@@ -1,5 +1,6 @@
-import { PlayerStatsYear, ProLeagueType, SportTypeId, getContrastRatio } from 'sports-ui-sdk';
+import { PlayerStatsYear, ProLeagueType, getContrastRatio } from 'sports-ui-sdk';
 import { ESPN_PARAM_FRAGMENTS, ESPN_VIEW_PARAM_FRAGMENTS } from './helpers/endpoint-builder/endpoint-builder.const';
+import { SportTypeId } from './models/sport-type.model';
 
 /**
  * Generates league params
