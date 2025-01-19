@@ -18,6 +18,7 @@ import { baseballTeamLiveSlice } from './features/espn/fantasy-baseball/slices/b
 import { baseballTeamRosterSlice } from './features/espn/fantasy-baseball/slices/baseball-team-roster.slice';
 import { FastcastStaticClient } from './features/espn/fastcast/client/fastcast-static.client';
 import { FastcastClient } from './features/espn/fastcast/client/fastcast.client';
+import { fastcastWebSocketMiddleware } from './features/espn/fastcast/helpers/websocket-handler';
 import { FastcastEventsSlice } from './features/espn/fastcast/slices/fastcast-event.slice';
 import { FastcastLeaguesSlice } from './features/espn/fastcast/slices/fastcast-league.slice';
 import { FastcastSportsSlice } from './features/espn/fastcast/slices/fastcast-sport.slice';
@@ -60,7 +61,8 @@ export const AppStore = configureStore({
       .concat(lineupHeadquartersHandler.middleware)
       .concat(masterSlateHandler.middleware)
       .concat(footballGameAttributesHandler.middleware)
-      .concat(slatePlayerHandler.middleware),
+      .concat(slatePlayerHandler.middleware)
+      .concat(fastcastWebSocketMiddleware),
 });
 
 export type RootState = ReturnType<typeof AppStore.getState>;

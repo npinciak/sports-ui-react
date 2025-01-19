@@ -8,6 +8,7 @@ export const OPERATION_CODE = {
   INIT: 'I',
   Replace: 'Replace',
   Error: 'ERROR',
+  U: 'U', // disconnect?
 } as const;
 
 export type OperationCode = (typeof OPERATION_CODE)[keyof typeof OPERATION_CODE];

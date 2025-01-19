@@ -1,24 +1,18 @@
-import { Button, Card, CardContent, Divider, Grid } from '@mui/material';
+import { Button, Grid, NativeSelect, Stack } from '@mui/material';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FastcastStaticClient } from '../client/fastcast-static.client';
 import { FastcastClient } from '../client/fastcast.client';
-import { FastcastWebSocketHandler } from '../helpers/websocket.handler';
+import { wsConnect, wsDisconnect } from '../helpers/websocket-handler';
 import { WebSocketUriBuilder } from '../models/websocket-uri-builder.model';
-import {
-  selectEventEntityList,
-  selecttEventEntityListBySport,
-} from '../selector/fastcast-event.selectors';
-import { selectSportEntityList } from '../selector/fastcast-sport.selectors';
+import { selectEventEntityListByLeague } from '../selector/fastcast-event.selectors';
+import { selectLeagueEntityList } from '../selector/fastcast-league.selectors';
 import { FastcastEventComponent } from './fastcast-event.component';
 
 export function FastcastWrapperComponent() {
-  const [open, setOpen] = useState(false);
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
+  const dispatch = useDispatch();
 
-  const [sportFilter, setSportFilter] = useState<string>('20');
+  const [leagueFilter, setLeagueFilter] = useState<string>('');
 
   FastcastStaticClient.useGetStaticScoreboardQuery();
 
@@ -27,38 +21,67 @@ export function FastcastWrapperComponent() {
 
   const [connectToFastCast] = FastcastClient.useLazyGetFastcastQuery();
 
-  const sportList = useSelector(selectSportEntityList);
-  const eventList = useSelector(selectEventEntityList);
-  const eventListBySport = useSelector(selecttEventEntityListBySport);
+  const leagueList = useSelector(selectLeagueEntityList);
 
-  const fastcastWebsocket = FastcastWebSocketHandler();
+  const eventListByLeague = useSelector(selectEventEntityListByLeague)(
+    leagueFilter
+  );
 
   async function onConnectionClick() {
-    const { data } = await getConnectionInfo();
+    const websocketConnectionInfo = await getConnectionInfo().unwrap();
+
     const { websocketUri } = WebSocketUriBuilder({
-      websocketConnectionInfo: data,
+      websocketConnectionInfo,
     });
 
-    fastcastWebsocket.websocket = websocketUri;
-
-    fastcastWebsocket.openConnection();
-    fastcastWebsocket.listenToMessages(connectToFastCast);
+    dispatch(wsConnect(websocketUri));
   }
 
   const onDisconnectClick = () => {
-    fastcastWebsocket.disconnect();
-  };
-
-  const handleSportSelection = (value: string) => {
-    setSportFilter(value);
+    dispatch(wsDisconnect());
   };
 
   return (
     <>
-      <Button onClick={onConnectionClick}>Connect</Button>
-      <Button onClick={onDisconnectClick}>Disconnect</Button>
-
-      {eventListBySport?.map(event => <FastcastEventComponent event={event} />)}
+      <Grid container spacing={2} className="mb-4">
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            className="w-full"
+            onClick={onConnectionClick}
+          >
+            Connect
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            className="w-full"
+            onClick={onDisconnectClick}
+          >
+            Disconnect
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <NativeSelect
+            value={leagueFilter}
+            onChange={event => setLeagueFilter(event.target.value)}
+            className="w-full"
+          >
+            <option value="">All</option>
+            {leagueList?.map(league => (
+              <option key={league.id} value={league.id}>
+                {league.name}
+              </option>
+            ))}
+          </NativeSelect>
+        </Grid>
+      </Grid>
+      <Stack width="100%">
+        {eventListByLeague?.map(event => (
+          <FastcastEventComponent key={event.id} event={event} />
+        ))}
+      </Stack>
     </>
   );
 }

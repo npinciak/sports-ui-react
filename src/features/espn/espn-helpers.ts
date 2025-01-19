@@ -1,4 +1,5 @@
 import { PlayerStatsYear, ProLeagueType, getContrastRatio } from 'sports-ui-sdk';
+import { ICompetitorsEntity } from './fastcast/models/competitors-entity.model';
 import { ESPN_PARAM_FRAGMENTS, ESPN_VIEW_PARAM_FRAGMENTS } from './helpers/endpoint-builder/endpoint-builder.const';
 import { SportTypeId } from './models/sport-type.model';
 
@@ -102,8 +103,9 @@ export function normalizeName(name: string) {
  *
  * @example teamColorHandler()
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function teamColorHandler(val: any): string | null {
+export function teamColorHandler(val: ICompetitorsEntity | undefined): string | null {
+  if (!val) return null;
+
   const { color, alternateColor } = val;
 
   if (!color || !alternateColor) return null;

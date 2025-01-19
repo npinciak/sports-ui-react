@@ -9,7 +9,15 @@ export const selectEventIds = createSelector([fastcastEventsSlice], state => sta
 export const selectEventIdSet = createSelector([selectEventIds], ids => new Set(ids));
 export const selectEventEntities = createSelector([fastcastEventsSlice], state => state.entities);
 export const selectEventEntityList = createSelector([selectEventEntities], entities => Object.values(entities));
-export const selecttEventEntityListBySport = createSelector(
+
+export const selectEventEntityListBySport = createSelector(
   [selectEventEntityList],
   events => (sportTypeId: string) => events.filter(event => event.eventIds?.sportTypeId === sportTypeId)
 );
+
+export const selectEventEntityListByLeague = createSelector([selectEventEntityList], events => (leagueId: string) => {
+  return events.filter(event => {
+    if (leagueId === '') return true;
+    return event.eventIds?.leagueId === leagueId;
+  });
+});
