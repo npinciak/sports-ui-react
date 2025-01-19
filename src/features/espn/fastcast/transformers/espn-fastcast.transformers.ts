@@ -71,7 +71,7 @@ export function transformILeaguesImportToUIFastcastLeague(leagueImport: ILeagues
 }
 
 export function clientCompetitorToFastcastTeam(data: ICompetitorsEntity, event: IEventsEntity): FastcastEventTeam {
-  const { id, uid, name, winner, score, logo, logoDark, abbreviation, homeAway, alternateColor, rank, seriesRecord, color } = data;
+  const { id, uid, name, winner, score, logo, logoDark, abbreviation, homeAway, alternateColor, rank, seriesRecord, scoringSummary } = data;
 
   const record = typeof data.record === 'string' ? data.record : (data.record?.[0]?.displayValue ?? null);
 
@@ -96,12 +96,13 @@ export function clientCompetitorToFastcastTeam(data: ICompetitorsEntity, event: 
     logoDark: logoDark ?? NO_LOGO,
     isWinner: winner,
     name: name ?? abbreviation,
-    color: `#${color ?? ''}`,
+    color: teamColorHandler(data),
     altColor: alternateColor ? `#${alternateColor}` : null,
     record,
     rank: rank ?? null,
     chanceToWinPct,
     seriesRecord: seriesRecord ?? null,
+    scoringSummary: scoringSummary ?? null,
   };
 }
 
