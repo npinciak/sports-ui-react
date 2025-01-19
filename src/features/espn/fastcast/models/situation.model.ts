@@ -3,6 +3,21 @@ import { ILastPlayEntity } from './last-play.model';
 
 export interface ISituationEntity {
   lastPlay: ILastPlayEntity | null;
+  drive: {
+    description: string;
+    result: string;
+    start: {
+      yardLine: number;
+      text: string;
+    };
+    end: {
+      yardLine: number;
+      text: string;
+    };
+    timeElapsed: {
+      displayValue: string;
+    };
+  };
   down: number;
   yardLine: number;
   distance: number;

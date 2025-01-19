@@ -7,7 +7,7 @@ export function FastcastTeamComponent({
   team: FastcastEventTeam | undefined;
 }) {
   return (
-    <Grid container className="w-full py-2 text-xs">
+    <Grid container className="w-full py-2 ">
       <Grid item xs={2} alignContent={'center'}>
         <img
           width="48"
@@ -26,13 +26,14 @@ export function FastcastTeamComponent({
         >
           {team?.rank} {team?.name}
         </div>
-        <div>{team?.record}</div>
+        <div className="text-xs">{team?.record}</div>
       </Grid>
       <Grid
         item
         xs={4}
         className="font-bold text-right"
         alignContent={'center'}
+        style={{ color: team?.color ?? '#000000' }}
       >
         {team?.score}
       </Grid>
