@@ -11,11 +11,11 @@ import {
   exists,
 } from 'sports-ui-sdk';
 import { IFantasyLeague } from '../../models';
+import { SPORT_TYPE_ID } from '../../models/sport-type.model';
 import { clientPlayerToFantasyPlayer } from '../../transformers/fantasy-player.transformers';
 import { BaseballLeague } from '../models/baseball-league.model';
 import { BaseballPlayer } from '../models/baseball-player.model';
 import { BaseballTeam, BaseballTeamLive } from '../models/baseball-team.model';
-import { SPORT_TYPE_ID } from '../../models/sport-type.model';
 
 /** @deprecated use transformClientLeagueToBaseballLeagueV2 */
 export function transformClientLeagueToBaseballLeague(
@@ -47,7 +47,7 @@ export function transformEspnFreeAgentToBaseballPlayer(freeAgents: FreeAgent[]):
 
     const playerInfo = clientPlayerToFantasyPlayer({
       clientPlayer: player,
-      sportId: SPORT_TYPE_ID.Baseball,
+      sportId: SPORT_TYPE_ID.BASEBALL,
       leagueId: ProLeagueType.MLB,
       teamMap: MLB_TEAM_MAP,
       positionMap: MLB_POSITION_MAP,
@@ -86,7 +86,7 @@ export function clientPlayerToBaseballPlayer(players: TeamRosterEntry[]): Baseba
 
     const playerInfo = clientPlayerToFantasyPlayer({
       clientPlayer: player.playerPoolEntry.player,
-      sportId: SPORT_TYPE_ID.Baseball,
+      sportId: SPORT_TYPE_ID.BASEBALL,
       leagueId: ProLeagueType.MLB,
       teamMap: MLB_TEAM_MAP,
       positionMap: MLB_POSITION_MAP,

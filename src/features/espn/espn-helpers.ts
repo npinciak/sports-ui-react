@@ -55,35 +55,35 @@ export function generateProTeamScheduleParams(): URLSearchParams {
 }
 
 /**
- * Sports to include in Fastcast
- *
- * @param id
- * @returns
- */
-export function includeSports(id: string): boolean {
-  return new Set(['1', '20', '40', '70', '600']).has(id);
-}
-
-/**
- * Leagues to include in Fastcast
- *
- * @param id
- * @returns boolean
- */
-export function includeLeagues(id: string): boolean {
-  return new Set(['10', '28', '46', '90', '775', '776', '20296']).has(id);
-}
-
-/**
  * Leagues to exclude in Fastcast
  *
  * @param id
  * @returns boolean
  */
 export function excludeLeagues(id: string): boolean {
-  const leagueIds = ['14', '62', '760', '102', '3923', '8097', '20226', '54', '59', '19834', '8301', '19483', '19868', '19728'];
+  const leagueIds = [
+    '14',
+    '62',
+    '760',
+    '102',
+    '3923',
+    LEAGUE.ENGLISH_W_SOCC,
+    '20226',
+    LEAGUE.NCAA_W,
+    '59',
+    '19834',
+    '8301',
+    '19483',
+    '19868',
+    '19728',
+  ];
   return new Set(leagueIds).has(id);
 }
+
+const LEAGUE = {
+  NCAA_W: '54',
+  ENGLISH_W_SOCC: '8097',
+};
 
 export function normalizeName(name: string) {
   return name

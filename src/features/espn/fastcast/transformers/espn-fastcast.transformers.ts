@@ -1,6 +1,7 @@
 import { EVENT_STATUS, EVENT_STATUS_TYPE, SEASON_TYPE, SEASON_TYPE_LIST } from 'sports-ui-sdk';
 import { NO_LOGO } from '../../constants';
-import { includeSports, parseEventUidStringToId, parseTeamUidStringToId, teamColorHandler } from '../../espn-helpers';
+import { parseEventUidStringToId, parseTeamUidStringToId, teamColorHandler } from '../../espn-helpers';
+import { SPORT_TYPE_ID_INCLUDE_LIST } from '../../models/sport-type.model';
 import { EspnDateHelper } from '../helpers/espn-date-helper';
 import { FASTCAST_EVENT_TYPE, ICompetitorsEntity, IEventsEntity, ILeaguesEntity, ISportsEntity } from '../models';
 import { IFastcastCheckpoint } from '../models/fastcast-checkpoint.model';
@@ -22,7 +23,10 @@ export function transformFastcastCheckpointToUIFastcast(response: IFastcastCheck
 
   sports.forEach(sport => {
     const { id } = sport;
-    if (includeSports(id)) {
+
+    const hasSportId = (SPORT_TYPE_ID_INCLUDE_LIST as string[]).includes(id);
+
+    if (hasSportId) {
       fastcastSports.push(transformISportsEntityToSport(sport));
       leagueList.push(...sport.leagues);
     }
