@@ -8,17 +8,14 @@ export const fastcastWebSocketMiddleware: Middleware = (api: MiddlewareAPI<Dispa
   let _websocket: WebSocket | null = null;
   let _sessionId: string | null = null;
 
-  console.log('ACTION: ', action);
 
   const _eventType: FastcastEventType | null = FASTCAST_EVENT_TYPE.TOP_EVENTS;
 
   const onOpen = (api: MiddlewareAPI) => (event: any) => {
-    console.log('onOpen', 'websocket open');
     (_websocket as WebSocket)!.send(JSON.stringify({ op: OPERATION_CODE.CONNECT }));
   };
 
   const onClose = (api: MiddlewareAPI) => () => {
-    console.log('onClose', 'websocket closed');
     api.dispatch(wsDisconnected());
   };
 
@@ -27,7 +24,6 @@ export const fastcastWebSocketMiddleware: Middleware = (api: MiddlewareAPI<Dispa
 
     switch (op) {
       case OPERATION_CODE.CONNECT:
-        console.log('OPERATION_CODE.CONNECT');
         (_websocket as WebSocket)!.send(JSON.stringify({ op: OPERATION_CODE.SUCCESS, sid, tc: _eventType }));
         break;
       case OPERATION_CODE.HEARTBEAT:
@@ -48,7 +44,6 @@ export const fastcastWebSocketMiddleware: Middleware = (api: MiddlewareAPI<Dispa
 
   switch (action.type) {
     case ACTIONS.WS_CONNECT:
-      console.log('ACTIONS.WS_CONNECT');
       if (_websocket != null) (_websocket as WebSocket).close();
 
       _websocket = new WebSocket((action as { payload: { host: string } }).payload.host);
@@ -60,7 +55,6 @@ export const fastcastWebSocketMiddleware: Middleware = (api: MiddlewareAPI<Dispa
 
       break;
     case ACTIONS.WS_CONNECTED:
-      console.log('ACTIONS.WS_CONNECT');
 
       // if (_websocket == null) return;
 

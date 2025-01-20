@@ -12,6 +12,8 @@ import { FastcastEventComponent } from './fastcast-event.component';
 export function FastcastWrapperComponent() {
   const dispatch = useDispatch();
 
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+
   const [leagueFilter, setLeagueFilter] = useState<string>('');
 
   FastcastStaticClient.useGetStaticScoreboardQuery();
@@ -27,7 +29,9 @@ export function FastcastWrapperComponent() {
     leagueFilter
   );
 
-  async function onConnectionClick() {
+  async function onConnectionClick(newConnectionStatus: any) {
+    setIsConnected(!!newConnectionStatus);
+
     const websocketConnectionInfo = await getConnectionInfo().unwrap();
 
     const { websocketUri } = WebSocketUriBuilder({
@@ -48,20 +52,12 @@ export function FastcastWrapperComponent() {
           <Button
             variant="contained"
             className="w-full"
-            onClick={onConnectionClick}
+            onClick={() => onConnectionClick(!isConnected)}
           >
-            Connect
+            {isConnected ? 'Disconnect' : 'Connect'}
           </Button>
         </Grid>
-        <Grid item xs={12}>
-          <Button
-            variant="contained"
-            className="w-full"
-            onClick={onDisconnectClick}
-          >
-            Disconnect
-          </Button>
-        </Grid>
+
         <Grid item xs={12}>
           <NativeSelect
             value={leagueFilter}
