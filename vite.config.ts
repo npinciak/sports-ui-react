@@ -4,7 +4,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   optimizeDeps: {
-    include: ['@mui/material'],
+    include: ['@mui/material', '@emotion/react', '@emotion/styled', '@mui/material/Tooltip'],
   },
   plugins: [react(), tsconfigPaths()],
 });

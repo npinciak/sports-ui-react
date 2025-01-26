@@ -3,8 +3,7 @@ export const ESPN_TEXT: Record<string, string> = {
 };
 
 export const BASE_URL = import.meta.env.VITE_ESPN_BASE;
-export const API_BASE = import.meta.env.VITE_ESPN_API_BASE;
-export const API_BASE_V2 = API_BASE + '/v2';
+export const BASE_URL_V2 = import.meta.env.VITE_ESPN_BASE + '/v2';
 
 export const CDN = import.meta.env.VITE_ESPN_CDN;
 export const CDN_COMBINER = CDN + 'combiner/i';
@@ -25,7 +24,8 @@ export const ICON_PATH = `${CDN_REDESIGN_IMG}/sprites/transitional-secondary-nav
 
 export const NO_LOGO = `${CDN_COMBINER}?img=/i/teamlogos/default-team-logo-500.png&h=100&scale=crop&w=100&location=origin`;
 
-export function fastcastURIBuilder(eventType: string | null, messageId: string) {
+export function fastcastURIBuilder(eventType: string | null, messageId: string | undefined) {
+  if (!messageId) return '';
   return `${FASTCAST_BASE}/${eventType}/message/${messageId}/checkpoint`;
 }
 

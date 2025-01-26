@@ -1,8 +1,9 @@
-import { Box, Container, Typography } from '@mui/material';
+import { Box } from '@mui/material';
+import { FastcastWrapperComponent } from '../../../features/espn/fastcast/components/fastcast-wrapper.component';
 
 export function HomePage() {
   return (
-    <Container component="main" maxWidth="sm">
+    <>
       <Box
         sx={{
           marginTop: 6,
@@ -11,10 +12,8 @@ export function HomePage() {
           alignItems: 'center',
         }}
       >
-        <Typography component="h1" variant="h5">
-          Home
-        </Typography>
+        <FastcastWrapperComponent />
       </Box>
-    </Container>
+    </>
   );
 }

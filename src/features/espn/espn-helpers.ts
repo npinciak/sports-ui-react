@@ -1,5 +1,7 @@
-import { PlayerStatsYear, ProLeagueType, SportType, getContrastRatio } from 'sports-ui-sdk';
+import { PlayerStatsYear, ProLeagueType, getContrastRatio } from 'sports-ui-sdk';
+import { ICompetitorsEntity } from './fastcast/models/competitors-entity.model';
 import { ESPN_PARAM_FRAGMENTS, ESPN_VIEW_PARAM_FRAGMENTS } from './helpers/endpoint-builder/endpoint-builder.const';
+import { SportTypeId } from './models/sport-type.model';
 
 /**
  * Generates league params
@@ -53,35 +55,35 @@ export function generateProTeamScheduleParams(): URLSearchParams {
 }
 
 /**
- * Sports to include in Fastcast
- *
- * @param id
- * @returns
- */
-export function includeSports(id: string): boolean {
-  return new Set(['1', '20', '40', '70', '600']).has(id);
-}
-
-/**
- * Leagues to include in Fastcast
- *
- * @param id
- * @returns boolean
- */
-export function includeLeagues(id: string): boolean {
-  return new Set(['10', '28', '46', '90', '775', '776', '20296']).has(id);
-}
-
-/**
  * Leagues to exclude in Fastcast
  *
  * @param id
  * @returns boolean
  */
 export function excludeLeagues(id: string): boolean {
-  const leagueIds = ['14', '62', '760', '102', '3923', '8097', '8301', '20226', '54', '59', '19834', '8301', '19483', '19868', '19728'];
+  const leagueIds = [
+    '14',
+    '62',
+    '760',
+    '102',
+    '3923',
+    LEAGUE.ENGLISH_W_SOCC,
+    '20226',
+    LEAGUE.NCAA_W,
+    '59',
+    '19834',
+    '8301',
+    '19483',
+    '19868',
+    '19728',
+  ];
   return new Set(leagueIds).has(id);
 }
+
+const LEAGUE = {
+  NCAA_W: '54',
+  ENGLISH_W_SOCC: '8097',
+};
 
 export function normalizeName(name: string) {
   return name
@@ -101,8 +103,9 @@ export function normalizeName(name: string) {
  *
  * @example teamColorHandler()
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function teamColorHandler(val: any): string | null {
+export function teamColorHandler(val: ICompetitorsEntity | undefined): string | null {
+  if (!val) return null;
+
   const { color, alternateColor } = val;
 
   if (!color || !alternateColor) return null;
@@ -143,7 +146,7 @@ export function transformUidToLeagueId(uid: string | null): string | null {
   return uid.split('~')[1].replace('l:', '');
 }
 
-export function transformIdToUid(sportType: SportType | null, leagueId: ProLeagueType | null, teamId: string | number | null): string {
+export function transformIdToUid(sportType: SportTypeId | null, leagueId: ProLeagueType | null, teamId: string | number | null): string {
   if (!sportType || !leagueId || !teamId) return '';
   return `s:${sportType}~l:${leagueId}~t:${teamId}`;
 }
@@ -165,7 +168,7 @@ export function parseEventUidStringToId(str: string): ParsedUid | null {
     return null;
   });
 
-  if (s && l && e && c) return { sportType: s, leagueId: l, eventId: e, competitionId: c };
+  if (s && l && e && c) return { sportTypeId: s, leagueId: l, eventId: e, competitionId: c };
 
   return null;
 }
@@ -181,13 +184,13 @@ export function parseTeamUidStringToId(str: string): ParsedUid | null {
     return null;
   });
 
-  if (s && l && t) return { sportType: s, leagueId: l, teamId: t };
+  if (s && l && t) return { sportTypeId: s, leagueId: l, teamId: t };
 
   return null;
 }
 
 export type ParsedUid = {
-  sportType: string;
+  sportTypeId: string;
   leagueId: string;
   eventId?: string;
   competitionId?: string;
