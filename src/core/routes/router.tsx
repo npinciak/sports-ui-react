@@ -1,3 +1,4 @@
+import { LoaderFunctionArgs, RouteObject } from 'react-router';
 import { fangraphsClient } from '../../@shared';
 import { AppStore } from '../../app.store';
 import {
@@ -9,9 +10,9 @@ import {
   BaseballPlayer,
   BaseballTeam,
 } from '../../features';
-import { FootballHomePage } from '../../features/daily-fantasy/football/pages';
 import { baseballHandler } from '../../features/espn/fantasy-baseball/handler';
 import { ProfilePage } from '../../features/profile';
+import ShellComponent from '../../shell/shell.component';
 import {
   ForgotPasswordPage,
   HomePage,
@@ -20,16 +21,40 @@ import {
   ResetPasswordPage,
   SignUpPage,
 } from '../pages';
-import { ProtectedRoute } from './protected-route.component';
 
-export const authenticatedRoutes = [
+export const publicRoutes: RouteObject[] = [
   {
     path: '',
-    element: <ProtectedRoute />,
+    element: <ShellComponent />,
     children: [
       {
         path: '',
         element: <HomePage />,
+      },
+      {
+        path: 'login',
+        element: <LoginPage />,
+      },
+      {
+        path: 'daily-fantasy',
+        children: [
+          {
+            path: '',
+            element: <HomePage />,
+          },
+        ],
+      },
+      {
+        path: 'forgot-password',
+        element: <ForgotPasswordPage />,
+      },
+      {
+        path: 'reset-password',
+        element: <ResetPasswordPage />,
+      },
+      {
+        path: 'sign-up',
+        element: <SignUpPage />,
       },
       {
         path: 'logout',
@@ -80,15 +105,10 @@ export const authenticatedRoutes = [
                               {
                                 path: '',
                                 element: <BaseballTeam />,
+
                                 loader: async ({
                                   params,
-                                }: {
-                                  params: {
-                                    year: string;
-                                    leagueId: string;
-                                    teamId: string;
-                                  };
-                                }) => {
+                                }: LoaderFunctionArgs) => {
                                   await AppStore.dispatch(
                                     baseballHandler.endpoints.fetchTeamById.initiate(
                                       {
@@ -157,40 +177,7 @@ export const authenticatedRoutes = [
           },
         ],
       },
-      {
-        path: 'daily-fantasy',
-        children: [
-          {
-            path: 'nfl',
-            element: <FootballHomePage />,
-          },
-        ],
-      },
+      { path: '*', element: <HomePage /> },
     ],
   },
-];
-
-export const publicRoutes = [
-  {
-    path: '',
-    element: <HomePage />,
-  },
-  {
-    path: 'login',
-    element: <LoginPage />,
-  },
-
-  {
-    path: 'forgot-password',
-    element: <ForgotPasswordPage />,
-  },
-  {
-    path: 'reset-password',
-    element: <ResetPasswordPage />,
-  },
-  {
-    path: 'sign-up',
-    element: <SignUpPage />,
-  },
-  { path: '*', element: <HomePage /> },
 ];

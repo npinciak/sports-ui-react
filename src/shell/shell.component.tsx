@@ -1,4 +1,4 @@
-import { Home, PersonPin } from '@mui/icons-material';
+import { Home, PersonPin, Scoreboard, Sports } from '@mui/icons-material';
 import {
   BottomNavigation,
   BottomNavigationAction,
@@ -7,10 +7,10 @@ import {
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { Outlet, useNavigate } from 'react-router-dom';
-import './App.css';
-import { HeaderComponent } from './core';
+import '../App.css';
+import { HeaderComponent } from '../core';
 
-function App() {
+function ShellComponent() {
   const navigate = useNavigate();
   return (
     <>
@@ -31,6 +31,18 @@ function App() {
             />
 
             <BottomNavigationAction
+              label="Daily Fantasy"
+              icon={<Sports />}
+              onClick={() => navigate('')}
+            />
+
+            <BottomNavigationAction
+              label="Scoreboard"
+              icon={<Scoreboard />}
+              onClick={() => navigate('')}
+            />
+
+            <BottomNavigationAction
               label="Profile"
               icon={<PersonPin />}
               onClick={() => navigate('/profile')}
@@ -42,4 +54,4 @@ function App() {
   );
 }
 
-export default App;
+export default ShellComponent;
