@@ -21,66 +21,67 @@ import {
   ResetPasswordPage,
   SignUpPage,
 } from '../pages';
+import { ROUTE_FRAGMENT } from './routes.model';
 
 export const publicRoutes: RouteObject[] = [
   {
-    path: '',
+    path: ROUTE_FRAGMENT.EMPTY,
     element: <ShellComponent />,
     children: [
       {
-        path: '',
+        path: ROUTE_FRAGMENT.EMPTY,
         element: <HomePage />,
       },
       {
-        path: 'login',
+        path: ROUTE_FRAGMENT.LOGIN,
         element: <LoginPage />,
       },
       {
-        path: 'daily-fantasy',
+        path: ROUTE_FRAGMENT.DAILY_FANTASY,
         children: [
           {
-            path: '',
+            path: ROUTE_FRAGMENT.EMPTY,
             element: <HomePage />,
           },
         ],
       },
       {
-        path: 'forgot-password',
+        path: ROUTE_FRAGMENT.FORGOT_PASSWORD,
         element: <ForgotPasswordPage />,
       },
       {
-        path: 'reset-password',
+        path: ROUTE_FRAGMENT.RESET_PASSWORD,
         element: <ResetPasswordPage />,
       },
       {
-        path: 'sign-up',
+        path: ROUTE_FRAGMENT.SIGN_UP,
         element: <SignUpPage />,
       },
       {
-        path: 'logout',
+        path: ROUTE_FRAGMENT.LOGOUT,
         element: <LogoutPage />,
       },
       {
-        path: 'profile',
+        path: ROUTE_FRAGMENT.PROFILE,
         element: <ProfilePage />,
       },
       {
-        path: 'admin',
+        path: ROUTE_FRAGMENT.ADMIN,
         children: [
           {
-            path: 'league-progression',
+            path: ROUTE_FRAGMENT.LEAGUE_PROGRESSION,
             element: <AdminLeagueProgressionPage />,
           },
         ],
       },
       {
-        path: 'baseball',
+        path: ROUTE_FRAGMENT.BASEBALL,
         children: [
           {
-            path: ':year',
+            path: ROUTE_FRAGMENT.YEAR,
             children: [
               {
-                path: 'league',
+                path: ROUTE_FRAGMENT.LEAGUE,
                 loader: async () => {
                   await AppStore.dispatch(
                     baseballHandler.endpoints.fetchEvents.initiate()
@@ -90,20 +91,20 @@ export const publicRoutes: RouteObject[] = [
                 },
                 children: [
                   {
-                    path: ':leagueId',
+                    path: ROUTE_FRAGMENT.LEAGUE_ID,
                     children: [
                       {
-                        path: '',
+                        path: ROUTE_FRAGMENT.EMPTY,
                         element: <BaseballHome />,
                       },
                       {
-                        path: 'team',
+                        path: ROUTE_FRAGMENT.TEAM,
                         children: [
                           {
-                            path: ':teamId',
+                            path: ROUTE_FRAGMENT.TEAM_ID,
                             children: [
                               {
-                                path: '',
+                                path: ROUTE_FRAGMENT.EMPTY,
                                 element: <BaseballTeam />,
 
                                 loader: async ({
@@ -112,9 +113,14 @@ export const publicRoutes: RouteObject[] = [
                                   await AppStore.dispatch(
                                     baseballHandler.endpoints.fetchTeamById.initiate(
                                       {
-                                        year: params?.year ?? '',
-                                        leagueId: params?.leagueId ?? '',
-                                        teamId: params?.teamId ?? '',
+                                        year:
+                                          params?.year ?? ROUTE_FRAGMENT.EMPTY,
+                                        leagueId:
+                                          params?.leagueId ??
+                                          ROUTE_FRAGMENT.EMPTY,
+                                        teamId:
+                                          params?.teamId ??
+                                          ROUTE_FRAGMENT.EMPTY,
                                       }
                                     )
                                   );
@@ -125,19 +131,19 @@ export const publicRoutes: RouteObject[] = [
                                 },
                               },
                               {
-                                path: 'batters',
+                                path: ROUTE_FRAGMENT.BATTERS,
                                 children: [
                                   {
-                                    path: '',
+                                    path: ROUTE_FRAGMENT.EMPTY,
                                     element: <BaseballBatters />,
                                   },
                                 ],
                               },
                               {
-                                path: 'pitchers',
+                                path: ROUTE_FRAGMENT.PITCHERS,
                                 children: [
                                   {
-                                    path: '',
+                                    path: ROUTE_FRAGMENT.EMPTY,
                                     element: <BaseballPitchers />,
                                   },
                                 ],
@@ -147,23 +153,92 @@ export const publicRoutes: RouteObject[] = [
                         ],
                       },
                       {
-                        path: 'free-agents',
+                        path: ROUTE_FRAGMENT.FREE_AGENTS,
                         children: [
                           {
-                            path: '',
+                            path: ROUTE_FRAGMENT.EMPTY,
                             element: <BaseballFreeAgents />,
                           },
                         ],
                       },
                       {
-                        path: 'player',
+                        path: ROUTE_FRAGMENT.PLAYER,
                         children: [
                           {
-                            path: ':playerId',
+                            path: ROUTE_FRAGMENT.PLAYER_ID,
                             children: [
                               {
-                                path: '',
+                                path: ROUTE_FRAGMENT.EMPTY,
                                 element: <BaseballPlayer />,
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: ROUTE_FRAGMENT.FOOTBALL,
+        children: [
+          {
+            path: ROUTE_FRAGMENT.YEAR,
+            children: [
+              {
+                path: ROUTE_FRAGMENT.LEAGUE,
+                loader: async () => {
+                  //TODO: Implement
+                  return null;
+                },
+                children: [
+                  {
+                    path: ROUTE_FRAGMENT.LEAGUE_ID,
+                    children: [
+                      {
+                        path: ROUTE_FRAGMENT.EMPTY,
+                        element: <div>Football Home</div>,
+                      },
+                      {
+                        path: ROUTE_FRAGMENT.TEAM,
+                        children: [
+                          {
+                            path: ROUTE_FRAGMENT.TEAM_ID,
+                            children: [
+                              {
+                                path: ROUTE_FRAGMENT.EMPTY,
+                                element: <div>Football Team</div>,
+                                loader: async () => {
+                                  //TODO: Implement
+                                  return null;
+                                },
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                      {
+                        path: ROUTE_FRAGMENT.FREE_AGENTS,
+                        children: [
+                          {
+                            path: ROUTE_FRAGMENT.EMPTY,
+                            element: <div>Football Free Agents</div>,
+                          },
+                        ],
+                      },
+                      {
+                        path: ROUTE_FRAGMENT.PLAYER,
+                        children: [
+                          {
+                            path: ROUTE_FRAGMENT.PLAYER_ID,
+                            children: [
+                              {
+                                path: ROUTE_FRAGMENT.EMPTY,
+                                element: <div>Football Player</div>,
                               },
                             ],
                           },

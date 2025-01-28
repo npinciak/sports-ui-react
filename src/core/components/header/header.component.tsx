@@ -4,11 +4,8 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { useNavigate } from 'react-router-dom';
 
 export function HeaderComponent() {
-  const navigate = useNavigate();
-
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -31,7 +28,6 @@ export function HeaderComponent() {
           >
             Desktop
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}></Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
