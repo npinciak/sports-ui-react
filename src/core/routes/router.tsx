@@ -10,6 +10,7 @@ import {
   BaseballPlayer,
   BaseballTeam,
 } from '../../features';
+import { FootballHomePage } from '../../features/daily-fantasy/football/pages/football-home.page';
 import { DailyFantasyHomePage } from '../../features/daily-fantasy/pages/home.page';
 import { baseballHandler } from '../../features/espn/fantasy-baseball/handler';
 import { FastcastScoreboardHomePage } from '../../features/espn/fastcast/pages/home.page';
@@ -44,6 +45,10 @@ export const publicRoutes: RouteObject[] = [
           {
             path: ROUTE_FRAGMENT.EMPTY,
             element: <DailyFantasyHomePage />,
+          },
+          {
+            path: ROUTE_FRAGMENT.FOOTBALL,
+            element: <FootballHomePage />,
           },
         ],
       },
