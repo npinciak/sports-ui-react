@@ -1,7 +1,5 @@
 import Box from '@mui/material/Box/Box';
-import Card from '@mui/material/Card/Card';
-import CardContent from '@mui/material/CardContent/CardContent';
-import CardHeader from '@mui/material/CardHeader/CardHeader';
+import { FastcastWrapperComponent } from '../components/fastcast-wrapper.component';
 
 export function FastcastScoreboardHomePage() {
   return (
@@ -12,10 +10,7 @@ export function FastcastScoreboardHomePage() {
         flexDirection: 'column',
       }}
     >
-      <Card>
-        <CardHeader title="FastcastScoreboardHomePage" />
-        <CardContent></CardContent>
-      </Card>
+      <FastcastWrapperComponent />
     </Box>
   );
 }
