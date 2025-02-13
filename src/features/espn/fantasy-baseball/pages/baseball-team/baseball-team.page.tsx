@@ -28,7 +28,6 @@ import {
   BaseballPlayerProjectionTable,
   BaseballPlayerStatsTable,
 } from '../../components';
-import { useFetchTeamByIdQuery } from '../../handler/fantasy-baseball.handler';
 import {
   selectPlayerIds,
   selectStartingBatterFangraphIds,
