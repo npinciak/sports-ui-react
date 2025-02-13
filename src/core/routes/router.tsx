@@ -13,6 +13,7 @@ import {
 import { FootballHomePage } from '../../features/daily-fantasy/football/pages/football-home.page';
 import { DailyFantasyHomePage } from '../../features/daily-fantasy/pages/home.page';
 import { baseballHandler } from '../../features/espn/fantasy-baseball/handler';
+import { EspnFantasyClientV3 } from '../../features/espn/client/espn-fantasy-v3.client';
 import { FastcastScoreboardHomePage } from '../../features/espn/fastcast/pages/home.page';
 import { ProfilePage } from '../../features/profile';
 import ShellComponent from '../../shell/shell.component';
@@ -128,7 +129,7 @@ export const publicRoutes: RouteObject[] = [
                                   params,
                                 }: LoaderFunctionArgs) => {
                                   await AppStore.dispatch(
-                                    baseballHandler.endpoints.fetchTeamById.initiate(
+                                    EspnFantasyClientV3.endpoints.getBaseballTeamById.initiate(
                                       {
                                         year:
                                           params?.year ?? ROUTE_FRAGMENT.EMPTY,

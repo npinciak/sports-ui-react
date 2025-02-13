@@ -10,12 +10,13 @@ import {
   useFetchEventsQuery,
   useFetchLeagueByIdQuery,
 } from '../../handler/fantasy-baseball.handler';
+import { EspnFantasyClientV3 } from '../../../client/espn-fantasy-v3.client';
 import { BaseballTeam } from '../../models/baseball-team.model';
 
 export function BaseballHome() {
   const { year, leagueId } = useParams<{ year: string; leagueId: string }>();
 
-  const { data, isSuccess } = useFetchLeagueByIdQuery({
+  const { data, isSuccess } = EspnFantasyClientV3.useGetBaseballLeagueQuery({
     year: year ?? '',
     leagueId: leagueId ?? '',
   });
