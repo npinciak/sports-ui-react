@@ -7,44 +7,37 @@ import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
-import { useGetProfileWithTeamsQuery } from '../../../@shared/supabase/supabase.client';
+import { SupabaseClient } from '../../../@shared/supabase/supabase.client';
+import {
+  LeagueRoute,
+  RouteBuilder,
+  TeamRoute,
+} from '../../../core/routes/route-builder';
 
 export function ProfilePage() {
-  const { data: profile, isLoading } = useGetProfileWithTeamsQuery({});
+  const {
+    data: profile,
+    isLoading,
+    isFetching,
+  } = SupabaseClient.useGetProfileWithTeamsQuery();
 
   const navigate = useNavigate();
 
-  // const { teamByIdByLeagueIdRoute } = RouteBuilder();
+  const { teamByTeamIdRoute, leagueByLeagueIdRoute } = RouteBuilder();
 
-  function handleToNavigateToTeam({
+  const handleToNavigateToTeam = ({
     sport,
     season,
     leagueId,
     teamId,
-  }: {
-    sport: string | null;
-    season: string | null;
-    leagueId: number | null;
-    teamId: number | null;
-  }) {
-    if (!leagueId || !teamId) return;
-    navigate(`/${sport}/${season}/league/${leagueId}/team/${teamId}`);
-  }
+  }: TeamRoute) =>
+    navigate(teamByTeamIdRoute({ sport, season, leagueId, teamId }));
 
-  function handleToNavigateToLeague({
-    leagueId,
-    sport,
-    season,
-  }: {
-    leagueId: number | null;
-    sport: string | null;
-    season: string | null;
-  }) {
-    if (!leagueId || !sport) return;
-    navigate(`/${sport}/${season}/league/${leagueId}`);
-  }
+  const handleToNavigateToLeague = ({ leagueId, sport, season }: LeagueRoute) =>
+    navigate(leagueByLeagueIdRoute({ sport, season, leagueId }));
 
-  if (isLoading) return <div className="animate-pulse">Loading...</div>;
+  if (isLoading || isFetching)
+    return <div className="animate-pulse">Loading...</div>;
 
   return (
     <Box marginTop={2}>
@@ -68,7 +61,17 @@ export function ProfilePage() {
                   title={team.team.name}
                   subheader={team.team.fantasy_league_name}
                   action={
-                    <IconButton aria-label="navigate">
+                    <IconButton
+                      aria-label="navigate"
+                      onClick={() =>
+                        handleToNavigateToTeam({
+                          sport,
+                          season,
+                          leagueId,
+                          teamId,
+                        })
+                      }
+                    >
                       <ArrowForwardIosIcon fontSize="medium" />
                     </IconButton>
                   }

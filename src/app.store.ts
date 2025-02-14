@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { fangraphsClient, fangraphsPlayerSlice, FangraphsStatsFilterFormSlice } from './@shared/fangraphs';
-import { supabaseClient } from './@shared/supabase/supabase.client';
+import { SupabaseClient } from './@shared/supabase/supabase.client';
 import { AuthenticationClient } from './core/authentication';
 import { AdminLeagueProgressionFormSlice } from './features/admin/slices/league-progression-form.slice';
 import { footballGameAttributesHandler } from './features/daily-fantasy/football/handlers/game-attributes.handler';
@@ -33,7 +33,7 @@ export const AppStore = configureStore({
     [EspnFantasyClientV3.reducerPath]: EspnFantasyClientV3.reducer,
     [fangraphsClient.reducerPath]: fangraphsClient.reducer,
     [FangraphsStatsFilterFormSlice.reducerPath]: FangraphsStatsFilterFormSlice.reducer,
-    [supabaseClient.reducerPath]: supabaseClient.reducer,
+    [SupabaseClient.reducerPath]: SupabaseClient.reducer,
     [baseballEventsSlice.reducerPath]: baseballEventsSlice.reducer,
     [baseballTeamRosterSlice.reducerPath]: baseballTeamRosterSlice.reducer,
     [baseballTeamSlice.reducerPath]: baseballTeamSlice.reducer,
@@ -55,10 +55,10 @@ export const AppStore = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware()
       .concat(AuthenticationClient.middleware)
-      .concat(supabaseClient.middleware)
       .concat(EspnClientV2.middleware)
       .concat(EspnFantasyClientV2.middleware)
       .concat(EspnFantasyClientV3.middleware)
+      .concat(SupabaseClient.middleware)
       .concat(fangraphsClient.middleware)
       .concat(FastcastClient.middleware)
       .concat(lineupHeadquartersHandler.middleware)

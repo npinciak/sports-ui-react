@@ -9,11 +9,8 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useDispatch, useSelector } from 'react-redux';
+import { SupabaseClient } from '../../../@shared';
 import { SupaClientLeagueProgressionInsert } from '../../../@shared/supabase/supabase-tables.model';
-import {
-  useCreateLeagueProgressionEntityMutation,
-  useGetProfileWithTeamsQuery,
-} from '../../../@shared/supabase/supabase.client';
 import {
   selectEspnTeamId,
   selectLeagueId,
@@ -31,7 +28,7 @@ import {
 } from '../slices/league-progression-form.slice';
 
 export function AdminLeagueProgressionForm() {
-  const { data: profileTeams } = useGetProfileWithTeamsQuery({});
+  const { data: profileTeams } = SupabaseClient.useGetProfileWithTeamsQuery({});
 
   const teams = profileTeams != undefined ? profileTeams.teams : [];
 
@@ -44,7 +41,7 @@ export function AdminLeagueProgressionForm() {
   const getEspnTeamId = useSelector(selectEspnTeamId);
 
   const [handleCreateLeagueProgressionEntity] =
-    useCreateLeagueProgressionEntityMutation();
+    SupabaseClient.useCreateLeagueProgressionEntityMutation();
 
   const handleCancel = () => {
     dispatch(resetForm());
