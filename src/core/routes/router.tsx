@@ -12,7 +12,7 @@ import {
 } from '../../features';
 import { FootballHomePage } from '../../features/daily-fantasy/football/pages/football-home.page';
 import { DailyFantasyHomePage } from '../../features/daily-fantasy/pages/home.page';
-import { baseballHandler } from '../../features/espn/fantasy-baseball/handler';
+import { EspnFantasyClientV2 } from '../../features/espn/client/espn-fantasy-v2.client';
 import { EspnFantasyClientV3 } from '../../features/espn/client/espn-fantasy-v3.client';
 import { FastcastScoreboardHomePage } from '../../features/espn/fastcast/pages/home.page';
 import { ProfilePage } from '../../features/profile';
@@ -102,7 +102,7 @@ export const publicRoutes: RouteObject[] = [
                 path: ROUTE_FRAGMENT.LEAGUE,
                 loader: async () => {
                   await AppStore.dispatch(
-                    baseballHandler.endpoints.fetchEvents.initiate()
+                    EspnFantasyClientV2.endpoints.getEvents.initiate()
                   );
 
                   return null;

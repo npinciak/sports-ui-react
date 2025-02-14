@@ -34,14 +34,12 @@ export const AppStore = configureStore({
     [fangraphsClient.reducerPath]: fangraphsClient.reducer,
     [FangraphsStatsFilterFormSlice.reducerPath]: FangraphsStatsFilterFormSlice.reducer,
     [supabaseClient.reducerPath]: supabaseClient.reducer,
-    [baseballHandler.reducerPath]: baseballHandler.reducer,
     [baseballEventsSlice.reducerPath]: baseballEventsSlice.reducer,
     [baseballTeamRosterSlice.reducerPath]: baseballTeamRosterSlice.reducer,
     [baseballTeamSlice.reducerPath]: baseballTeamSlice.reducer,
     [baseballTeamLiveSlice.reducerPath]: baseballTeamLiveSlice.reducer,
     [baseballLeagueSlice.reducerPath]: baseballLeagueSlice.reducer,
     [FastcastClient.reducerPath]: FastcastClient.reducer,
-    [FastcastStaticClient.reducerPath]: FastcastStaticClient.reducer,
     [FastcastEventsSlice.reducerPath]: FastcastEventsSlice.reducer,
     [FastcastSportsSlice.reducerPath]: FastcastSportsSlice.reducer,
     [FastcastLeaguesSlice.reducerPath]: FastcastLeaguesSlice.reducer,
@@ -57,11 +55,12 @@ export const AppStore = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware()
       .concat(AuthenticationClient.middleware)
-      .concat(baseballHandler.middleware)
       .concat(supabaseClient.middleware)
+      .concat(EspnClientV2.middleware)
+      .concat(EspnFantasyClientV2.middleware)
+      .concat(EspnFantasyClientV3.middleware)
       .concat(fangraphsClient.middleware)
       .concat(FastcastClient.middleware)
-      .concat(FastcastStaticClient.middleware)
       .concat(lineupHeadquartersHandler.middleware)
       .concat(masterSlateHandler.middleware)
       .concat(footballGameAttributesHandler.middleware)

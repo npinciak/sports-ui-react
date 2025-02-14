@@ -22,4 +22,12 @@ export class ApiEndpointConfiguration {
 
     return endpoint;
   }
+
+  static get espnFastcastWebsocketConnectionUrl() {
+    const endpoint = import.meta.env.VITE_ESPN_FASTCAST_CONNECTION_URL as string | undefined;
+
+    if (endpoint == undefined) throw new Error('VITE_ESPN_FASTCAST_CONNECTION_URL is not defined in .env file');
+
+    return endpoint;
+  }
 }
