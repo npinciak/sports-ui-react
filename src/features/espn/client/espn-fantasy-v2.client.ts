@@ -3,6 +3,7 @@ import { EspnClient } from 'sports-ui-sdk';
 import { SmartDate } from '../../../@shared/helpers';
 import { ApiEndpointConfiguration } from '../../../api.config';
 import { generateEventParams } from '../espn-helpers';
+import { FantasySportsAbbreviation } from '../helpers/endpoint-builder/endpoint-builder.model';
 
 export const EspnFantasyClientV2 = createApi({
   reducerPath: 'espnFantasyClientV2',
@@ -10,8 +11,32 @@ export const EspnFantasyClientV2 = createApi({
     baseUrl: ApiEndpointConfiguration.espnFantasyEndpointV2,
   }),
   endpoints: builder => ({
-    getEvents: builder.query<EspnClient.EventList, void>({
-      query: () => {
+    getPlayerNews: builder.query<
+      unknown,
+      {
+        fantasySport: FantasySportsAbbreviation;
+        lookbackPeriod: number;
+        playerId: string | null;
+      }
+    >({
+      query: args => {
+        const { fantasySport, lookbackPeriod, playerId } = args;
+
+        const params = {
+          days: lookbackPeriod,
+          playerId,
+        };
+
+        return {
+          url: `/games/${fantasySport}/news/players`,
+          params,
+        };
+      },
+    }),
+    getEvents: builder.query<EspnClient.EventList, { fantasySport: FantasySportsAbbreviation }>({
+      query: args => {
+        const { fantasySport } = args;
+
         const smartDate = new SmartDate();
 
         const oneWeekAgoFromToday = smartDate.formatWithDelimiter({ date: smartDate.today.getTime() });
@@ -22,7 +47,7 @@ export const EspnFantasyClientV2 = createApi({
         const params = generateEventParams(dateRange);
 
         return {
-          url: '/games',
+          url: `/games/${fantasySport}/games`,
           params,
         };
       },

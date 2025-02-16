@@ -20,7 +20,7 @@ export const EspnFantasyClientV3 = createApi({
       {
         fantasySport: FantasySportsAbbreviation;
         lookbackPeriod: number;
-        playerId: number;
+        playerId: string | null;
       }
     >({
       query: args => {
