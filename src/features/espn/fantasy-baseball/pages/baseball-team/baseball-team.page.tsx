@@ -22,12 +22,12 @@ import {
 import { FangraphsPosition } from '../../../../../@shared/fangraphs/models';
 import { selectFangraphsPlayerEntities } from '../../../../../@shared/fangraphs/selectors';
 import { selectStatSplitPeriod } from '../../../../../@shared/fangraphs/selectors/stats-filter.selector';
+import { EspnFantasyClientV3 } from '../../../client/espn-fantasy-v3.client';
 import {
   BaseballLineupCard,
   BaseballPlayerProjectionTable,
   BaseballPlayerStatsTable,
 } from '../../components';
-import { useFetchTeamByIdQuery } from '../../handler/fantasy-baseball.handler';
 import {
   selectPlayerIds,
   selectStartingBatterFangraphIds,
@@ -46,11 +46,12 @@ export function BaseballTeam() {
     teamId: string;
   }>();
 
-  const { data: team, isLoading } = useFetchTeamByIdQuery({
-    year: year ?? '',
-    leagueId: leagueId ?? '',
-    teamId: teamId ?? '',
-  });
+  const { data: team, isLoading } =
+    EspnFantasyClientV3.useGetBaseballTeamByIdQuery({
+      year: year ?? '',
+      leagueId: leagueId ?? '',
+      teamId: teamId ?? '',
+    });
 
   const playerSportsUiIdList = useSelector(selectPlayerIds);
   const startingBatters = useSelector(selectTeamStartingBatterList);
@@ -65,11 +66,6 @@ export function BaseballTeam() {
 
   const teamStartingPitcherListWithEvents = useSelector(
     selectTeamStartingPitcherListWithEvents
-  );
-
-  console.warn(
-    'teamStartingPitcherListWithEvents',
-    teamStartingPitcherListWithEvents
   );
 
   const projectionsFilter: FangraphsPlayerProjectionsRequestBody = {

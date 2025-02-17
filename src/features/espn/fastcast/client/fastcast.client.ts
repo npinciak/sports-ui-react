@@ -1,20 +1,18 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { BaseEspnEndpointBuilder } from '../../helpers/endpoint-builder/endpoint-builder';
+import { ApiEndpointConfiguration } from '../../../../api.config';
 import { UIFastcast } from '../models/fastcast-transform.model';
 import { WebSocketConnectionInfo } from '../models/websocket.model';
 import { transformFastcastCheckpointToUIFastcast } from '../transformers/espn-fastcast.transformers';
 
-const endpoints = BaseEspnEndpointBuilder({});
-
 export const FastcastClient = createApi({
   reducerPath: 'fastcastClient',
   baseQuery: fetchBaseQuery({
-    baseUrl: endpoints.espnFastcastWebSocketHost,
+    baseUrl: ApiEndpointConfiguration.espnFastcastWebsocketConnectionUrl,
   }),
   endpoints: builder => ({
     getFastCastWebsocketConnectionInfo: builder.query<WebSocketConnectionInfo, void>({
       query: () => {
-        return { url: '' };
+        return { url: '/public/websockethost' };
       },
     }),
     getFastcast: builder.query<UIFastcast, { url: string }>({

@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { EspnClient } from 'sports-ui-sdk';
-import { baseballHandler } from '../handler/fantasy-baseball.handler';
+import { EspnFantasyClientV2 } from '../../client/espn-fantasy-v2.client';
 
 export const baseballEventsAdapter = createEntityAdapter({
   selectId: (entity: EspnClient.EventEntity) => entity.id,
@@ -17,7 +17,7 @@ export const baseballEventsSlice = createSlice({
     teamRemoved: baseballEventsAdapter.removeOne,
   },
   extraReducers: builder => {
-    builder.addMatcher(baseballHandler.endpoints.fetchEvents.matchFulfilled, (state, action) => {
+    builder.addMatcher(EspnFantasyClientV2.endpoints.getEvents.matchFulfilled, (state, action) => {
       baseballEventsAdapter.setAll(state, action.payload.events);
     });
   },

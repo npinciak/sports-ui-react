@@ -1,7 +1,7 @@
 import { Button, Grid, NativeSelect, Stack } from '@mui/material';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FastcastStaticClient } from '../client/fastcast-static.client';
+import { EspnClientV2 } from '../../client/espn-v2.client';
 import { FastcastClient } from '../client/fastcast.client';
 import { wsConnect, wsDisconnect } from '../helpers/websocket-handler';
 import { WebSocketUriBuilder } from '../models/websocket-uri-builder.model';
@@ -16,7 +16,7 @@ export function FastcastWrapperComponent() {
 
   const [leagueFilter, setLeagueFilter] = useState<string>('');
 
-  FastcastStaticClient.useGetStaticScoreboardQuery();
+  EspnClientV2.useGetStaticScoreboardQuery();
 
   const [getConnectionInfo] =
     FastcastClient.useLazyGetFastCastWebsocketConnectionInfoQuery();

@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { FastcastStaticClient } from '../client/fastcast-static.client';
+import { EspnClientV2 } from '../../client/espn-v2.client';
 import { FastcastClient } from '../client/fastcast.client';
 import { UIFastcastLeague } from '../models/fastcast-league.model';
 
@@ -16,7 +16,7 @@ export const FastcastLeaguesSlice = createSlice({
       fastcastLeagueAdapter.removeAll(state);
       fastcastLeagueAdapter.setAll(state, action.payload.fastcastLeagues);
     });
-    builder.addMatcher(FastcastStaticClient.endpoints.getStaticScoreboard.matchFulfilled, (state, action) => {
+    builder.addMatcher(EspnClientV2.endpoints.getStaticScoreboard.matchFulfilled, (state, action) => {
       fastcastLeagueAdapter.removeAll(state);
       fastcastLeagueAdapter.setAll(state, action.payload.fastcastLeagues);
     });

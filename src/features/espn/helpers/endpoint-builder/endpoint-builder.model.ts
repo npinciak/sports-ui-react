@@ -50,17 +50,3 @@ export const SportLeagueToImageLocationMap: { [key in SportLeague]: string } = {
   [SPORT_LEAGUE.NFL]: '-4px -206px',
   [SPORT_LEAGUE.NHL]: '-4px -304px',
 } as const;
-
-export type BaseEspnEndpointBuilderClass = {
-  new (...args: unknown[]): unknown;
-  espnEvents: string;
-  positions: string;
-  oneFeed: string;
-  staticScoreboard: string;
-  fantasyBaseV3Seasons: string;
-  leagueClickout: string;
-  espnFastcastWebSocketHost: string;
-  matchupClickout: (teamId: string | number, matchupPeriodId: string | number) => string;
-  fantasyBaseV3SeasonByYear: (year: string) => string;
-  fantasyBaseV3LeagueBySeasonById: (year: string, leagueId: string) => string;
-};

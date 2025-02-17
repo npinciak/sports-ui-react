@@ -12,7 +12,7 @@ const SupabaseClientTag = {
 
 const SupabaseClientTagList = [SupabaseClientTag.GetLeagueProgression, SupabaseClientTag.EspnPlayer];
 
-export const supabaseClient = createApi({
+export const SupabaseClient = createApi({
   reducerPath: 'supabaseApi',
   baseQuery: fakeBaseQuery(),
   tagTypes: SupabaseClientTagList,
@@ -47,7 +47,7 @@ export const supabaseClient = createApi({
         return { data };
       },
     }),
-    getProfileWithTeams: builder.query({
+    getProfileWithTeams: builder.query<unknown, void>({
       queryFn: async () => {
         const { data } = await supabase
           .from('profile')
@@ -61,11 +61,3 @@ export const supabaseClient = createApi({
     }),
   }),
 });
-
-export const {
-  useCreateLeagueProgressionEntityMutation,
-  useGetLeagueProgressionQuery,
-  useCreateEspnPlayerMutation,
-  useGetProfileQuery,
-  useGetProfileWithTeamsQuery,
-} = supabaseClient;

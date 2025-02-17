@@ -6,21 +6,19 @@ import {
 } from '@inovua/reactdatagrid-community/types';
 import { Link, useParams } from 'react-router-dom';
 import { BaseballStat } from 'sports-ui-sdk';
-import {
-  useFetchEventsQuery,
-  useFetchLeagueByIdQuery,
-} from '../../handler/fantasy-baseball.handler';
+import { EspnFantasyClientV2 } from '../../../client/espn-fantasy-v2.client';
+import { EspnFantasyClientV3 } from '../../../client/espn-fantasy-v3.client';
 import { BaseballTeam } from '../../models/baseball-team.model';
 
 export function BaseballHome() {
   const { year, leagueId } = useParams<{ year: string; leagueId: string }>();
 
-  const { data, isSuccess } = useFetchLeagueByIdQuery({
+  const { data, isSuccess } = EspnFantasyClientV3.useGetBaseballLeagueQuery({
     year: year ?? '',
     leagueId: leagueId ?? '',
   });
 
-  const { data: events } = useFetchEventsQuery();
+  const { data: events } = EspnFantasyClientV2.useGetEventsQuery();
 
   const defaultSortInfo: TypeSortInfo = [];
 

@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { FastcastStaticClient } from '../client/fastcast-static.client';
+import { EspnClientV2 } from '../../client/espn-v2.client';
 import { FastcastClient } from '../client/fastcast.client';
 import { IFastcastSportEntity } from '../models/fastcast-sport.model';
 
@@ -17,7 +17,7 @@ export const FastcastSportsSlice = createSlice({
       fastcastSportsAdapter.removeAll(state);
       fastcastSportsAdapter.setAll(state, action.payload.fastcastSports);
     });
-    builder.addMatcher(FastcastStaticClient.endpoints.getStaticScoreboard.matchFulfilled, (state, action) => {
+    builder.addMatcher(EspnClientV2.endpoints.getStaticScoreboard.matchFulfilled, (state, action) => {
       fastcastSportsAdapter.removeAll(state);
       fastcastSportsAdapter.setAll(state, action.payload.fastcastSports);
     });

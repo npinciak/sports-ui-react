@@ -12,8 +12,10 @@ import {
 } from '../../features';
 import { FootballHomePage } from '../../features/daily-fantasy/football/pages/football-home.page';
 import { DailyFantasyHomePage } from '../../features/daily-fantasy/pages/home.page';
-import { baseballHandler } from '../../features/espn/fantasy-baseball/handler';
+import { EspnFantasyClientV2 } from '../../features/espn/client/espn-fantasy-v2.client';
+import { EspnFantasyClientV3 } from '../../features/espn/client/espn-fantasy-v3.client';
 import { FastcastScoreboardHomePage } from '../../features/espn/fastcast/pages/home.page';
+import { FANTASY_SPORTS_ABBREVIATION } from '../../features/espn/helpers/endpoint-builder/endpoint-builder.const';
 import { ProfilePage } from '../../features/profile';
 import ShellComponent from '../../shell/shell.component';
 import {
@@ -101,7 +103,9 @@ export const publicRoutes: RouteObject[] = [
                 path: ROUTE_FRAGMENT.LEAGUE,
                 loader: async () => {
                   await AppStore.dispatch(
-                    baseballHandler.endpoints.fetchEvents.initiate()
+                    EspnFantasyClientV2.endpoints.getEvents.initiate({
+                      fantasySport: FANTASY_SPORTS_ABBREVIATION.Baseball,
+                    })
                   );
 
                   return null;
@@ -123,12 +127,11 @@ export const publicRoutes: RouteObject[] = [
                               {
                                 path: ROUTE_FRAGMENT.EMPTY,
                                 element: <BaseballTeam />,
-
                                 loader: async ({
                                   params,
                                 }: LoaderFunctionArgs) => {
                                   await AppStore.dispatch(
-                                    baseballHandler.endpoints.fetchTeamById.initiate(
+                                    EspnFantasyClientV3.endpoints.getBaseballTeamById.initiate(
                                       {
                                         year:
                                           params?.year ?? ROUTE_FRAGMENT.EMPTY,
@@ -187,6 +190,23 @@ export const publicRoutes: RouteObject[] = [
                               {
                                 path: ROUTE_FRAGMENT.EMPTY,
                                 element: <BaseballPlayer />,
+                                loader: async ({
+                                  params,
+                                }: LoaderFunctionArgs) => {
+                                  const { playerId } = params;
+
+                                  await AppStore.dispatch(
+                                    EspnFantasyClientV2.endpoints.getPlayerNews.initiate(
+                                      {
+                                        fantasySport:
+                                          FANTASY_SPORTS_ABBREVIATION.Baseball,
+                                        playerId: playerId ? playerId : null,
+                                        lookbackPeriod: 30,
+                                      }
+                                    )
+                                  );
+                                  return null;
+                                },
                               },
                             ],
                           },
