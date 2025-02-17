@@ -12,7 +12,7 @@ export const EspnFantasyClientV2 = createApi({
   }),
   endpoints: builder => ({
     getPlayerNews: builder.query<
-      unknown,
+      EspnClient.PlayerNewsFeed,
       {
         fantasySport: FantasySportsAbbreviation;
         lookbackPeriod: number;

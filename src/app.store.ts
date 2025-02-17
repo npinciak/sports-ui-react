@@ -23,6 +23,7 @@ import { fastcastWebSocketMiddleware } from './features/espn/fastcast/helpers/we
 import { FastcastEventsSlice } from './features/espn/fastcast/slices/fastcast-event.slice';
 import { FastcastLeaguesSlice } from './features/espn/fastcast/slices/fastcast-league.slice';
 import { FastcastSportsSlice } from './features/espn/fastcast/slices/fastcast-sport.slice';
+import { EspnPlayerNewsSlice } from './features/espn/slices/espn-player-news.slice';
 
 export const AppStore = configureStore({
   reducer: {
@@ -31,6 +32,7 @@ export const AppStore = configureStore({
     [EspnClientV2.reducerPath]: EspnClientV2.reducer,
     [EspnFantasyClientV2.reducerPath]: EspnFantasyClientV2.reducer,
     [EspnFantasyClientV3.reducerPath]: EspnFantasyClientV3.reducer,
+    [EspnPlayerNewsSlice.reducerPath]: EspnPlayerNewsSlice.reducer,
     [fangraphsClient.reducerPath]: fangraphsClient.reducer,
     [FangraphsStatsFilterFormSlice.reducerPath]: FangraphsStatsFilterFormSlice.reducer,
     [SupabaseClient.reducerPath]: SupabaseClient.reducer,
