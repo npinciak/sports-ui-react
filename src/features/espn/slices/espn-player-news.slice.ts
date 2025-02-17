@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { PlayerNewsFeedEntity } from 'sports-ui-sdk/src/lib/espn/models/espn-client.model';
 import { EspnFantasyClientV2 } from '../client/espn-fantasy-v2.client';
+import { FantasyPlayerNewsEntity } from '../models/fantasy-player-news-entity.model';
 
 interface EspnPlayerNewsSliceModel {
-  map: Record<string, PlayerNewsFeedEntity>;
+  map: Record<string, FantasyPlayerNewsEntity[]>;
 }
 
 const INITIAL_STATE: EspnPlayerNewsSliceModel = {
@@ -22,7 +22,7 @@ export const EspnPlayerNewsSlice = createSlice({
     builder.addMatcher(EspnFantasyClientV2.endpoints.getPlayerNews.matchFulfilled, (state, action) => {
       const playerId = action.meta.arg.originalArgs.playerId;
 
-      const { feed } = action.payload;
+      const feed = action.payload;
 
       EspnPlayerNewsSlice.caseReducers.setPlayerNews(state, { payload: { data: feed, playerId }, type: 'setPlayerNews' });
     });

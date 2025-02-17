@@ -4,6 +4,8 @@ import { SmartDate } from '../../../@shared/helpers';
 import { ApiEndpointConfiguration } from '../../../api.config';
 import { generateEventParams } from '../espn-helpers';
 import { FantasySportsAbbreviation } from '../helpers/endpoint-builder/endpoint-builder.model';
+import { FantasyPlayerNewsEntity } from '../models/fantasy-player-news-entity.model';
+import { transformClientPlayerNewsFeed } from '../transformers/fantasy-player.transformers';
 
 export const EspnFantasyClientV2 = createApi({
   reducerPath: 'espnFantasyClientV2',
@@ -12,7 +14,7 @@ export const EspnFantasyClientV2 = createApi({
   }),
   endpoints: builder => ({
     getPlayerNews: builder.query<
-      EspnClient.PlayerNewsFeed,
+      FantasyPlayerNewsEntity[],
       {
         fantasySport: FantasySportsAbbreviation;
         lookbackPeriod: number;
@@ -31,6 +33,9 @@ export const EspnFantasyClientV2 = createApi({
           url: `/games/${fantasySport}/news/players`,
           params,
         };
+      },
+      transformResponse: (response: EspnClient.PlayerNewsFeed) => {
+        return response.feed.map(feed => transformClientPlayerNewsFeed(feed));
       },
     }),
     getEvents: builder.query<EspnClient.EventList, { fantasySport: FantasySportsAbbreviation }>({
