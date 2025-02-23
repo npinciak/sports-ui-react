@@ -10,12 +10,7 @@ export const baseballTeamLiveAdapter = createEntityAdapter({
 export const baseballTeamLiveSlice = createSlice({
   name: 'baseballTeamLive',
   initialState: baseballTeamLiveAdapter.getInitialState(),
-  reducers: {
-    teamAdded: baseballTeamLiveAdapter.addOne,
-    teamAddMany: baseballTeamLiveAdapter.addMany,
-    teamUpdated: baseballTeamLiveAdapter.updateOne,
-    teamRemoved: baseballTeamLiveAdapter.removeOne,
-  },
+  reducers: {},
   extraReducers: builder => {
     builder.addMatcher(EspnFantasyClientV3.endpoints.getBaseballLeague.matchFulfilled, (state, action) => {
       baseballTeamLiveAdapter.setAll(state, action.payload.teamsLive);
