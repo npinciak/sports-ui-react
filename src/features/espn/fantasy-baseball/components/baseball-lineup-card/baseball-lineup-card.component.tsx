@@ -4,9 +4,21 @@ import Avatar from '@mui/material/Avatar';
 import StyledBadge from '@mui/material/Badge';
 import { BaseballPlayer } from '../../models/baseball-player.model';
 
-export function BaseballLineupCard({ players }: { players: BaseballPlayer[] }) {
-  return players.map(player => (
-    <div className="grid grid-cols-4 py-3" key={player.id}>
+interface BaseballLineupCardProps {
+  player: BaseballPlayer;
+  onClick: (playerId: string) => void;
+}
+
+export function BaseballLineupCard({
+  player,
+  onClick,
+}: BaseballLineupCardProps) {
+  return (
+    <div
+      className="grid grid-cols-4 py-3"
+      key={player.id}
+      onClick={() => onClick(player.id)}
+    >
       <div>
         <Tooltip
           title={
@@ -35,5 +47,5 @@ export function BaseballLineupCard({ players }: { players: BaseballPlayer[] }) {
         </div>
       </div>
     </div>
-  ));
+  );
 }

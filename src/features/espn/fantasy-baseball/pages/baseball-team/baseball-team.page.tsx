@@ -1,9 +1,5 @@
-import { Avatar } from '@mui/material';
-import Skeleton from '@mui/material/Skeleton';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { SelectComponent } from '../../../../../@shared';
+import { RouteBuilder } from '@/core/routes/route-builder';
+import { SelectComponent } from '@shared/components';
 import {
   DEFAULT_PAGE_NUMBER,
   DEFAULT_PAGE_SIZE,
@@ -12,7 +8,10 @@ import {
   FangraphsProjection,
   FangraphsTeam,
   setStatSplitPeriod,
-} from '../../../../../@shared/fangraphs/';
+} from '@shared/fangraphs';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   useGetFangraphProjectionsQuery,
   useGetFangraphStatsQuery,
@@ -28,6 +27,7 @@ import {
   BaseballPlayerProjectionTable,
   BaseballPlayerStatsTable,
 } from '../../components';
+import { BaseballTeamHeader } from '../../components/baseball-team-header/baseball-team-header.component';
 import {
   selectPlayerIds,
   selectStartingBatterFangraphIds,
@@ -39,6 +39,9 @@ import {
 
 export function BaseballTeam() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { playerByIdRoute } = RouteBuilder();
 
   const { year, leagueId, teamId } = useParams<{
     year: string;
@@ -128,59 +131,29 @@ export function BaseballTeam() {
     refetch();
   }
 
+  function handlePlayerClick(playerId: string) {
+    navigate(
+      playerByIdRoute({ leagueId, sport: 'baseball', season: year, playerId })
+    );
+  }
+
   const loading = isLoading || isFangraphsStatsLoading || statPeriodLoading;
-
-  // if (loading) return <div className="animate-pulse">Loading...</div>;
-
-  const statPeriodOptions = statPeriodList ?? [];
 
   return (
     <div key={team?.id}>
-      <div className="grid sm:grid-cols-1 grid-cols-3 text-left mb-5 mt-5">
-        <div>
-          {loading ? (
-            <Skeleton variant="circular">
-              <Avatar src={team?.logo} alt={team?.name} />
-            </Skeleton>
-          ) : (
-            <Avatar src={team?.logo} alt={team?.name} />
-          )}
-        </div>
-        <div className="col-span-2">
-          {loading ? (
-            <>
-              <Skeleton>
-                <h1>
-                  {team?.name} {team?.totalPoints}
-                </h1>
-              </Skeleton>
-
-              <Skeleton>
-                <div>
-                  <span className="text-xs">Rank: {team?.currentRank}</span>
-                </div>
-              </Skeleton>
-            </>
-          ) : (
-            <>
-              <h1>
-                {team?.name} {team?.totalPoints}
-              </h1>
-              <div>
-                <span className="text-xs">Rank: {team?.currentRank}</span>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
+      <BaseballTeamHeader team={team} isLoading={loading} />
 
       <div className="flex flex-wrap text-left">
         <div className="w-full xl:px-4 xl:w-3/12">
           <div className="font-bold">Starting Batters</div>
-          <BaseballLineupCard players={teamStartingBatterListWithEvents} />
+          {teamStartingBatterListWithEvents.map(player => (
+            <BaseballLineupCard player={player} onClick={handlePlayerClick} />
+          ))}
           <div className="py-3"></div>
           <div className="font-bold">Starting Pitchers</div>
-          <BaseballLineupCard players={teamStartingPitcherListWithEvents} />
+          {teamStartingPitcherListWithEvents.map(player => (
+            <BaseballLineupCard player={player} onClick={handlePlayerClick} />
+          ))}
         </div>
 
         <div className="w-full xl:px-4 xl:w-9/12">
