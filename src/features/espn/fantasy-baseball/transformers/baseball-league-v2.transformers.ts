@@ -34,8 +34,14 @@ export function transformClientLeagueToBaseballLeagueV2(
   };
 }
 
-export function clientLeagueTeamListToLeagueTeamList(team: EspnClient.Team): Omit<BaseballTeam, 'roster'> {
-  const { abbrev, logo, valuesByStat, pointsByStat, name } = team;
+export function clientLeagueTeamListToLeagueTeamList(
+  team: EspnClient.Team & { tradeBlock: { players: Record<string, 'UNTOUCHABLE' | 'ON_THE_BLOCK'> | undefined } }
+): Omit<BaseballTeam, 'roster'> {
+  const { abbrev, logo, valuesByStat, pointsByStat, name, tradeBlock } = team;
+
+  const hasTradeablePlayers = tradeBlock.hasOwnProperty('players')
+    ? Object.values(tradeBlock.players as Record<string, 'UNTOUCHABLE' | 'ON_THE_BLOCK'>).some(p => p === 'ON_THE_BLOCK')
+    : false;
 
   return {
     id: team.id.toString(),
@@ -47,10 +53,13 @@ export function clientLeagueTeamListToLeagueTeamList(team: EspnClient.Team): Omi
     valuesByStat,
     pointsByStat,
     liveScore: 0,
+    hasTradeablePlayers,
   };
 }
 
-export function clientTeamToBaseballTeam(team: EspnClient.Team): BaseballTeam {
+export function clientTeamToBaseballTeam(
+  team: EspnClient.Team & { tradeBlock: { players: Record<string, 'UNTOUCHABLE' | 'ON_THE_BLOCK'> | undefined } }
+): BaseballTeam {
   const {
     roster: { entries },
   } = team;

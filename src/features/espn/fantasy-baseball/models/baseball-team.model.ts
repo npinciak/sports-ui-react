@@ -8,6 +8,7 @@ interface BaseballTeamProps {
   totalPoints: number;
   currentRank: number;
   liveScore: number | null;
+  hasTradeablePlayers: boolean;
 }
 
 export type BaseballTeam = TeamEntity & BaseballTeamProps & Pick<EspnClient.Team, 'valuesByStat' | 'pointsByStat'>;

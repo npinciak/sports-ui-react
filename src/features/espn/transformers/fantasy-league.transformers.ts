@@ -9,11 +9,13 @@ export function clientLeagueToLeagueSettings(league: EspnClient.League): IFantas
     status: { firstScoringPeriod, finalScoringPeriod },
     settings: {
       scheduleSettings: { matchupPeriodCount },
+      name,
     },
   } = league;
 
   return {
     id: id.toString(),
+    name,
     seasonId: seasonId.toString(),
     scoringPeriodId: scoringPeriodId.toString(),
     firstScoringPeriod: firstScoringPeriod.toString(),

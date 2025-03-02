@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { EspnClient } from 'sports-ui-sdk';
 import { ApiEndpointConfiguration } from '../../../api.config';
 import { generateLeagueParams, generateTeamParams } from '../espn-helpers';
+import { BaseballLeague } from '../fantasy-baseball/models/baseball-league.model';
 import { BaseballTeam } from '../fantasy-baseball/models/baseball-team.model';
 import { clientTeamToBaseballTeam, transformClientLeagueToBaseballLeagueV2 } from '../fantasy-baseball/transformers';
 import { FANTASY_SPORTS_ABBREVIATION } from '../helpers/endpoint-builder/endpoint-builder.const';
@@ -38,7 +39,7 @@ export const EspnFantasyClientV3 = createApi({
       },
     }),
     getBaseballLeague: builder.query<
-      any,
+      BaseballLeague,
       {
         year: string | null;
         leagueId: string | null;

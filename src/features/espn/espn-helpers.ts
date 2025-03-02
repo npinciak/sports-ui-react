@@ -27,6 +27,8 @@ export function generateTeamParams(teamId: string): URLSearchParams {
   params.append(ESPN_PARAM_FRAGMENTS.RosterForTeamId, teamId);
   params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Team);
   params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Roster);
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.PendingTransactions);
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.PositionalRatings);
   return params;
 }
 
