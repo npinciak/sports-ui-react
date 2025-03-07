@@ -10,8 +10,8 @@ export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
       '@shared': path.resolve(__dirname, './src/@shared'),
+      '@sdk': path.resolve(__dirname, './src/sdk'),
     },
   },
 });

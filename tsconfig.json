@@ -2,8 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@shared/*": ["./src/@shared/*"]
+      "@shared/*": ["./src/@shared/*"],
+      "@sdk/*": ["./src/sdk/*"]
     },
     "target": "ES2020",
     "useDefineForClassFields": true,
