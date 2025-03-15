@@ -1,4 +1,4 @@
-import { PLAYER_INJURY_STATUS, PlayerInjuryStatus } from './injury-status.model';
+import { PLAYER_INJURY_STATUS, PlayerCompetitionStatus } from './injury-status.model';
 
 export const enum InjurySeverity {
   Serious,
@@ -6,8 +6,8 @@ export const enum InjurySeverity {
   Positive,
 }
 
-export type InjurySeverityClass = typeof INJURY_SEVERITY_CLASS[keyof typeof INJURY_SEVERITY_CLASS];
-export type InjurySeverityColor = typeof INJURY_SEVERITY_COLOR[keyof typeof INJURY_SEVERITY_COLOR];
+export type InjurySeverityClass = (typeof INJURY_SEVERITY_CLASS)[keyof typeof INJURY_SEVERITY_CLASS];
+export type InjurySeverityColor = (typeof INJURY_SEVERITY_COLOR)[keyof typeof INJURY_SEVERITY_COLOR];
 
 export const INJURY_SEVERITY_COLOR = {
   Serious: '#cb0123',
@@ -33,7 +33,7 @@ export const INJURY_SEVERITY_CLASS_BY_INJURY_SEVERITY: { [key in InjurySeverity]
   [InjurySeverity.Positive]: INJURY_SEVERITY_CLASS[InjurySeverity.Positive],
 } as const;
 
-export const INJURY_SEVERITY_BY_INJURY_STATUS: { [key in PlayerInjuryStatus]: InjurySeverity } = {
+export const INJURY_SEVERITY_BY_INJURY_STATUS: { [key in PlayerCompetitionStatus]: InjurySeverity } = {
   [PLAYER_INJURY_STATUS.Active]: InjurySeverity.Positive,
   [PLAYER_INJURY_STATUS.Probable]: InjurySeverity.Positive,
   [PLAYER_INJURY_STATUS.Ques]: InjurySeverity.SemiSerious,

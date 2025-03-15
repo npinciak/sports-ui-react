@@ -1,4 +1,4 @@
-import { PLAYER_INJURY_STATUS, PlayerInjuryStatus } from './injury-status.model';
+import { PLAYER_INJURY_STATUS, PlayerCompetitionStatus } from './injury-status.model';
 
 export const INJURY_ICONS_FA = {
   Healthy: '',
@@ -8,7 +8,7 @@ export const INJURY_ICONS_FA = {
   NotStarting: 'fa-solid fad fa-exclamation',
 } as const;
 
-export const FA_ICON_BY_INJURY_STATUS: { [key in PlayerInjuryStatus]: FaInjuryIcons } = {
+export const FA_ICON_BY_INJURY_STATUS: { [key in PlayerCompetitionStatus]: FaInjuryIcons } = {
   [PLAYER_INJURY_STATUS.Active]: INJURY_ICONS_FA.Healthy,
   [PLAYER_INJURY_STATUS.Probable]: INJURY_ICONS_FA.Starting,
   [PLAYER_INJURY_STATUS.Ques]: INJURY_ICONS_FA.Questionable,
@@ -28,4 +28,4 @@ export const FA_ICON_BY_INJURY_STATUS: { [key in PlayerInjuryStatus]: FaInjuryIc
   [PLAYER_INJURY_STATUS.UNKNOWN]: INJURY_ICONS_FA.Healthy,
 } as const;
 
-export type FaInjuryIcons = typeof INJURY_ICONS_FA[keyof typeof INJURY_ICONS_FA];
+export type FaInjuryIcons = (typeof INJURY_ICONS_FA)[keyof typeof INJURY_ICONS_FA];

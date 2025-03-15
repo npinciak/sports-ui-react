@@ -2,7 +2,7 @@ import { IClientFreeAgentEntity } from './free-agent.model';
 import { IClientLeagueCommunication } from './league-communication.model';
 import { IClientScheduleEntity } from './schedule.model';
 import { IClientBaseballTeam, IClientTeamEntity } from './team.model';
-import { IClientLeagueTransaction } from './transaction.model';
+import { IClientLeagueTransactionEntity } from './transaction.model';
 
 export interface IClientLeague {
   id: number;
@@ -17,7 +17,7 @@ export interface IClientLeague {
   teams: IClientTeamEntity[];
   players: IClientFreeAgentEntity[];
   communication: IClientLeagueCommunication;
-  transactions: IClientLeagueTransaction[];
+  transactions: IClientLeagueTransactionEntity[];
 }
 
 export interface IClientBaseballLeague extends Omit<IClientLeague, 'teams'> {

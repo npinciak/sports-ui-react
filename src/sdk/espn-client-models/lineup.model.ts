@@ -1,7 +1,7 @@
 export interface LineupAttributes {
   id: number;
   parentId: number;
-  abbrev: string;
+  abbrev: string | null;
   bench: boolean;
   eligiblePositions: number[];
   lineupSlotEligible: boolean;

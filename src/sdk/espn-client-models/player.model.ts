@@ -1,4 +1,4 @@
-import { PlayerInjuryStatus } from '../injury/injury-status.model';
+import { PlayerCompetitionStatus } from '../injury/injury-status.model';
 import { IClientPlayerInjustStatusByGameMap } from './game-status.model';
 import { IClientPlayerRatingsMapByTimePeriod } from './player-rating.model';
 import { IClientPlayerStatsYearEntity } from './player-stats.model';
@@ -19,7 +19,7 @@ export interface IClientPlayerInfoEntity {
   lastNewsDate: number;
   injured: boolean;
   eligibleSlots: number[];
-  injuryStatus?: PlayerInjuryStatus;
+  injuryStatus?: PlayerCompetitionStatus;
   ownership: IClientPlayerOwnershipEntity;
   outlooks?: PlayerOutlooksMap;
   stats?: IClientPlayerStatsYearEntity[];

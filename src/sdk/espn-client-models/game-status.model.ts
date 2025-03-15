@@ -1,3 +1,3 @@
-import { PlayerInjuryStatus } from '../injury/injury-status.model';
+import { PlayerCompetitionStatus } from '../injury/injury-status.model';
 
-export type IClientPlayerInjustStatusByGameMap = Record<number, PlayerInjuryStatus>;
+export type IClientPlayerInjustStatusByGameMap = Record<number, PlayerCompetitionStatus>;

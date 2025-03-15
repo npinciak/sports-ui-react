@@ -19,7 +19,7 @@ export interface IClientTeamEntity {
   rankCalculatedFinal: number;
   pointsByStat: Record<number, number>;
   valuesByStat: Record<number, number>;
-  tradeBlock: IClientTradeBlockEntity;
+  tradeBlock: IClientTradeBlock;
   transactionCounter: IClientTransactionCounter;
 }
 
@@ -28,10 +28,10 @@ export const TRADE_BLOCK_STATUS = {
   ON_THE_BLOCK: 'ON_THE_BLOCK',
 } as const;
 
-export type IClientTradeBlockStatus = (typeof TRADE_BLOCK_STATUS)[keyof typeof TRADE_BLOCK_STATUS];
+export type ClientTradeBlockStatus = (typeof TRADE_BLOCK_STATUS)[keyof typeof TRADE_BLOCK_STATUS];
 
-interface IClientTradeBlockEntity {
-  players: Record<string, IClientTradeBlockStatus> | undefined;
+interface IClientTradeBlock {
+  players: Record<string, ClientTradeBlockStatus> | undefined;
 }
 
 export interface IClientBaseballTeam extends IClientTeamEntity {
