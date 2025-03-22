@@ -8,9 +8,9 @@ import {
   TextField,
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { SupabaseClient } from '@shared/';
+import { SupaClientLeagueProgressionInsert } from '@shared//supabase/supabase-tables.model';
 import { useDispatch, useSelector } from 'react-redux';
-import { SupabaseClient } from '../../../@shared';
-import { SupaClientLeagueProgressionInsert } from '../../../@shared/supabase/supabase-tables.model';
 import {
   selectEspnTeamId,
   selectLeagueId,

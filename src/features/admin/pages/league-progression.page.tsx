@@ -10,7 +10,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { SupabaseClient } from '../../../@shared';
+import { SupabaseClient } from '@shared/';
 import { AdminLeagueProgressionForm } from '../components/league-progression-form.component';
 
 export function AdminLeagueProgressionPage() {

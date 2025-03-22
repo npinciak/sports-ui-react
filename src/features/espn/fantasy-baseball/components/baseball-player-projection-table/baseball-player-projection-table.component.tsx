@@ -1,9 +1,8 @@
-import ReactDataGrid from '@inovua/reactdatagrid-community';
 import {
   TypeColumn,
   TypeSortInfo,
 } from '@inovua/reactdatagrid-community/types';
-import { FangraphsPlayerProjectionEntity } from '../../../../../@shared/fangraphs';
+import { FangraphsPlayerProjectionEntity } from '@shared/fangraphs';
 
 export function BaseballPlayerProjectionTable({
   data,
@@ -120,13 +119,5 @@ export function BaseballPlayerProjectionTable({
   ];
 
   const gridStyle = { minHeight: 500 };
-  return (
-    <ReactDataGrid
-      idProperty="id"
-      defaultSortInfo={defaultSortInfo}
-      columns={columns}
-      dataSource={data}
-      style={gridStyle}
-    />
-  );
+  return <></>;
 }

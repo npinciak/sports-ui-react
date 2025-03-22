@@ -2,7 +2,7 @@ import {
   TypeColumn,
   TypeSortInfo,
 } from '@inovua/reactdatagrid-community/types';
-import { FangraphsPlayerStatEntity } from '../../../../../@shared';
+import { FangraphsPlayerStatEntity } from '../@shared';
 
 const DEFAULT_COLUMN_WIDTH = 100;
 export const defaultSortInfo: TypeSortInfo = [];

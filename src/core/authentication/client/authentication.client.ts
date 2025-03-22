@@ -1,6 +1,6 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import { supabase } from '@shared//supabase';
 import { Session, User, WeakPassword } from '@supabase/supabase-js';
-import { supabase } from '../../../@shared/supabase';
 
 const AuthenticationClientTag = {
   User: 'User',

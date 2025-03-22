@@ -1,5 +1,5 @@
+import { fangraphsClient } from '@shared/';
 import { LoaderFunctionArgs, RouteObject } from 'react-router';
-import { fangraphsClient } from '../../@shared';
 import { AppStore } from '../../app.store';
 import {
   AdminLeagueProgressionPage,
