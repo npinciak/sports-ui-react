@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --force",
     "build": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
@@ -18,8 +18,9 @@
     "@emotion/styled": "^11.14.0",
     "@inovua/reactdatagrid-community": "^5.10.2",
     "@mui/icons-material": "^5.16.11",
-    "@mui/material": "^5.16.11",
+    "@mui/material": "^6.4.7",
     "@mui/styled-engine-sc": "^6.2.0",
+    "@mui/x-charts": "^7.27.1",
     "@mui/x-data-grid": "^7.23.1",
     "@reduxjs/toolkit": "^2.5.0",
     "@supabase/supabase-js": "^2.47.5",
@@ -32,7 +33,6 @@
     "react-router-dom": "^6.28.0",
     "react-window": "^1.8.10",
     "socket.io-client": "^4.8.1",
-    "sports-ui-sdk": "git+https://github.com/npinciak/sports-ui-sdk.git",
     "styled-components": "^6.1.13"
   },
   "devDependencies": {
