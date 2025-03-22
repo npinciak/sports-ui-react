@@ -1,8 +1,27 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../../app.store';
+import { FangraphsPlayerAdapter } from '../slices';
 
-const fangraphsStatsSlice = (state: RootState) => state.fangraphsPlayer;
+const fangraphsStatsState = (state: RootState) => state.fangraphsPlayer;
 
-export const selectFangraphsPlayerIds = createSelector([fangraphsStatsSlice], state => state.ids);
-export const selectFangraphsPlayerEntities = createSelector([fangraphsStatsSlice], state => state.entities);
-export const selectFangraphsPlayerEntityList = createSelector([selectFangraphsPlayerEntities], entities => Object.values(entities));
+const { selectIds, selectEntities, selectAll, selectTotal } = FangraphsPlayerAdapter.getSelectors<RootState>(fangraphsStatsState);
+
+export const selectFangraphsPlayerIds = createSelector(
+  state => state,
+  state => selectIds(state)
+);
+
+export const selectFangraphsPlayerEntities = createSelector(
+  state => state,
+  state => selectEntities(state)
+);
+
+export const selectFangraphsPlayerEntityList = createSelector(
+  state => state,
+  state => selectAll(state)
+);
+
+export const selectFangraphsPlayerTotal = createSelector(
+  state => state,
+  state => selectTotal(state)
+);

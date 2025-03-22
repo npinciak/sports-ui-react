@@ -1,12 +1,12 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { supabase } from '../../supabase/supabase.client';
 import {
+  FANGRAPHS_PROJECTION,
   FangraphsPageOfPlayerStats,
   FangraphsPlayerProjectionEntity,
   FangraphsPlayerProjectionsRequestBody,
   FangraphsPlayerStatsRequestBody,
   FangraphsPosition,
-  FangraphsProjection,
   FangraphsTeam,
 } from '../models';
 import { FangraphsClientTag, FangraphsClientTagList } from './fangraphs.client.model';
@@ -39,7 +39,7 @@ export const fangraphsClient = createApi({
     getFangraphPlayerList: builder.query<FangraphsPlayerProjectionEntity[], void>({
       queryFn: async () => {
         const body = {
-          type: FangraphsProjection.RestOfSeasonTheBatX,
+          type: FANGRAPHS_PROJECTION.Steamer600,
           pos: FangraphsPosition.All,
           team: FangraphsTeam.AllTeams,
           players: ['0'],

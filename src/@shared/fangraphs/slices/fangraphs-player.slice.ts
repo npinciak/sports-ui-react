@@ -12,12 +12,7 @@ export const FangraphsPlayerAdapter = createEntityAdapter({
 export const fangraphsPlayerSlice = createSlice({
   name: 'fangraphsPlayer',
   initialState: FangraphsPlayerAdapter.getInitialState(),
-  reducers: {
-    teamAdded: FangraphsPlayerAdapter.addOne,
-    teamAddMany: FangraphsPlayerAdapter.addMany,
-    teamUpdated: FangraphsPlayerAdapter.updateOne,
-    teamRemoved: FangraphsPlayerAdapter.removeOne,
-  },
+  reducers: {},
   extraReducers: builder => {
     builder.addMatcher(fangraphsClient.endpoints.getFangraphPlayerList.matchFulfilled, (state, action) => {
       FangraphsPlayerAdapter.setAll(state, action.payload);

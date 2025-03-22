@@ -1,7 +1,7 @@
 import { DEFAULT_META_DATA } from '../client/fangraphs.client.model';
 import { FangraphsPlayerStatEntity } from './player-stats.model';
 import { FangraphsPosition, FangraphsPositionType } from './positions.model';
-import { FangraphsProjectionType } from './projection-type.model';
+import { FangraphsProjection } from './projection-type.model';
 import { FangraphsTeam } from './teams.model';
 
 export type FangraphsPageOfResponse<T> = {
@@ -27,7 +27,7 @@ export type FangraphsPlayerStatsRequestBody = {
 };
 
 export type FangraphsPlayerProjectionsRequestBody = {
-  type: FangraphsProjectionType;
+  type: FangraphsProjection;
   team: FangraphsTeam;
   pos: FangraphsPositionType;
   players: number[];

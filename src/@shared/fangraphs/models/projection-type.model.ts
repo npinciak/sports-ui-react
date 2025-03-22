@@ -1,5 +1,6 @@
-export const FangraphsProjection = {
+export const FANGRAPHS_PROJECTION = {
   Steamer: 'steamerr',
+  Steamer600: 'steamer600',
   SteamerU: 'steameru',
   RestOfSeasonZips: 'rzips',
   UpdateZips: 'uzips',
@@ -10,4 +11,4 @@ export const FangraphsProjection = {
   RestOfSeasonTheBatX: 'rthebatx',
 } as const;
 
-export type FangraphsProjectionType = (typeof FangraphsProjection)[keyof typeof FangraphsProjection];
+export type FangraphsProjection = (typeof FANGRAPHS_PROJECTION)[keyof typeof FANGRAPHS_PROJECTION];
