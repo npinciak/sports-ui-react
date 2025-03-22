@@ -1,4 +1,5 @@
-import { PlayerStatsYear, ProLeagueType, getContrastRatio } from 'sports-ui-sdk';
+import { getContrastRatio } from '@sdk/color-ratio';
+import { IClientPlayerStatsYearEntity, IClientProLeagueType } from '@sdk/espn-client-models';
 import { ICompetitorsEntity } from './fastcast/models/competitors-entity.model';
 import { ESPN_PARAM_FRAGMENTS, ESPN_VIEW_PARAM_FRAGMENTS } from './helpers/endpoint-builder/endpoint-builder.const';
 import { SportTypeId } from './models/sport-type.model';
@@ -14,6 +15,19 @@ export function generateLeagueParams(): URLSearchParams {
   params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Scoreboard);
   params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Status);
   params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Team);
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Transactions);
+  params.append(ESPN_PARAM_FRAGMENTS.ScoringPeriod, '3');
+  return params;
+}
+
+/**
+ * Generates player query params
+ * @returns URLSearchParams
+ */
+export function generatePlayerParams(scoringPeriodId: string): URLSearchParams {
+  const params = new URLSearchParams();
+  params.append(ESPN_PARAM_FRAGMENTS.ScoringPeriod, scoringPeriodId);
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.PlayersWl);
   return params;
 }
 
@@ -27,6 +41,8 @@ export function generateTeamParams(teamId: string): URLSearchParams {
   params.append(ESPN_PARAM_FRAGMENTS.RosterForTeamId, teamId);
   params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Team);
   params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Roster);
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.PendingTransactions);
+  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.PositionalRatings);
   return params;
 }
 
@@ -146,7 +162,11 @@ export function transformUidToLeagueId(uid: string | null): string | null {
   return uid.split('~')[1].replace('l:', '');
 }
 
-export function transformIdToUid(sportType: SportTypeId | null, leagueId: ProLeagueType | null, teamId: string | number | null): string {
+export function transformIdToUid(
+  sportType: SportTypeId | null,
+  leagueId: IClientProLeagueType | null,
+  teamId: string | number | null
+): string {
   if (!sportType || !leagueId || !teamId) return '';
   return `s:${sportType}~l:${leagueId}~t:${teamId}`;
 }
@@ -203,10 +223,12 @@ export type ParsedUid = {
  * @param stats
  * @returns
  */
-export function flattenPlayerStats(stats?: PlayerStatsYear[] | null): Record<string, PlayerStatsYear | null> | null {
+export function flattenPlayerStats(
+  stats?: IClientPlayerStatsYearEntity[] | null
+): Record<string, IClientPlayerStatsYearEntity | null> | null {
   if (!stats) return null;
 
-  return stats.reduce<Record<string, PlayerStatsYear | null>>((result, stat) => {
+  return stats.reduce<Record<string, IClientPlayerStatsYearEntity | null>>((result, stat) => {
     result[stat.id] = stat;
     return result;
   }, {});

@@ -1,11 +1,22 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { EspnClient } from 'sports-ui-sdk';
-import { SmartDate } from '../../../@shared/helpers';
+import { IClientEventEntity } from '@sdk/espn-client-models/event.model';
+import { IClientPlayerNewsFeed } from '@sdk/espn-client-models/player-news-feed.model';
+import { SmartDate } from '@shared//helpers';
 import { ApiEndpointConfiguration } from '../../../api.config';
 import { generateEventParams } from '../espn-helpers';
 import { FantasySportsAbbreviation } from '../helpers/endpoint-builder/endpoint-builder.model';
 import { FantasyPlayerNewsEntity } from '../models/fantasy-player-news-entity.model';
 import { transformClientPlayerNewsFeed } from '../transformers/fantasy-player.transformers';
+
+interface IClientPlayerNewsParams {
+  fantasySport: FantasySportsAbbreviation;
+  lookbackPeriod: number;
+  playerId: string | null;
+}
+
+interface IClientGetEventsParams {
+  fantasySport: FantasySportsAbbreviation;
+}
 
 export const EspnFantasyClientV2 = createApi({
   reducerPath: 'espnFantasyClientV2',
@@ -13,14 +24,7 @@ export const EspnFantasyClientV2 = createApi({
     baseUrl: ApiEndpointConfiguration.espnFantasyEndpointV2,
   }),
   endpoints: builder => ({
-    getPlayerNews: builder.query<
-      FantasyPlayerNewsEntity[],
-      {
-        fantasySport: FantasySportsAbbreviation;
-        lookbackPeriod: number;
-        playerId: string | null;
-      }
-    >({
+    getPlayerNews: builder.query<FantasyPlayerNewsEntity[], IClientPlayerNewsParams>({
       query: args => {
         const { fantasySport, lookbackPeriod, playerId } = args;
 
@@ -34,11 +38,9 @@ export const EspnFantasyClientV2 = createApi({
           params,
         };
       },
-      transformResponse: (response: EspnClient.PlayerNewsFeed) => {
-        return response.feed.map(feed => transformClientPlayerNewsFeed(feed));
-      },
+      transformResponse: ({ feed }: IClientPlayerNewsFeed) => feed.map(value => transformClientPlayerNewsFeed(value)),
     }),
-    getEvents: builder.query<EspnClient.EventList, { fantasySport: FantasySportsAbbreviation }>({
+    getEvents: builder.query<IClientEventEntity[], IClientGetEventsParams>({
       query: args => {
         const { fantasySport } = args;
 

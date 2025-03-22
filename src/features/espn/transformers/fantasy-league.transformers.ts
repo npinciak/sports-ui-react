@@ -1,7 +1,7 @@
-import { EspnClient } from 'sports-ui-sdk';
+import { IClientLeague } from '@sdk/espn-client-models/league.model';
 import { IFantasyLeague } from '../models/fantasy-league.model';
 
-export function clientLeagueToLeagueSettings(league: EspnClient.League): IFantasyLeague {
+export function clientLeagueToLeagueSettings(league: IClientLeague): IFantasyLeague {
   const {
     id,
     seasonId,
@@ -9,11 +9,13 @@ export function clientLeagueToLeagueSettings(league: EspnClient.League): IFantas
     status: { firstScoringPeriod, finalScoringPeriod },
     settings: {
       scheduleSettings: { matchupPeriodCount },
+      name,
     },
   } = league;
 
   return {
     id: id.toString(),
+    name,
     seasonId: seasonId.toString(),
     scoringPeriodId: scoringPeriodId.toString(),
     firstScoringPeriod: firstScoringPeriod.toString(),

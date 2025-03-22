@@ -1,12 +1,13 @@
-import { BaseballStat, PlayerStatsEntity } from 'sports-ui-sdk';
-import { SupaClientFangraphsConstantsTable } from '../../../../../@shared/supabase/supabase-tables.model';
+import { IClientPlayerStat } from '@sdk/espn-client-models';
+import { BaseballStat } from '@sdk/espn-client-models/baseball/stats/mlb-stats.model';
+import { SupaClientFangraphsConstantsTable } from '@shared/supabase/supabase-tables.model';
 
 export function MlbAdvancedStats(
   fangraphsConstants: SupaClientFangraphsConstantsTable,
-  playerStatsEntity: PlayerStatsEntity | null
+  playerStatsEntity: IClientPlayerStat | null
 ): MlbAdvancedStatsClass {
   return class MlbAdvancedStatsClass {
-    private static _playerStatsEntity: PlayerStatsEntity = playerStatsEntity ?? [];
+    private static _playerStatsEntity: IClientPlayerStat = playerStatsEntity ?? [];
     private static _fangraphsConstants: SupaClientFangraphsConstantsTable = fangraphsConstants;
 
     private static _wOBACache: number | null = null;

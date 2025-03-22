@@ -1,4 +1,4 @@
-import { EventStatus, EventStatusType } from 'sports-ui-sdk';
+import { ClientEventStatus, ClientEventStatusType } from '@sdk/espn-client-models/event-status.model';
 import { ParsedUid } from '../../espn-helpers';
 import { IEventsEntity } from './events-entity.model';
 import { FastcastEventTeam } from './fastcast-team.model';
@@ -10,8 +10,8 @@ interface IFastcastEventAttributes {
   id: string;
   timestamp: number;
   state: string | null;
-  status: EventStatus | null;
-  statusId: EventStatusType;
+  status: ClientEventStatus | null;
+  statusId: ClientEventStatusType;
   location: string | null;
   clock: string | null;
   summary: string | null;

@@ -1,6 +1,6 @@
-export type BaseballPlayerNews = {
+export interface BaseballPlayerNews {
   link: string;
   headline: string;
   store: string;
   id: string;
-};
+}

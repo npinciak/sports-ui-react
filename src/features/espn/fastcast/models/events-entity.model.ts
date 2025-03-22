@@ -1,5 +1,5 @@
-import { EventStatus } from 'sports-ui-sdk/src/lib/espn-client/models/event-status.model';
-import { SeasonType } from 'sports-ui-sdk/src/lib/espn-client/models/season-type.model';
+import { ClientEventStatus } from '@sdk/espn-client-models/event-status.model';
+import { ClientSeasonType } from '@sdk/espn-client-models/season-type.model';
 import { ICompetitorsEntity } from './competitors-entity.model';
 import { IEntityBase } from './entity.model';
 import { IFullStatusEntity } from './full-status.model';
@@ -12,10 +12,10 @@ export interface IEventsEntity extends Omit<IEntityBase, 'abbreviation' | 'slug'
   date: string;
   location: string;
   season: number;
-  seasonType: SeasonType;
+  seasonType: ClientSeasonType;
   period: number;
   clock: string;
-  status: EventStatus;
+  status: ClientEventStatus;
   summary: string;
   fullStatus: IFullStatusEntity;
   link: string;

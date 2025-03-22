@@ -1,13 +1,42 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { EspnClient } from 'sports-ui-sdk';
+import { IClientBaseballTeam, IClientSimplePlayerEntity } from '@sdk/espn-client-models';
+import { IClientBaseballLeague, IClientLeague } from '@sdk/espn-client-models/league.model';
 import { ApiEndpointConfiguration } from '../../../api.config';
-import { generateLeagueParams, generateTeamParams } from '../espn-helpers';
-import { BaseballTeam } from '../fantasy-baseball/models/baseball-team.model';
-import { clientTeamToBaseballTeam, transformClientLeagueToBaseballLeagueV2 } from '../fantasy-baseball/transformers';
+import { generateLeagueParams, generatePlayerParams, generateTeamParams } from '../espn-helpers';
+import { BaseballLeague } from '../fantasy-baseball/models/baseball-league.model';
+import { BaseballPlayerEntity } from '../fantasy-baseball/models/baseball-player.model';
+import { BaseballTeamEntity } from '../fantasy-baseball/models/baseball-team.model';
+import {
+  clientSimplePlayerToBaseballPlayer,
+  clientTeamToBaseballTeam,
+  transformClientLeagueToBaseballLeagueV2,
+} from '../fantasy-baseball/transformers';
 import { FANTASY_SPORTS_ABBREVIATION } from '../helpers/endpoint-builder/endpoint-builder.const';
 import { FantasySportsAbbreviation } from '../helpers/endpoint-builder/endpoint-builder.model';
-import { FetchTeamArgs } from '../models';
+import { IFantasyLeague } from '../models';
 import { clientLeagueToLeagueSettings } from '../transformers';
+
+interface IClientGetBaseballPlayerParams {
+  year: string;
+  scoringPeriodId: string;
+}
+
+interface IClientGetBaseballLeagueParams {
+  year: string;
+  leagueId: string;
+}
+
+interface IClientGetBaseballTeamParams {
+  year: string;
+  leagueId: string;
+  teamId: string;
+}
+
+interface IClientValidateLeagueParams {
+  year: string;
+  leagueId: string;
+  sport: FantasySportsAbbreviation;
+}
 
 export const EspnFantasyClientV3 = createApi({
   reducerPath: 'espnFantasyClientV3',
@@ -15,12 +44,36 @@ export const EspnFantasyClientV3 = createApi({
     baseUrl: ApiEndpointConfiguration.espnFantasyEndpointV3,
   }),
   endpoints: builder => ({
+    getBaseballPlayers: builder.query<BaseballPlayerEntity[], IClientGetBaseballPlayerParams>({
+      query: args => {
+        const { year } = args;
+
+        const params = generatePlayerParams('0');
+
+        return {
+          url: `/games/${FANTASY_SPORTS_ABBREVIATION.Baseball}/seasons/${year}/players`,
+          params,
+          headers: {
+            'X-Fantasy-Filter': JSON.stringify({
+              players: {
+                filterActive: {
+                  value: true,
+                },
+              },
+            }),
+          },
+        };
+      },
+      transformResponse: (players: IClientSimplePlayerEntity[]) => {
+        return players.map(player => clientSimplePlayerToBaseballPlayer(player));
+      },
+    }),
     getPlayerNews: builder.query<
       unknown,
       {
         fantasySport: FantasySportsAbbreviation;
         lookbackPeriod: number;
-        playerId: string | null;
+        playerId: string;
       }
     >({
       query: args => {
@@ -37,13 +90,7 @@ export const EspnFantasyClientV3 = createApi({
         };
       },
     }),
-    getBaseballLeague: builder.query<
-      any,
-      {
-        year: string | null;
-        leagueId: string | null;
-      }
-    >({
+    getBaseballLeague: builder.query<BaseballLeague, IClientGetBaseballLeagueParams>({
       query: args => {
         const { year, leagueId } = args;
         const params = generateLeagueParams();
@@ -51,15 +98,32 @@ export const EspnFantasyClientV3 = createApi({
         return {
           url: `/games/${FANTASY_SPORTS_ABBREVIATION.Baseball}/seasons/${year}/segments/0/leagues/${leagueId}`,
           params,
+          headers: {
+            'X-Fantasy-Filter': JSON.stringify({
+              transactions: {
+                filterType: {
+                  value: [
+                    'WAIVER',
+                    // 'WAIVER_ERROR',
+                    //  'DRAFT',
+                    'FREEAGENT',
+                    // 'DROP',
+                    // 'ROSTER',
+                  ],
+                },
+              },
+            }),
+          },
         };
       },
-      transformResponse: (league: EspnClient.BaseballLeague) => {
+      transformResponse: (league: IClientBaseballLeague) => {
         const genericLeagueSettings = clientLeagueToLeagueSettings(league);
 
         return transformClientLeagueToBaseballLeagueV2(league, genericLeagueSettings);
       },
     }),
-    getBaseballTeamById: builder.query<BaseballTeam, FetchTeamArgs>({
+
+    getBaseballTeamById: builder.query<BaseballTeamEntity, IClientGetBaseballTeamParams>({
       query: args => {
         const { year, leagueId, teamId } = args;
 
@@ -70,13 +134,25 @@ export const EspnFantasyClientV3 = createApi({
           params,
         };
       },
-      transformResponse: (league: EspnClient.BaseballLeague, _, args) => {
+      transformResponse: (league: IClientBaseballLeague, _, args) => {
         const { teamId } = args;
 
-        const team = league.teams.find(t => t.id.toString() === teamId) as EspnClient.Team;
+        const team = league.teams.find(t => t.id.toString() === teamId) as IClientBaseballTeam;
 
         return clientTeamToBaseballTeam(team);
       },
+    }),
+    validateLeague: builder.query<IFantasyLeague, IClientValidateLeagueParams>({
+      query: args => {
+        const { year, leagueId, sport } = args;
+        const params = generateLeagueParams();
+
+        return {
+          url: `/games/${sport}/seasons/${year}/segments/0/leagues/${leagueId}`,
+          params,
+        };
+      },
+      transformResponse: (league: IClientLeague) => clientLeagueToLeagueSettings(league),
     }),
   }),
 });

@@ -1,33 +1,29 @@
-import { PlayerCardEntity, PlayerInjuryStatus, PlayerRatings, TeamRosterEntry } from 'sports-ui-sdk';
-import { PlayerEntity } from '../../../../@shared/models';
-import { FantasyPlayer } from '../../models';
+import { IClientPlayerRatingsMapByTimePeriod, IClientTeamRosterEntity } from '@sdk/espn-client-models';
+import { PlayerCompetitionStatus } from '@sdk/injury/injury-status.model';
+import { FangraphsPlayerProjectionEntity } from '@shared/fangraphs/models/player-projections.model';
+import { PlayerEntity } from '@shared/models';
+import { FantasyPlayerEntity } from '../../models';
 
-export interface BaseballPlayerProps {
+export interface BaseballPlayerEntity extends FantasyPlayerEntity {
+  lineupSlotId: number;
   isStarting: boolean;
-  playerRatings: PlayerRatings | undefined;
-  percentChange: number | null;
-  percentOwned: number | null;
+  startingStatus: string | null;
+  playerRatings: IClientPlayerRatingsMapByTimePeriod | null;
   isPitcher: boolean;
   lineupSlot: string | null;
-  starterStatusByProGame: Record<number, PlayerInjuryStatus> | null;
+  starterStatusByProGame: Record<number, PlayerCompetitionStatus> | null;
   eligibleLineupSlots: string;
   sportsUiId: string;
 }
 
-export type BaseballPlayer = FantasyPlayer & BaseballPlayerProps & Pick<TeamRosterEntry, 'lineupSlotId'>;
+export interface BaseballPlayerStatsRowEntity
+  extends Omit<PlayerEntity, 'teamId' | 'teamUid'>,
+    Pick<BaseballPlayerEntity, 'eligibleLineupSlots' | 'percentChange' | 'percentOwned' | 'percentStarted'>,
+    Pick<IClientTeamRosterEntity, 'lineupSlotId'> {
+  highlightedPlayer: boolean;
+  stats: Record<number, number>;
+}
 
-export type BaseballPlayerCard = Omit<BaseballPlayer, 'lineupSlotId' | 'lineupSlot'> &
-  Pick<PlayerCardEntity['player'], 'stance' | 'laterality'> & { playerCardImage: string };
-
-export type BaseballPlayerMap = Record<string, BaseballPlayer>;
-
-export type BaseballPlayerStatsRow = Omit<PlayerEntity, 'teamId' | 'teamUid'> &
-  Pick<BaseballPlayer, 'eligibleLineupSlots' | 'injured' | 'injuryStatus' | 'percentChange' | 'percentOwned' | 'percentStarted'> &
-  Pick<TeamRosterEntry, 'lineupSlotId'> & {
-    highlightedPlayer: boolean;
-    stats: Record<number, number>;
-  };
-
-export type BaseballPlayerLiveStatsRow = Omit<PlayerEntity, 'teamId' | 'teamUid'> &
-  Pick<BaseballPlayer, 'eligibleLineupSlots' | 'injured' | 'injuryStatus' | 'isPitcher'> &
-  Pick<TeamRosterEntry, 'lineupSlotId'> & { stats: Record<number, number> | null };
+export interface BaseballPlayerWithFangraphsEntity extends BaseballPlayerEntity {
+  fangraphsProjection: FangraphsPlayerProjectionEntity | null;
+}

@@ -1,7 +1,7 @@
-import { EspnClient } from 'sports-ui-sdk';
-import { FangraphsPlayerProjectionEntity, FangraphsTeamToEspnTeam } from '../../../../@shared/fangraphs';
+import { LineupEntityMap } from '@sdk/espn-client-models/lineup.model';
+import { FangraphsPlayerProjectionEntity, FangraphsTeamToEspnTeam } from '@shared/fangraphs';
 import { normalizeName } from '../../espn-helpers';
-import { BaseballPlayer, BaseballPlayerStatsRow } from '../models/baseball-player.model';
+import { BaseballPlayerEntity, BaseballPlayerStatsRowEntity } from '../models/baseball-player.model';
 
 /**
  * Filters starting players
@@ -10,7 +10,7 @@ import { BaseballPlayer, BaseballPlayerStatsRow } from '../models/baseball-playe
  * @param lineupMap
  * @returns
  */
-export function startingPlayersFilter<T extends BaseballPlayer>(players: T[], lineupMap: EspnClient.LineupEntityMap): T[] {
+export function startingPlayersFilter<T extends BaseballPlayerEntity>(players: T[], lineupMap: LineupEntityMap): T[] {
   const playerList = players.filter(p => !lineupMap[p.lineupSlotId].bench && p.lineupSlotId !== 21);
   return sortPlayersByLineupSlotDisplayOrder(playerList, lineupMap);
 }
@@ -22,9 +22,9 @@ export function startingPlayersFilter<T extends BaseballPlayer>(players: T[], li
  * @param lineupMap
  * @returns
  */
-export function sortPlayersByLineupSlotDisplayOrder<T extends BaseballPlayer | BaseballPlayerStatsRow>(
+export function sortPlayersByLineupSlotDisplayOrder<T extends BaseballPlayerEntity | BaseballPlayerStatsRowEntity>(
   players: T[],
-  lineupMap: EspnClient.LineupEntityMap
+  lineupMap: LineupEntityMap
 ): T[] {
   return players.sort((a, b) => lineupMap[a.lineupSlotId].displayOrder - lineupMap[b.lineupSlotId].displayOrder);
 }
@@ -36,8 +36,8 @@ export function sortPlayersByLineupSlotDisplayOrder<T extends BaseballPlayer | B
  * @param lineupMap
  * @returns
  */
-export function benchPlayersFilter<T extends BaseballPlayer>(players: T[], lineupMap: EspnClient.LineupEntityMap): T[] {
-  const playerList = players.filter(p => lineupMap[p.lineupSlotId].bench && !p.injured);
+export function benchPlayersFilter<T extends BaseballPlayerEntity>(players: T[], lineupMap: LineupEntityMap): T[] {
+  const playerList = players.filter(p => lineupMap[p.lineupSlotId].bench && p.health?.isInjured);
   return sortPlayersByLineupSlotDisplayOrder(playerList, lineupMap);
 }
 
@@ -45,7 +45,7 @@ export function generateSportsUiPlayerId({
   espnPlayer,
   fangraphsPlayer,
 }: {
-  espnPlayer: BaseballPlayer;
+  espnPlayer: BaseballPlayerEntity;
   fangraphsPlayer: FangraphsPlayerProjectionEntity;
 }): {
   normalizedEspnId: string;

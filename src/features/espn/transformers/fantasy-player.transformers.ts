@@ -1,21 +1,19 @@
-import {
-  PLAYER_INJURY_STATUS,
-  PRO_LEAGUE_ABBREV_BY_PRO_LEAGUE_TYPE,
-  PlayerInfo,
-  PlayerOutlooksMap,
-  ProLeagueType,
-  exists,
-} from 'sports-ui-sdk';
-import { PlayerNewsFeedEntity } from 'sports-ui-sdk/src/lib/espn/models/espn-client.model';
-import { PositionEntityMap } from '../../../@shared/models';
+import { IClientPlayerNewsFeedEntity } from '@sdk/espn-client-models/player-news-feed.model';
+import { IClientPlayerInfoEntity, IClientSimplePlayerEntity, PlayerOutlooksMap } from '@sdk/espn-client-models/player.model';
+import { PRO_LEAGUE_ABBREV_BY_PRO_LEAGUE_TYPE } from '@sdk/espn-client-models/professional-league-type.const';
+import { IClientProLeagueType } from '@sdk/espn-client-models/professional-league-type.model';
+import { PLAYER_COMPETITION_STATUS } from '@sdk/injury';
+import { INJURY_SEVERITY_BY_INJURY_STATUS } from '@sdk/injury/injury-severity.model';
+import { exists } from '@shared/helpers/exists';
+import { PositionEntityMap } from '@shared/models';
 import { flattenPlayerStats, normalizeName, transformIdToUid } from '../espn-helpers';
 import { ImageBuilder } from '../helpers';
 import { FantasyPlayerNewsEntity } from '../models/fantasy-player-news-entity.model';
-import { FantasyPlayer } from '../models/fantasy-player.model';
+import { FantasyPlayerEntity } from '../models/fantasy-player.model';
 import { SportTypeId } from '../models/sport-type.model';
 
-export function transformClientPlayerNewsFeed(feed: PlayerNewsFeedEntity): FantasyPlayerNewsEntity {
-  const { id, headline, byline, story, images, links } = feed;
+export function transformClientPlayerNewsFeed(feed: IClientPlayerNewsFeedEntity): FantasyPlayerNewsEntity {
+  const { id, headline, byline, story, images, links, type } = feed;
 
   const image = images?.[0]?.url ?? null;
 
@@ -26,6 +24,7 @@ export function transformClientPlayerNewsFeed(feed: PlayerNewsFeedEntity): Fanta
     story,
     image,
     link: links?.mobile?.href ?? null,
+    type,
   };
 }
 
@@ -44,25 +43,67 @@ export function clientPlayerOutlook(outlooks?: PlayerOutlooksMap) {
     .sort((a, b) => b.week - a.week);
 }
 
+interface IClientPlayerToFantasyPlayerParams {
+  clientPlayer: IClientPlayerInfoEntity;
+  sportId: SportTypeId;
+  leagueId: IClientProLeagueType;
+  teamMap: Record<string, string>;
+  positionMap: PositionEntityMap;
+}
+
+interface IClientSimplePlayerToFantasyPlayerParams {
+  clientPlayer: IClientSimplePlayerEntity;
+  sportId: SportTypeId;
+  leagueId: IClientProLeagueType;
+  teamMap: Record<string, string>;
+  positionMap: PositionEntityMap;
+}
+
+export function clientSimplePlayerToFantasyPlayer({
+  clientPlayer,
+  sportId,
+  leagueId,
+  teamMap,
+  positionMap,
+}: IClientSimplePlayerToFantasyPlayerParams): FantasyPlayerEntity {
+  const { id, proTeamId, fullName, defaultPositionId,ownership } = clientPlayer;
+
+  const team = teamMap[proTeamId] as string;
+  const league = PRO_LEAGUE_ABBREV_BY_PRO_LEAGUE_TYPE[leagueId].toLowerCase();
+
+  return {
+    id: id.toString(),
+    sportsUiId: `name=${normalizeName(fullName)}~team=${team.toLowerCase()}`,
+    name: fullName,
+    teamUid: transformIdToUid(sportId, leagueId, proTeamId),
+    position:'',
+    img: ImageBuilder({ league }).headshotImgBuilder({ id }),
+    team,
+    teamId: proTeamId.toString(),
+    lastNewsDate: null,
+    health: null,
+    defaultPositionId: null,
+    percentOwned: ownership ? ownership.percentOwned : 0,
+    percentChange: null,
+    percentStarted: null,
+    stats: null,
+    outlookByWeek: [],
+  };
+}
+
 export function clientPlayerToFantasyPlayer({
   clientPlayer,
   sportId,
   leagueId,
   teamMap,
   positionMap,
-}: {
-  clientPlayer: PlayerInfo;
-  sportId: SportTypeId;
-  leagueId: ProLeagueType;
-  teamMap: Record<string, string>;
-  positionMap: PositionEntityMap;
-}): FantasyPlayer {
-  const { proTeamId, defaultPositionId, injured, outlooks, id, fullName, ownership, lastNewsDate } = clientPlayer;
+}: IClientPlayerToFantasyPlayerParams): FantasyPlayerEntity {
+  const { proTeamId, defaultPositionId, outlooks, id, fullName, ownership, lastNewsDate } = clientPlayer;
 
   const team = teamMap[proTeamId] as string;
   const stats = flattenPlayerStats(clientPlayer.stats);
   const outlookByWeek = clientPlayerOutlook(outlooks);
-  const injuryStatus = exists(clientPlayer.injuryStatus) ? clientPlayer.injuryStatus : PLAYER_INJURY_STATUS.Active;
+  const injuryStatus = exists(clientPlayer.injuryStatus) ? clientPlayer.injuryStatus : PLAYER_COMPETITION_STATUS.Active;
   const league = PRO_LEAGUE_ABBREV_BY_PRO_LEAGUE_TYPE[leagueId].toLowerCase();
 
   return {
@@ -74,10 +115,15 @@ export function clientPlayerToFantasyPlayer({
     position: positionMap[defaultPositionId].abbrev,
     img: ImageBuilder({ league }).headshotImgBuilder({ id }),
     lastNewsDate,
-    injured: injuryStatus === PLAYER_INJURY_STATUS.DTD || injured,
+    health: {
+      isActive: injuryStatus === PLAYER_COMPETITION_STATUS.Active,
+      isHealthy: false,
+      isInjured: false,
+      injuryStatus,
+      injurySeverity: INJURY_SEVERITY_BY_INJURY_STATUS[injuryStatus],
+    },
     stats,
     team,
-    injuryStatus,
     defaultPositionId,
     outlookByWeek,
     percentOwned: ownership ? ownership.percentOwned : 0,

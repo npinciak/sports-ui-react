@@ -1,4 +1,6 @@
-import { EVENT_STATUS, EVENT_STATUS_TYPE, SEASON_TYPE, SEASON_TYPE_LIST } from 'sports-ui-sdk';
+import { EVENT_STATUS, EVENT_STATUS_TYPE } from '@sdk/espn-client-models/event-status.model';
+import { SEASON_TYPE, SEASON_TYPE_LIST } from '@sdk/espn-client-models/season-type.model';
+import { exists } from '@shared/helpers/exists';
 import { NO_LOGO } from '../../constants';
 import { parseEventUidStringToId, parseTeamUidStringToId, teamColorHandler } from '../../espn-helpers';
 import { SPORT_TYPE_ID_INCLUDE_LIST } from '../../models/sport-type.model';
@@ -10,10 +12,6 @@ import { BaseballSituation, FastcastEvent, FootballSituation } from '../models/f
 import { UIFastcastLeague } from '../models/fastcast-league.model';
 import { IFastcastSportEntity } from '../models/fastcast-sport.model';
 import { FastcastEventTeam } from '../models/fastcast-team.model';
-
-function exists(value: any): boolean {
-  return value != undefined || value != null;
-}
 
 export function transformFastcastCheckpointToUIFastcast(response: IFastcastCheckpoint) {
   const { sports } = response;

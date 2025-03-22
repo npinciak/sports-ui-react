@@ -44,11 +44,4 @@ export const baseballLeagueSlice = createSlice({
       baseballLeagueSlice.caseReducers.setLeague(state, { type: 'setLeague', payload: store });
     });
   },
-  selectors: {
-    selectStore: store => store,
-  },
 });
-
-const { actions } = baseballLeagueSlice;
-// Extract and export each action creator by name
-export const { setLeague } = actions;
