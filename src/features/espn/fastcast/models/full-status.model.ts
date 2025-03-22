@@ -1,11 +1,11 @@
-import { EventStatusType } from 'sports-ui-sdk/src/lib/espn-client/models/event-status.model';
+import { ClientEventStatusType } from '@sdk/espn-client-models/event-status.model';
 
 export interface IFullStatusEntity {
   type: IFullStatus;
 }
 
 export interface IFullStatus {
-  id: EventStatusType;
+  id: ClientEventStatusType;
   name: string;
   state: string;
   completed: boolean;

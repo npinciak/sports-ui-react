@@ -1,31 +1,22 @@
-import { BaseballStat, exists } from 'sports-ui-sdk';
-import { SupaClientFangraphsConstantsTable } from '../../../../@shared/supabase/supabase-tables.model';
+import { BaseballStat } from '@sdk/espn-client-models/baseball/stats/mlb-stats.model';
+import { PLAYER_INJURY_STATUS } from '@sdk/injury/injury-status.model';
+import { exists } from '@shared/helpers/exists';
+import { SupaClientFangraphsConstantsTable } from '@shared/supabase/supabase-tables.model';
 import { MlbAdvancedStats } from '../helpers';
-import { BaseballPlayer, BaseballPlayerStatsRow } from '../models/baseball-player.model';
+import { BaseballPlayerEntity, BaseballPlayerStatsRowEntity } from '../models/baseball-player.model';
+
+interface BaseballPlayerStatsRowProps {
+  player: BaseballPlayerEntity;
+  statPeriod: string;
+  seasonConstants: SupaClientFangraphsConstantsTable;
+}
 
 export function transformToBaseballPlayerBatterStatsRow({
   player,
   statPeriod,
   seasonConstants,
-}: {
-  player: BaseballPlayer;
-  statPeriod: string;
-  seasonConstants: SupaClientFangraphsConstantsTable;
-}): BaseballPlayerStatsRow | null {
-  const {
-    id,
-    name,
-    injured,
-    injuryStatus,
-    img,
-    team,
-    position,
-    lineupSlotId,
-    percentChange,
-    percentOwned,
-    percentStarted,
-    eligibleLineupSlots,
-  } = player;
+}: BaseballPlayerStatsRowProps): BaseballPlayerStatsRowEntity | null {
+  const { id, name, img, team, position, lineupSlotId, percentChange, percentOwned, percentStarted, eligibleLineupSlots } = player;
 
   if (!exists(player.stats)) return null;
 
@@ -54,8 +45,6 @@ export function transformToBaseballPlayerBatterStatsRow({
   return {
     id,
     name,
-    injured,
-    injuryStatus,
     img,
     team,
     position,
@@ -66,5 +55,52 @@ export function transformToBaseballPlayerBatterStatsRow({
     highlightedPlayer: false,
     eligibleLineupSlots,
     stats,
+  };
+}
+
+export function addEventsToPitcherEntity(player: BaseballPlayerEntity, eventIdSet: Set<string>) {
+  let playerStartingStatus = '';
+
+  const { starterStatusByProGame } = player;
+
+  if (starterStatusByProGame) {
+    for (const [gameId, startingStatus] of Object.entries(starterStatusByProGame)) {
+      const isProbable = startingStatus === PLAYER_INJURY_STATUS.Probable;
+
+      if (eventIdSet.has(gameId)) {
+        playerStartingStatus = isProbable ? PLAYER_INJURY_STATUS.Starting : startingStatus;
+      }
+    }
+  }
+
+  const isStarting = playerStartingStatus === PLAYER_INJURY_STATUS.Starting;
+
+  return {
+    ...player,
+    isStarting,
+  };
+}
+
+export function addEventsToBatterEntity(player: BaseballPlayerEntity) {
+  let playerStartingStatus = '';
+
+  const { starterStatusByProGame } = player;
+
+  if (starterStatusByProGame) {
+    const hasGames = Object.entries(starterStatusByProGame).length > 0;
+
+    if (!hasGames) {
+      playerStartingStatus = PLAYER_INJURY_STATUS.NotStarting;
+    } else if (hasGames) {
+      const [_, startingStatus] = Object.entries(starterStatusByProGame)[0];
+      playerStartingStatus = startingStatus ?? PLAYER_INJURY_STATUS.UNKNOWN;
+    }
+  }
+
+  const isStarting = playerStartingStatus === PLAYER_INJURY_STATUS.Starting ? true : false;
+
+  return {
+    ...player,
+    isStarting,
   };
 }

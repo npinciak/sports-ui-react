@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { SmartDate } from '../../../../@shared/helpers';
+import { SmartDate } from '@shared/helpers';
 import { DfsEndpointBuilder } from '../../helpers';
 import { GameAttributes } from '../../models/game-attributes.model';
 

@@ -9,4 +9,4 @@ export const SEASON_TYPE = {
 
 export const SEASON_TYPE_LIST = Object.values(SEASON_TYPE);
 
-export type IClientSeasonType = (typeof SEASON_TYPE)[keyof typeof SEASON_TYPE];
+export type ClientSeasonType = (typeof SEASON_TYPE)[keyof typeof SEASON_TYPE];

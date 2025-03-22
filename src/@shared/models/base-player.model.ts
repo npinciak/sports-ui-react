@@ -1,7 +1,7 @@
 type BasePlayerEntityProps = 'id' | 'name' | 'img' | 'team' | 'teamId' | 'teamUid' | 'position';
 
 /**
- * Base front end player model
+ * Base frontend player model
  *
  * Any player related models should extend this model
  */

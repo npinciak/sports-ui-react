@@ -1,7 +1,8 @@
-import { EspnClient } from 'sports-ui-sdk';
+import { IClientCompetitorEntity } from '@sdk/espn-client-models/competitor.model';
+import { IClientEventEntity } from '@sdk/espn-client-models/event.model';
 
-type CompetitorsProps = Pick<EspnClient.Competitor, 'id' | 'abbreviation' | 'homeAway'>;
+type CompetitorEntity = Pick<IClientCompetitorEntity, 'id' | 'abbreviation' | 'homeAway'>;
 
-export type BaseballEvent = Pick<EspnClient.EventEntity, 'id' | 'uid'> & {
-  competitors: Record<string, CompetitorsProps>;
+export type BaseballEvent = Pick<IClientEventEntity, 'id' | 'uid'> & {
+  competitors: Record<string, CompetitorEntity>;
 };

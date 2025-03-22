@@ -1,4 +1,4 @@
-import { SmartDate } from '../../../../@shared/helpers/smart-date';
+import { SmartDate } from '@shared/helpers/smart-date';
 
 export function DfsEndpointBuilder() {
   return class DfsEndpointBuilderClass {

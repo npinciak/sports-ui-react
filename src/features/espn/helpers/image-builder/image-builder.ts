@@ -1,4 +1,4 @@
-import { exists } from 'sports-ui-sdk';
+import { exists } from '@shared/helpers/exists';
 import { CDN_COMBINER } from '../../constants';
 
 export function ImageBuilder({ league, sport }: { league?: string; sport?: string }) {

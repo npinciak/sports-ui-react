@@ -1,4 +1,4 @@
-import { TeamEntity } from '../../../../@shared/models/base-team.model';
+import { TeamEntity } from '@shared/models/base-team.model';
 import { ParsedUid } from '../../espn-helpers';
 import { IAthleteActionEntity } from './athlete-action-entity.model';
 import { ICompetitorsEntity } from './competitors-entity.model';

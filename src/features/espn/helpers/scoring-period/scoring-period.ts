@@ -1,5 +1,5 @@
-import { exists } from 'sports-ui-sdk';
-import { FilterOptions } from '../../../../@shared/models';
+import { exists } from '@shared/helpers/exists';
+import { FilterOptions } from '@shared/models';
 import { ScoringPeriodId } from './scoring-period.model';
 
 /**

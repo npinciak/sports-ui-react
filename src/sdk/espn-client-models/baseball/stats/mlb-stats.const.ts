@@ -1,6 +1,6 @@
-import { BaseballStat } from 'sports-ui-sdk';
 import { ClientBaseballStatCategory } from './baseball-stat-category.model';
 import { ClientBaseballStatType } from './baseball-stat-type.model';
+import { BaseballStat } from './mlb-stats.model';
 
 export const MLB_STATS_MAP = {
   [BaseballStat.AB]: {

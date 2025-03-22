@@ -56,6 +56,6 @@ export const EVENT_STATUS_TYPE_TO_EVENT_STATUS_NAME = {
   [EVENT_STATUS_TYPE.FullTime]: EVENT_STATUS_NAME.FullTime,
 };
 
-export type IClientEventStatus = (typeof EVENT_STATUS)[keyof typeof EVENT_STATUS];
-export type IClientEventStatusType = (typeof EVENT_STATUS_TYPE)[keyof typeof EVENT_STATUS_TYPE];
-export type IClientEventStatusName = (typeof EVENT_STATUS_NAME)[keyof typeof EVENT_STATUS_NAME];
+export type ClientEventStatus = (typeof EVENT_STATUS)[keyof typeof EVENT_STATUS];
+export type ClientEventStatusType = (typeof EVENT_STATUS_TYPE)[keyof typeof EVENT_STATUS_TYPE];
+export type ClientEventStatusName = (typeof EVENT_STATUS_NAME)[keyof typeof EVENT_STATUS_NAME];
