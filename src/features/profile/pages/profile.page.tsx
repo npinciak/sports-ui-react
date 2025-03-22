@@ -1,4 +1,6 @@
+import { AddCircleOutlineTwoTone } from '@mui/icons-material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -6,13 +8,15 @@ import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
+import { SupabaseClient } from '@shared//supabase/supabase.client';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SupabaseClient } from '../../../@shared/supabase/supabase.client';
 import {
   LeagueRoute,
   RouteBuilder,
   TeamRoute,
 } from '../../../core/routes/route-builder';
+import { AddLeagueFormComponent } from '../components/add-league-form.component';
 
 export function ProfilePage() {
   const {
@@ -20,6 +24,12 @@ export function ProfilePage() {
     isLoading,
     isFetching,
   } = SupabaseClient.useGetProfileWithTeamsQuery();
+
+  const [isAddLeagueFormDialogOpen, setIsAddLeagueFormDialogOpen] =
+    useState<boolean>(false);
+
+  const [isAddTeamFormDialogOpen, setIsAddTeamFormDialogOpen] =
+    useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -38,6 +48,22 @@ export function ProfilePage() {
 
   if (isLoading || isFetching)
     return <div className="animate-pulse">Loading...</div>;
+
+  const openAddLeagueFormDialog = () => {
+    setIsAddLeagueFormDialogOpen(true);
+  };
+
+  const openAddTeamFormDialog = () => {
+    setIsAddTeamFormDialogOpen(true);
+  };
+
+  const closeAddTeamFormDialog = () => {
+    setIsAddTeamFormDialogOpen(false);
+  };
+
+  const closeAddLeagueFormDialog = () => {
+    setIsAddLeagueFormDialogOpen(false);
+  };
 
   return (
     <Box marginTop={2}>
@@ -79,6 +105,18 @@ export function ProfilePage() {
               </Card>
             </Box>
           ))}
+          <Box sx={{ marginBottom: '16px' }}>
+            <Card>
+              <CardHeader
+                subheader="Add Team"
+                action={
+                  <IconButton aria-label="add" onClick={openAddTeamFormDialog}>
+                    <AddCircleOutlineTwoTone fontSize="medium" />
+                  </IconButton>
+                }
+              />
+            </Card>
+          </Box>
         </Grid>
         <Grid item xs={12}>
           <Divider>Leagues</Divider>
@@ -113,8 +151,53 @@ export function ProfilePage() {
               </Card>
             </Box>
           ))}
+          <Box sx={{ marginBottom: '16px' }}>
+            <Card>
+              <CardHeader
+                subheader="Add League"
+                action={
+                  <IconButton
+                    aria-label="add"
+                    onClick={openAddLeagueFormDialog}
+                  >
+                    <AddCircleOutlineTwoTone fontSize="medium" />
+                  </IconButton>
+                }
+              />
+            </Card>
+          </Box>
         </Grid>
       </Grid>
+
+      <Dialog
+        fullWidth
+        autoFocus={isAddTeamFormDialogOpen}
+        open={isAddTeamFormDialogOpen}
+        onClose={closeAddTeamFormDialog}
+        title="Add Team"
+      >
+        <DialogContent>
+          <AddLeagueFormComponent />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeAddTeamFormDialog}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        fullWidth
+        autoFocus={isAddLeagueFormDialogOpen}
+        open={isAddLeagueFormDialogOpen}
+        onClose={closeAddLeagueFormDialog}
+        title="Add League"
+      >
+        <DialogContent>
+          <AddLeagueFormComponent />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeAddLeagueFormDialog}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
