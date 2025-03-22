@@ -8,19 +8,30 @@ interface EspnPlayerNewsCardComponentProps {
 export function EspnPlayerNewsCardComponent({
   entity,
 }: EspnPlayerNewsCardComponentProps) {
-  const { id, headline, byline, story, image, link } = entity;
+  const { id, headline, byline, story, image, type } = entity;
 
   return (
     <Card className="mt-2" key={id}>
       <CardMedia component="img" image={image ?? ''} />
       <CardContent>
-        <div className="font-semibold mb-2">{headline}</div>
-
-        <div className="text-xs mb-2">{byline}</div>
         <div
-          className="font-normal text-lg"
-          dangerouslySetInnerHTML={{ __html: story ?? '' }}
-        />
+          role="article"
+          aria-labelledby={headline ?? '-'}
+          aria-describedby="headline author story"
+        >
+          <div id="headline" className="font-semibold mb-2">
+            {headline}
+          </div>
+
+          <div id="author" className="text-xs mb-2">
+            {byline ?? type}
+          </div>
+          <div
+            id="story"
+            className="font-normal text-lg"
+            dangerouslySetInnerHTML={{ __html: story ?? '' }}
+          />
+        </div>
       </CardContent>
     </Card>
   );
