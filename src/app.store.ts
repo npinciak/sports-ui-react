@@ -16,8 +16,10 @@ import { EspnClientV2 } from './features/espn/client/espn-v2.client';
 import { baseballTeamSlice } from './features/espn/fantasy-baseball/slices';
 import { baseballEventsSlice } from './features/espn/fantasy-baseball/slices/baseball-events.slice';
 import { baseballLeagueSlice } from './features/espn/fantasy-baseball/slices/baseball-league.slice';
+import { baseballPlayersSlice } from './features/espn/fantasy-baseball/slices/baseball-players.slice';
 import { baseballTeamLiveSlice } from './features/espn/fantasy-baseball/slices/baseball-team-live.slice';
 import { baseballTeamRosterSlice } from './features/espn/fantasy-baseball/slices/baseball-team-roster.slice';
+import { baseballTransactionSlice } from './features/espn/fantasy-baseball/slices/baseball-transactions.slice';
 import { FastcastClient } from './features/espn/fastcast/client/fastcast.client';
 import { fastcastWebSocketMiddleware } from './features/espn/fastcast/helpers/websocket-handler';
 import { FastcastEventsSlice } from './features/espn/fastcast/slices/fastcast-event.slice';
@@ -36,10 +38,12 @@ export const AppStore = configureStore({
     [fangraphsClient.reducerPath]: fangraphsClient.reducer,
     [FangraphsStatsFilterFormSlice.reducerPath]: FangraphsStatsFilterFormSlice.reducer,
     [SupabaseClient.reducerPath]: SupabaseClient.reducer,
+    [baseballPlayersSlice.reducerPath]: baseballPlayersSlice.reducer,
     [baseballEventsSlice.reducerPath]: baseballEventsSlice.reducer,
     [baseballTeamRosterSlice.reducerPath]: baseballTeamRosterSlice.reducer,
     [baseballTeamSlice.reducerPath]: baseballTeamSlice.reducer,
     [baseballTeamLiveSlice.reducerPath]: baseballTeamLiveSlice.reducer,
+    [baseballTransactionSlice.reducerPath]: baseballTransactionSlice.reducer,
     [baseballLeagueSlice.reducerPath]: baseballLeagueSlice.reducer,
     [FastcastClient.reducerPath]: FastcastClient.reducer,
     [FastcastEventsSlice.reducerPath]: FastcastEventsSlice.reducer,
