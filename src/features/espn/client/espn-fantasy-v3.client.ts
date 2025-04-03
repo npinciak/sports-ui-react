@@ -46,9 +46,9 @@ export const EspnFantasyClientV3 = createApi({
   endpoints: builder => ({
     getBaseballPlayers: builder.query<BaseballPlayerEntity[], IClientGetBaseballPlayerParams>({
       query: args => {
-        const { year } = args;
+        const { year, scoringPeriodId } = args;
 
-        const params = generatePlayerParams('0');
+        const params = generatePlayerParams(scoringPeriodId);
 
         return {
           url: `/games/${FANTASY_SPORTS_ABBREVIATION.Baseball}/seasons/${year}/players`,
@@ -112,6 +112,7 @@ export const EspnFantasyClientV3 = createApi({
                   ],
                 },
               },
+              schedule: { filterCurrentMatchupPeriod: { value: true } },
             }),
           },
         };
@@ -122,7 +123,6 @@ export const EspnFantasyClientV3 = createApi({
         return transformClientLeagueToBaseballLeagueV2(league, genericLeagueSettings);
       },
     }),
-
     getBaseballTeamById: builder.query<BaseballTeamEntity, IClientGetBaseballTeamParams>({
       query: args => {
         const { year, leagueId, teamId } = args;

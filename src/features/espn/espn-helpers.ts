@@ -16,7 +16,6 @@ export function generateLeagueParams(): URLSearchParams {
   params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Status);
   params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Team);
   params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Transactions);
-  params.append(ESPN_PARAM_FRAGMENTS.ScoringPeriod, '3');
   return params;
 }
 
