@@ -1,4 +1,4 @@
-import { fangraphsClient } from '@shared/';
+import { fangraphsClient } from '@shared/fangraphs/client/fangraphs.client';
 import { LoaderFunctionArgs, RouteObject } from 'react-router';
 import { AppStore } from '../../app.store';
 import {
@@ -117,6 +117,33 @@ export const publicRoutes: RouteObject[] = [
                       {
                         path: ROUTE_FRAGMENT.EMPTY,
                         element: <BaseballHome />,
+                        loader: async ({ params }: LoaderFunctionArgs) => {
+                          const { year, leagueId } = params;
+
+                          await AppStore.dispatch(
+                            EspnFantasyClientV3.endpoints.getBaseballLeague.initiate(
+                              {
+                                year: year ?? ROUTE_FRAGMENT.EMPTY,
+                                leagueId: leagueId ?? ROUTE_FRAGMENT.EMPTY,
+                              }
+                            )
+                          );
+
+                          const scoringPeriodId =
+                            AppStore.getState().baseballLeague.scoringPeriodId!;
+
+                          await AppStore.dispatch(
+                            EspnFantasyClientV3.endpoints.getBaseballPlayers.initiate(
+                              {
+                                year: year ?? ROUTE_FRAGMENT.EMPTY,
+                                scoringPeriodId:
+                                  scoringPeriodId ?? ROUTE_FRAGMENT.EMPTY,
+                              }
+                            )
+                          );
+
+                          return null;
+                        },
                       },
                       {
                         path: ROUTE_FRAGMENT.TEAM,

@@ -1,4 +1,4 @@
-export const FangraphsPosition = {
+export const FANGRAPHS_POSITION = {
   All: 'all',
   NonPitchers: 'np',
   C: 'c',
@@ -14,4 +14,4 @@ export const FangraphsPosition = {
   P: 'p',
 } as const;
 
-export type FangraphsPositionType = (typeof FangraphsPosition)[keyof typeof FangraphsPosition];
+export type FangraphsPositionType = (typeof FANGRAPHS_POSITION)[keyof typeof FANGRAPHS_POSITION];

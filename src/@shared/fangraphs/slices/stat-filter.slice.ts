@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from '../client';
-import { FangraphsPlayerStatsRequestBody, FangraphsPosition, FangraphsTeam } from '../models';
+import { FANGRAPHS_POSITION, FangraphsPlayerStatsRequestBody, FangraphsTeam } from '../models';
 
 export const INITIAL_STATE: FangraphsPlayerStatsRequestBody = {
   team: FangraphsTeam.AllTeams,
-  pos: FangraphsPosition.All,
+  pos: FANGRAPHS_POSITION.All,
   players: [],
   statSplitPeriod: 0,
   meta: { pageitems: DEFAULT_PAGE_SIZE, pagenum: DEFAULT_PAGE_NUMBER },
