@@ -5,7 +5,7 @@ export interface LineupAttributes {
   bench: boolean;
   eligiblePositions: number[];
   lineupSlotEligible: boolean;
-  name: string;
+  name: string  | null;
   starter: boolean;
   displayOrder: number;
   active: boolean;

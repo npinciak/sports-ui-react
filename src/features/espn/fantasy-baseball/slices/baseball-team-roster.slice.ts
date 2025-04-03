@@ -1,24 +1,34 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { EspnFantasyClientV3 } from '../../client/espn-fantasy-v3.client';
-import { BaseballPlayer } from '../models/baseball-player.model';
+import { BaseballPlayerEntity } from '../models/baseball-player.model';
 
 export const baseballTeamRosterAdapter = createEntityAdapter({
-  selectId: (player: BaseballPlayer) => player.sportsUiId,
-  sortComparer: (a: BaseballPlayer, b: BaseballPlayer) => Number(a.id) - Number(b.id),
+  selectId: (player: BaseballPlayerEntity) => player.sportsUiId,
+  sortComparer: (a: BaseballPlayerEntity, b: BaseballPlayerEntity) => Number(a.id) - Number(b.id),
 });
 
 export const baseballTeamRosterSlice = createSlice({
   name: 'baseballTeamRoster',
-  initialState: baseballTeamRosterAdapter.getInitialState(),
+  initialState: { ...baseballTeamRosterAdapter.getInitialState(), map: {} as Record<string, string> },
   reducers: {
-    teamAdded: baseballTeamRosterAdapter.addOne,
-    teamAddMany: baseballTeamRosterAdapter.addMany,
-    teamUpdated: baseballTeamRosterAdapter.updateOne,
-    teamRemoved: baseballTeamRosterAdapter.removeOne,
+    setPlayerIdSportsUiIdMap: (state, action) => {
+      state.map = action.payload;
+    },
   },
   extraReducers: builder => {
     builder.addMatcher(EspnFantasyClientV3.endpoints.getBaseballTeamById.matchFulfilled, (state, action) => {
-      baseballTeamRosterAdapter.setAll(state, action.payload.roster);
+      const roster = action.payload.roster;
+      baseballTeamRosterAdapter.setAll(state, roster);
+
+      const map = roster.reduce(
+        (acc, player) => {
+          acc[player.id] = player.sportsUiId;
+          return acc;
+        },
+        {} as Record<string, string>
+      );
+
+      baseballTeamRosterSlice.caseReducers.setPlayerIdSportsUiIdMap(state, { payload: map, type: 'setPlayerIdSportsUiIdMap' });
     });
   },
 });

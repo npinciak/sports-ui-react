@@ -1,10 +1,10 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { EspnFantasyClientV3 } from '../../client/espn-fantasy-v3.client';
-import { BaseballTeamLive } from '../models/baseball-team.model';
+import { BaseballTeamLiveEntity } from '../models/baseball-team.model';
 
 export const baseballTeamLiveAdapter = createEntityAdapter({
-  selectId: (team: BaseballTeamLive) => team.id,
-  sortComparer: (a: BaseballTeamLive, b: BaseballTeamLive) => Number(a.liveScore) - Number(b.liveScore),
+  selectId: (team: BaseballTeamLiveEntity) => team.id,
+  sortComparer: (a: BaseballTeamLiveEntity, b: BaseballTeamLiveEntity) => Number(a.liveScore) - Number(b.liveScore),
 });
 
 export const baseballTeamLiveSlice = createSlice({
