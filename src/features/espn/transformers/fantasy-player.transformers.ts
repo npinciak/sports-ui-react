@@ -2,7 +2,7 @@ import { IClientPlayerNewsFeedEntity } from '@sdk/espn-client-models/player-news
 import { IClientPlayerInfoEntity, IClientSimplePlayerEntity, PlayerOutlooksMap } from '@sdk/espn-client-models/player.model';
 import { PRO_LEAGUE_ABBREV_BY_PRO_LEAGUE_TYPE } from '@sdk/espn-client-models/professional-league-type.const';
 import { IClientProLeagueType } from '@sdk/espn-client-models/professional-league-type.model';
-import { PLAYER_COMPETITION_STATUS } from '@sdk/injury';
+import { INJURY_STATUS_LIST, PLAYER_COMPETITION_STATUS, PlayerCompetitionStatus } from '@sdk/injury';
 import { INJURY_SEVERITY_BY_INJURY_STATUS } from '@sdk/injury/injury-severity.model';
 import { exists } from '@shared/helpers/exists';
 import { PositionEntityMap } from '@shared/models';
@@ -66,7 +66,7 @@ export function clientSimplePlayerToFantasyPlayer({
   teamMap,
   positionMap,
 }: IClientSimplePlayerToFantasyPlayerParams): FantasyPlayerEntity {
-  const { id, proTeamId, fullName, defaultPositionId,ownership } = clientPlayer;
+  const { id, proTeamId, fullName, defaultPositionId, ownership } = clientPlayer;
 
   const team = teamMap[proTeamId] as string;
   const league = PRO_LEAGUE_ABBREV_BY_PRO_LEAGUE_TYPE[leagueId].toLowerCase();
@@ -76,13 +76,13 @@ export function clientSimplePlayerToFantasyPlayer({
     sportsUiId: `name=${normalizeName(fullName)}~team=${team.toLowerCase()}`,
     name: fullName,
     teamUid: transformIdToUid(sportId, leagueId, proTeamId),
-    position:'',
+    position: positionMap[defaultPositionId]?.abbrev,
     img: ImageBuilder({ league }).headshotImgBuilder({ id }),
     team,
     teamId: proTeamId.toString(),
     lastNewsDate: null,
     health: null,
-    defaultPositionId: null,
+    defaultPositionId,
     percentOwned: ownership ? ownership.percentOwned : 0,
     percentChange: null,
     percentStarted: null,
@@ -118,7 +118,7 @@ export function clientPlayerToFantasyPlayer({
     health: {
       isActive: injuryStatus === PLAYER_COMPETITION_STATUS.Active,
       isHealthy: false,
-      isInjured: false,
+      isInjured: INJURY_STATUS_LIST.includes(injuryStatus as PlayerCompetitionStatus),
       injuryStatus,
       injurySeverity: INJURY_SEVERITY_BY_INJURY_STATUS[injuryStatus],
     },

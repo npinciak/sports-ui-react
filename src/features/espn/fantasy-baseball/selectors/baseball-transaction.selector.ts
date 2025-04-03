@@ -27,14 +27,25 @@ export const getSuccessfulTransactionList = createSelector(
       .map(transaction => {
         return {
           ...transaction,
-          items: transaction.items.map(item => ({
-            ...item,
-            playerName: selectPlayerById(item.playerId)?.name ?? null,
-            fromTeamAbbrev: getTeamById(item.fromTeamId) != null ? getTeamById(item.fromTeamId)?.abbrev : 'Free Agent',
-            fromTeamLogo: getTeamById(item.fromTeamId) != null ? getTeamById(item.fromTeamId)?.logo : '',
-            toTeamLogo: getTeamById(item.toTeamId) != null ? getTeamById(item.toTeamId)?.logo : '',
-            toTeamAbbrev: getTeamById(item.toTeamId) != null ? getTeamById(item.toTeamId)?.abbrev : 'Free Agent',
-          })),
+          items: transaction.items.map(item => {
+            const { playerId, fromTeamId, toTeamId } = item;
+
+            const player = selectPlayerById(playerId);
+
+            const fromTeam = getTeamById(fromTeamId);
+            const toTeam = getTeamById(toTeamId);
+
+            return {
+              ...item,
+              playerName: player?.name ?? null,
+              playerHeadshot: player?.img ?? null,
+              playerPosition: player?.position ?? null,
+              fromTeamAbbrev: fromTeam != null ? fromTeam?.abbrev : 'Free Agent',
+              fromTeamLogo: fromTeam != null ? fromTeam?.logo : '',
+              toTeamLogo: toTeam != null ? toTeam?.logo : '',
+              toTeamAbbrev: toTeam != null ? toTeam?.abbrev : 'Free Agent',
+            };
+          }),
         };
       })
 );

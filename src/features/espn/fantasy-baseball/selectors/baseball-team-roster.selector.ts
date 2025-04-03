@@ -42,6 +42,13 @@ export const selectPlayerById = createSelector(
   }
 );
 
+export const selectInjuryPlayerList = createSelector([selectPlayerEntityList], players =>
+  players.filter(p => {
+    if (!p.health) return false;
+    return p.health?.isInjured;
+  })
+);
+
 export const selectTeamBatterList = createSelector([selectPlayerEntityList], players =>
   players.filter(p => !p.isPitcher || p.lineupSlotId === 12)
 );
@@ -90,10 +97,12 @@ export const selectFangraphsToPitchers = createSelector(
   (players, fangraphsEntities, totalFangraphsPlayers) => {
     const hasFangraphsPlayers = totalFangraphsPlayers > 0;
 
-    return players.map(player => ({
-      ...player,
-      fangraphsProjection: hasFangraphsPlayers ? (fangraphsEntities[player.sportsUiId] as FangraphsPlayerProjectionEntity) : null,
-    }));
+    return players.map(player => {
+      return {
+        ...player,
+        fangraphsProjection: hasFangraphsPlayers ? (fangraphsEntities[player.sportsUiId] as FangraphsPlayerProjectionEntity) : null,
+      };
+    });
   }
 );
 
