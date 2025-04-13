@@ -24,7 +24,7 @@ module.exports = {
       },
       plugins: ['@typescript-eslint/eslint-plugin'],
       extends: [
-        'plugin:@@typescript-eslint/no-unused-vars',
+        'plugin:@typescript-eslint/no-unused-vars',
         'plugin:@typescript-eslint/eslint-recommended', // removes redundant warnings between TS & ESLint
         'plugin:@typescript-eslint/recommended', // rules specific to typescript, e.g., writing interfaces
         'eslint-config-prettier/@typescript-eslint', // ensure rule set doesn't conflict with prettier for TS files too
