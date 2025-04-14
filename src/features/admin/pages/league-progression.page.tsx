@@ -3,19 +3,28 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Grid,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
 } from '@mui/material';
-import { SupabaseClient } from '@shared/';
+import Grid from '@mui/material/Grid2';
+import { LineChart } from '@mui/x-charts/LineChart/LineChart';
+import { SupabaseClient } from '@shared/supabase/supabase.client';
 import { AdminLeagueProgressionForm } from '../components/league-progression-form.component';
 
 export function AdminLeagueProgressionPage() {
   const { data: leagueProgression } =
     SupabaseClient.useGetLeagueProgressionQuery({});
+
+  const chartData = leagueProgression
+    ?.map(row => ({
+      rank: row.rank,
+      date: row.date,
+      totalPoints: row.total_points,
+    }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   return (
     <Box
@@ -26,14 +35,33 @@ export function AdminLeagueProgressionPage() {
       }}
     >
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Card>
             <CardContent>
               <AdminLeagueProgressionForm />
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
+          <LineChart
+            yAxis={[{ data: chartData?.map(row => row.totalPoints) ?? [] }]}
+            series={[
+              {
+                data: chartData?.map(row => row.totalPoints) ?? [],
+                area: true,
+                color: '#38bdf8',
+              },
+              {
+                data: chartData?.map(row => row.rank) ?? [],
+                area: true,
+                color: '#c084fc',
+              },
+            ]}
+            width={800}
+            height={400}
+          />
+        </Grid>
+        <Grid size={12}>
           <Card>
             <CardHeader title="League Progression" />
             <CardContent>

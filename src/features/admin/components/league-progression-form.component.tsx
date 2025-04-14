@@ -7,9 +7,9 @@ import {
   SelectChangeEvent,
   TextField,
 } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import { SupabaseClient } from '@shared/';
+import Grid from '@mui/material/Grid2';
 import { SupaClientLeagueProgressionInsert } from '@shared//supabase/supabase-tables.model';
+import { SupabaseClient } from '@shared/supabase/supabase.client';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectEspnTeamId,
@@ -84,7 +84,7 @@ export function AdminLeagueProgressionForm() {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <FormControl fullWidth>
             <TextField
               id="totalPoints"
@@ -96,7 +96,7 @@ export function AdminLeagueProgressionForm() {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <FormControl fullWidth>
             <InputLabel id="rank-select-label">Rank</InputLabel>
 
@@ -112,7 +112,7 @@ export function AdminLeagueProgressionForm() {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <FormControl fullWidth>
             <InputLabel id="team-select-label">Team</InputLabel>
 
@@ -131,12 +131,12 @@ export function AdminLeagueProgressionForm() {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Button fullWidth variant="outlined" onClick={handleCancel}>
             Cancel
           </Button>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Button fullWidth variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
