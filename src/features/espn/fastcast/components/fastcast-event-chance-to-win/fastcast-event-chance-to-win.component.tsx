@@ -2,7 +2,7 @@ import {
   KeyboardDoubleArrowLeft,
   KeyboardDoubleArrowRight,
 } from '@mui/icons-material';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { FastcastEventTeam } from '../../models/fastcast-team.model';
 
 export function FastcastChanceToWinComponent({
@@ -35,7 +35,7 @@ export function FastcastChanceToWinComponent({
 
   return (
     <Grid container className="w-full mb-2 text-xs" columnSpacing={1}>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <div className="flex w-full">
           {awayTeamChanceToWin >= 5 && (
             <div className="font-semibold p-2" style={awayTeamStyle}>

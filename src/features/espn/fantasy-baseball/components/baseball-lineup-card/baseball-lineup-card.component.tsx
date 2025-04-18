@@ -2,10 +2,11 @@ import { LocalHospital } from '@mui/icons-material';
 import { Tooltip, Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import StyledBadge from '@mui/material/Badge';
-import { BaseballPlayer } from '../../models/baseball-player.model';
+import Grid from '@mui/material/Grid2';
+import { BaseballPlayerEntity } from '../../models/baseball-player.model';
 
 interface BaseballLineupCardProps {
-  player: BaseballPlayer;
+  player: BaseballPlayerEntity;
   onClick: (playerId: string) => void;
 }
 
@@ -14,15 +15,19 @@ export function BaseballLineupCard({
   onClick,
 }: BaseballLineupCardProps) {
   return (
-    <div
-      className="grid grid-cols-4 py-3"
-      key={player.id}
+    <Grid
+      container
+      role="article"
+      aria-label={player.name}
+      className="py-3"
       onClick={() => onClick(player.id)}
     >
-      <div>
+      <Grid size={3}>
         <Tooltip
           title={
-            player.isStarting && !player.injured ? 'Starting' : 'Not Starting'
+            player.isStarting && !player.health!.isInjured
+              ? 'Starting'
+              : 'Not Starting'
           }
         >
           <StyledBadge
@@ -34,10 +39,10 @@ export function BaseballLineupCard({
             <Avatar src={player.img} alt={player.name} />
           </StyledBadge>
         </Tooltip>
-      </div>
-      <div className="col-span-3">
+      </Grid>
+      <Grid size={9}>
         <Typography variant="body1">
-          {player.name} {player.injured ? <LocalHospital /> : ''}
+          {player.name} {player.health!.isInjured ? <LocalHospital /> : ''}
         </Typography>
         <div className="text-xs">
           <Typography variant="body2">
@@ -45,7 +50,7 @@ export function BaseballLineupCard({
             <span className="font-bold"> {player.lineupSlot}</span>
           </Typography>
         </div>
-      </div>
-    </div>
+      </Grid>
+    </Grid>
   );
 }

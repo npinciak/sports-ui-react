@@ -1,41 +1,25 @@
-import { Grid } from '@mui/material';
+import { Avatar, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { FastcastEventTeam } from '../models/fastcast-team.model';
 
-export function FastcastTeamComponent({
-  team,
-}: {
+interface FastcastTeamComponentProps {
   team: FastcastEventTeam | undefined;
-}) {
+}
+
+export function FastcastTeamComponent({ team }: FastcastTeamComponentProps) {
   return (
     <Grid container className="w-full py-2 ">
-      <Grid item xs={2} alignContent={'center'}>
-        <img
-          width="48"
-          height="35"
-          role="presentation"
-          className="h-10 w-10"
-          title={team?.name}
-          alt={team?.name}
-          src={team?.logo}
-        />
+      <Grid size={2} alignContent={'center'}>
+        <Avatar src={team?.logo} alt={team?.name} />
       </Grid>
-      <Grid item xs={6} alignContent={'center'}>
-        <div
-          className="font-semibold"
-          style={{ color: team?.color ?? '#000000' }}
-        >
+      <Grid size={6} alignContent={'center'}>
+        <Typography variant="body2">
           {team?.rank} {team?.name}
-        </div>
-        <div className="text-xs">{team?.record}</div>
+        </Typography>
+        <Typography variant="caption">{team?.record}</Typography>
       </Grid>
-      <Grid
-        item
-        xs={4}
-        className="font-bold text-right"
-        alignContent={'center'}
-        style={{ color: team?.color ?? '#000000' }}
-      >
-        {team?.score}
+      <Grid size={4} className="font-bold text-right" alignContent={'center'}>
+        <Typography variant="body2">{team?.score}</Typography>
       </Grid>
     </Grid>
   );

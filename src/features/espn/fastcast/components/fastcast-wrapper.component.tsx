@@ -1,4 +1,5 @@
-import { Button, Grid, NativeSelect, Stack } from '@mui/material';
+import { Button, NativeSelect, Stack } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { EspnClientV2 } from '../../client/espn-v2.client';
@@ -48,7 +49,7 @@ export function FastcastWrapperComponent() {
   return (
     <>
       <Grid container spacing={2} className="mb-4">
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Button
             variant="contained"
             className="w-full"
@@ -58,7 +59,7 @@ export function FastcastWrapperComponent() {
           </Button>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={12}>
           <NativeSelect
             value={leagueFilter}
             onChange={event => setLeagueFilter(event.target.value)}

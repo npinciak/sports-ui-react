@@ -1,4 +1,5 @@
-import { Card, CardContent, Divider, Grid } from '@mui/material';
+import { Card, CardContent, Divider } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { FastcastEvent } from '../models/fastcast-event.model';
 import { fastcastEventSummary } from '../transformers/espn-fastcast.transformers';
 import { FastcastChanceToWinAwayComponent } from './fastcast-event-chance-to-win/fastcast-event-chance-to-win-away.component';
@@ -33,7 +34,7 @@ export function FastcastEventComponent({ event }: FastcastEventComponentProps) {
                   className="w-full mb-2 text-xs"
                   columnSpacing={1}
                 >
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <div className="flex w-full">
                       <FastcastChanceToWinAwayComponent
                         team={event.teams?.away}
@@ -49,7 +50,7 @@ export function FastcastEventComponent({ event }: FastcastEventComponentProps) {
                   className="w-full mb-2 text-xs"
                   columnSpacing={1}
                 >
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     {event.lastPlay?.text}
                     {event.drive?.description}
                   </Grid>

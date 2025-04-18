@@ -1,12 +1,18 @@
 import { AddCircleOutlineTwoTone } from '@mui/icons-material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
+import {
+  Button,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+} from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
 import { SupabaseClient } from '@shared//supabase/supabase.client';
 import { useState } from 'react';
@@ -68,10 +74,24 @@ export function ProfilePage() {
   return (
     <Box marginTop={2}>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <h1>Profile</h1>
+        <Grid size={12}>
+          <Divider>Profile</Divider>
+          <Card>
+            <CardContent>
+              <Grid container spacing={2} alignContent={'center'}>
+                <Grid size={12}>
+                <Avatar
+                  alt={profile?.name?.toUpperCase()}
+                  src="./"
+                  aria-label={profile?.name ?? ''}
+                  sx={{ width: 56, height: 56 }}
+                />
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Divider>Teams</Divider>
           {profile?.teams.map(team => (
             <Box sx={{ marginBottom: '16px' }} key={team.team.id}>
@@ -118,7 +138,7 @@ export function ProfilePage() {
             </Card>
           </Box>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Divider>Leagues</Divider>
           {profile?.leagues.map(league => (
             <Box sx={{ marginBottom: '16px' }} key={league.league.id}>
