@@ -30,6 +30,10 @@ export type IClientLeagueRosterSettings = { positionLimits: Record<string, numbe
 
 export interface IClientLeagueSettings {
   name: string;
+  size: number;
+  scoringSettings: {
+    scoringType: 'ROTO';
+  };
   rosterSettings: IClientLeagueRosterSettings;
   scheduleSettings: IClientLeagueScheduleSettings;
 }
