@@ -1,2 +1,2 @@
-export * from './fangraphs-player.slice';
+export * from './fangraphs-batter.slice';
 export * from './stat-filter.slice';

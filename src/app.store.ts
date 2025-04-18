@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { fangraphsClient, fangraphsPlayerSlice, FangraphsStatsFilterFormSlice } from './@shared/fangraphs';
+import { fangraphsPitcherSlice } from '@shared/fangraphs/slices/fangraphs-pitcher.slice';
+import { fangraphsBatterSlice, fangraphsClient, FangraphsStatsFilterFormSlice } from './@shared/fangraphs';
 import { SupabaseClient } from './@shared/supabase/supabase.client';
 import { AuthenticationClient } from './core/authentication';
 import { AdminLeagueProgressionFormSlice } from './features/admin/slices/league-progression-form.slice';
@@ -49,7 +50,8 @@ export const AppStore = configureStore({
     [FastcastEventsSlice.reducerPath]: FastcastEventsSlice.reducer,
     [FastcastSportsSlice.reducerPath]: FastcastSportsSlice.reducer,
     [FastcastLeaguesSlice.reducerPath]: FastcastLeaguesSlice.reducer,
-    [fangraphsPlayerSlice.reducerPath]: fangraphsPlayerSlice.reducer,
+    [fangraphsBatterSlice.reducerPath]: fangraphsBatterSlice.reducer,
+    [fangraphsPitcherSlice.reducerPath]: fangraphsPitcherSlice.reducer,
     [lineupHeadquartersHandler.reducerPath]: lineupHeadquartersHandler.reducer,
     [masterSlateHandler.reducerPath]: masterSlateHandler.reducer,
     [slatePlayerHandler.reducerPath]: slatePlayerHandler.reducer,

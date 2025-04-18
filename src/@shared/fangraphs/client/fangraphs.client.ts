@@ -1,12 +1,11 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { supabase } from '../../supabase/supabase.client';
 import {
-  FANGRAPHS_POSITION,
   FANGRAPHS_PROJECTION,
   FangraphsPageOfPlayerStats,
   FangraphsPlayerProjectionEntity,
-  FangraphsPlayerProjectionsRequestBody,
   FangraphsTeam,
+  IClientFangraphsProjectionsRequestBodyBase,
   IClientFangraphsStatsRequestBodyBase,
 } from '../models';
 import { FangraphsClientTag, FangraphsClientTagList } from './fangraphs.client.model';
@@ -16,7 +15,7 @@ export const fangraphsClient = createApi({
   baseQuery: fakeBaseQuery(),
   tagTypes: FangraphsClientTagList,
   endpoints: builder => ({
-    getFangraphProjections: builder.query<FangraphsPlayerProjectionEntity[], FangraphsPlayerProjectionsRequestBody>({
+    getFangraphProjections: builder.query<FangraphsPlayerProjectionEntity[], IClientFangraphsProjectionsRequestBodyBase>({
       queryFn: async args => {
         const { type, pos, team, players } = args;
 
@@ -31,17 +30,16 @@ export const fangraphsClient = createApi({
           body,
         });
 
-        if (!data) return { data: [] };
-        return { data };
+        return handleReturnData(data);
       },
       providesTags: [FangraphsClientTag.FangraphsProjections],
     }),
-    getFangraphPlayerList: builder.query<FangraphsPlayerProjectionEntity[], void>({
+    getFangraphPitcherPlayerList: builder.query<FangraphsPlayerProjectionEntity[], void>({
       queryFn: async () => {
         const body = {
-          type: FANGRAPHS_PROJECTION.Steamer600,
-          pos: FANGRAPHS_POSITION.All,
+          type: FANGRAPHS_PROJECTION.SteamerU,
           team: FangraphsTeam.AllTeams,
+          stats: 'pit',
           players: ['0'],
         };
 
@@ -49,8 +47,24 @@ export const fangraphsClient = createApi({
           body,
         });
 
-        if (!data) return { data: [] };
-        return { data };
+        return handleReturnData(data);
+      },
+      providesTags: [FangraphsClientTag.FangraphsProjections],
+    }),
+    getFangraphBatterPlayerList: builder.query<FangraphsPlayerProjectionEntity[], void>({
+      queryFn: async () => {
+        const body = {
+          type: FANGRAPHS_PROJECTION.SteamerU,
+          team: FangraphsTeam.AllTeams,
+          stats: 'bat',
+          players: ['0'],
+        };
+
+        const { data } = await supabase.functions.invoke<FangraphsPlayerProjectionEntity[]>('fangraphs-projections', {
+          body,
+        });
+
+        return handleReturnData(data);
       },
       providesTags: [FangraphsClientTag.FangraphsProjections],
     }),
@@ -60,8 +74,7 @@ export const fangraphsClient = createApi({
           body: args,
         });
 
-        if (!data) return { data: { data: [], dateRange: '', dateRangeSeason: '', sortDir: '', sortStat: '', totalCount: 0 } };
-        return { data };
+        return handleReturnData(data);
       },
       providesTags: [FangraphsClientTag.FangraphsStats],
     }),
@@ -77,18 +90,17 @@ export const fangraphsClient = createApi({
           },
         });
 
-        if (!data) return { data: [] };
-
-        return { data };
+        return handleReturnData(data);
       },
     }),
   }),
 });
 
-export const {
-  useGetFangraphProjectionsQuery,
-  useGetFangraphStatsQuery,
-  useLazyGetFangraphStatsQuery,
-  useGetStatPeriodSplitOptionsQuery,
-  useRefetchStatsMutation,
-} = fangraphsClient;
+export const { useGetFangraphStatsQuery, useGetStatPeriodSplitOptionsQuery, useRefetchStatsMutation } = fangraphsClient;
+
+function handleReturnData<T>(data: T | null): { data: T } {
+  if (!data) return { data: [] as T };
+  if (data == null) return { data: [] as T };
+
+  return { data };
+}
