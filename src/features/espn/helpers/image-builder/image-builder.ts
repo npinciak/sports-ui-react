@@ -1,9 +1,11 @@
 import { exists } from '@shared/helpers/exists';
-import { CDN_COMBINER } from '../../constants';
+import { CDN_A, CDN_COMBINER, CDN_G } from '../../constants';
+import { FantasySportsAbbreviation, SportLeague } from '../endpoint-builder/endpoint-builder.model';
 
-export function ImageBuilder({ league, sport }: { league?: string; sport?: string }) {
+export function ImageBuilder({ league, sport }: { league?: SportLeague; sport?: FantasySportsAbbreviation }) {
   return class ImageBuilderClass {
-    private static readonly _cdn = CDN_COMBINER;
+    private static readonly _cdn = CDN_A;
+    private static readonly _cdnG = CDN_G;
     private static readonly _cdnCombiner = CDN_COMBINER;
 
     private static _sport = sport;
@@ -13,7 +15,7 @@ export function ImageBuilder({ league, sport }: { league?: string; sport?: strin
       return `${this._cdnCombiner}?img=/redesign/assets/img/icons/ESPN-icon-${this._sport?.toLowerCase().replace('ice ', '')}.png&h=100&w=100`;
     }
 
-    static logoImgBuilder({ id, width, height }: ImageBuilderInput): string {
+    static teamLogoImgBuilder({ id, width, height }: ImageBuilderInput): string {
       const w = exists(width) ? width : 100;
       const h = exists(height) ? height : 100;
 
@@ -24,7 +26,11 @@ export function ImageBuilder({ league, sport }: { league?: string; sport?: strin
       const w = exists(width) ? width : 55;
       const h = exists(height) ? height : 40;
 
-      return `${this._cdn}?img=/i/headshots/${this._league}/players/full/${id}.png&w=${w}&h=${h}&cb=1`;
+      return `${this._cdnCombiner}?img=/i/headshots/${this._league}/players/full/${id}.png&w=${w}&h=${h}&cb=1`;
+    }
+
+    static get fantasySportLeagueImage() {
+      return `${this._cdnG}/lm-static/${this._sport}/images/${this._sport}-shield-shield.svg`;
     }
   };
 }

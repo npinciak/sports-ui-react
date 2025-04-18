@@ -1,8 +1,10 @@
-export const CDN = import.meta.env.VITE_ESPN_CDN;
-export const CDN_COMBINER = CDN + 'combiner/i';
-export const CDN_REDESIGN_IMG = CDN + 'redesign/assets/img';
+export const CDN_A = import.meta.env.VITE_ESPN_CDN_A as string;
+export const CDN_G = import.meta.env.VITE_ESPN_CDN_G as string;
 
-export const FASTCAST_SERVICE_URI = import.meta.env.VITE_ESPN_FASTCAST_SERVICE_URI;
+export const CDN_COMBINER = `${CDN_A}/combiner/i`;
+export const CDN_REDESIGN_IMG = `${CDN_A}/redesign/assets/img`;
+
+export const FASTCAST_SERVICE_URI = import.meta.env.VITE_ESPN_FASTCAST_SERVICE_URI as string;
 export const FASTCAST_BASE = import.meta.env.VITE_ESPN_FASTCAST_BASE! + FASTCAST_SERVICE_URI + '/topic';
 
 export const ICON_PATH = `${CDN_REDESIGN_IMG}/sprites/transitional-secondary-navigation-icons-v4.png`;
