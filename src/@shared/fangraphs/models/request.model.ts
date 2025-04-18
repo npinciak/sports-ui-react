@@ -45,6 +45,15 @@ export interface IClientFangraphsStatsRequestBodyBase {
   qual: 'y' | 'n';
 }
 
+export interface IClientFangraphsProjectionsRequestBodyBase {
+  stats: 'bat' | 'pit' | 'fld';
+  type: FangraphsProjection;
+  team: FangraphsTeam;
+  pos: FangraphsPositionType;
+  players: number[];
+  lg: 'all' | 'nl' | 'al';
+}
+
 function FangraphsBaseRequestBody() {
   return class FangraphsBaseRequestBodyClass {
     static playerIds: number[] = [];

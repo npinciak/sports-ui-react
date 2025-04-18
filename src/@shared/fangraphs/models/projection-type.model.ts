@@ -9,6 +9,7 @@ export const FANGRAPHS_PROJECTION = {
   RestOfSeasonATCDepthChart: 'ratcdc',
   RestOfSeasonTheBat: 'rthebat',
   RestOfSeasonTheBatX: 'rthebatx',
+  OopsyDc: 'roopsydc',
 } as const;
 
 export type FangraphsProjection = (typeof FANGRAPHS_PROJECTION)[keyof typeof FANGRAPHS_PROJECTION];

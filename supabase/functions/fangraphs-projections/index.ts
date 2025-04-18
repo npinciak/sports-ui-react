@@ -8,15 +8,11 @@ Deno.serve(async req => {
 
   const body = await req.json();
 
-  const { type, pos, team, players } = body;
-
   const params = new URLSearchParams();
-  params.append('type', type);
-  params.append('pos', pos);
-  params.append('team', team as unknown as string);
-  params.append('players', players.map(id => Number(id)).join(','));
-  params.append('lg', 'all');
-  params.append('z', new Date().getTime().toString());
+
+  for (const [key, value] of Object.entries(body)) {
+    params.append(key, value as string);
+  }
 
   const response = await fetch(`https://www.fangraphs.com/api/projections?${params.toString()}`);
 
