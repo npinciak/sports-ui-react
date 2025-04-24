@@ -1,6 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { TRANSACTION, TRANSACTION_STATUS } from '@sdk/espn-client-models';
 import { RootState } from '../../../../app.store';
+import { BaseballTransactionEntity } from '../models/baseball-transaction.model';
 import { baseballTransactionAdapter } from '../slices/baseball-transactions.slice';
 import { selectPlayerById } from './baseball-player.selector';
 import { getTeamById } from './baseball-team.selector';
@@ -49,6 +50,22 @@ export const getSuccessfulTransactionList = createSelector(
         };
       })
 );
+
+export const getGroupedTransactions = createSelector([getSuccessfulTransactionList], transactionList => {
+  const grouped: Record<string, BaseballTransactionEntity[]> = {};
+
+  transactionList.forEach(transaction => {
+    const date = transaction.transactionProcessDate || transaction.transactionProposedDate || 'Pending';
+
+    if (!grouped[date]) {
+      grouped[date] = [];
+    }
+
+    grouped[date].push(transaction);
+  });
+
+  return grouped;
+});
 
 export const getFreeAgentSignings = createSelector(getTransactionList, transactionList =>
   transactionList.filter(transaction => transaction.type === TRANSACTION.FreeAgent)
