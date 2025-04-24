@@ -1,24 +1,40 @@
-import { DataGrid } from '@mui/x-data-grid/DataGrid';
-import { GridColDef } from '@mui/x-data-grid/models';
 import { useParams } from 'react-router-dom';
-import { BaseballStat } from 'sports-ui-sdk';
-import { BaseballTeam } from '../../models/baseball-team.model';
 
-import { Typography } from '@mui/material';
+import Grid from '@mui/material/Grid2';
+
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Grid2 from '@mui/material/Unstable_Grid2';
+import { BarChart } from '@mui/x-charts';
+import { DataGrid } from '@mui/x-data-grid';
+import {
+  BaseballStat,
+  MLB_STATS_MAP,
+} from '@sdk/espn-client-models/baseball/stats';
+import { WidgetCard } from '@shared/components/widget-card.component';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { EspnFantasyClientV3 } from '../../../client/espn-fantasy-v3.client';
+import { BaseballLeagueHeader } from '../../components/baseball-league-header.component';
+import { BaseballSeasonCompletedPctWidget } from '../../components/baseball-season-completed-pct-widget.component';
+import { BaseballTradeablesWidget } from '../../components/baseball-tradeables-widget.component';
+import { BaseballTransactionsWidget } from '../../components/baseball-transactions-widget/baseball-transactions-widget.component';
+import { LEAGUE_STATS_TABLE_COLUMNS } from '../../models/baseball-league-table.model';
+import { selectSeasonCompletedPct } from '../../selectors/baseball-league.selector';
 import {
+  getTeamDropTotals,
+  getTeamMoveToActive,
+  getTeamMoveToInjuredReserve,
   getTeamsWithTradeablePlayers,
   getTeamsWithTradeablePlayersCount,
 } from '../../selectors/baseball-team.selector';
+import { getGroupedTransactions } from '../../selectors/baseball-transaction.selector';
 
 export function BaseballHome() {
   const { year, leagueId } = useParams<{ year: string; leagueId: string }>();
 
-  const { data, isSuccess } = EspnFantasyClientV3.useGetBaseballLeagueQuery({
+  const [selectedGraphStat, setSelectedGraphStat] = useState(BaseballStat.K);
+
+  const { data } = EspnFantasyClientV3.useGetBaseballLeagueQuery({
     year: year ?? '',
     leagueId: leagueId ?? '',
   });
@@ -28,184 +44,113 @@ export function BaseballHome() {
   );
 
   const teamsWithTradeablePlayers = useSelector(getTeamsWithTradeablePlayers);
+  const totalLeagueDropTotal = useSelector(getTeamDropTotals);
+  const totalTeamMoveToActive = useSelector(getTeamMoveToActive);
+  const totalTeamMoveToInjuredReserve = useSelector(
+    getTeamMoveToInjuredReserve
+  );
 
-  const columns: GridColDef<Omit<BaseballTeam, 'roster'>>[] = [
-    {
-      field: 'currentRank',
-      headerName: 'Rank',
-      sortable: true,
-      valueGetter: (_, row) => row.currentRank,
-    },
-    {
-      field: 'name',
-      headerName: 'Name',
-      minWidth: 250,
-      valueGetter: (_, row) => row.name,
-      renderCell: params => {
-        return (
-          <div className="flex items-center">
-            <img
-              src={params.row.logo}
-              alt={params.row.name}
-              className="w-8 h-8 mr-2"
-            />
-            <div>{params.row.name}</div>
-            {/* <div className="ml-2 text-gray-500">{params.row.abbrev}</div> */}
-            {params.row.hasTradeablePlayers && (
-              <div className="ml-2 text-red-500">Tradeable</div>
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      field: `${BaseballStat.R}`,
-      headerName: 'R',
-      valueGetter: (_, row) => row?.valuesByStat[BaseballStat.R],
-      type: 'number',
-      sortable: true,
-    },
-    {
-      field: `${BaseballStat.RBI}`,
-      headerName: 'RBI',
-      valueGetter: (_, row) => row?.valuesByStat[BaseballStat.RBI],
-      type: 'number',
-      sortable: true,
-    },
-    {
-      field: `${BaseballStat.HR}`,
-      headerName: 'HR',
-      valueGetter: (_, row) => row?.valuesByStat[BaseballStat.HR],
-      type: 'number',
-      sortable: true,
-    },
-    {
-      field: `${BaseballStat.SB}`,
-      headerName: 'SB',
-      valueGetter: (_, row) => row?.valuesByStat[BaseballStat.SB],
-      type: 'number',
-      sortable: true,
-    },
-    {
-      field: `${BaseballStat.AVG}`,
-      headerName: 'AVG',
-      valueGetter: (_, row) => row?.valuesByStat[BaseballStat.AVG],
-      type: 'number',
-      sortable: true,
-    },
-    {
-      field: `${BaseballStat.K}`,
-      headerName: 'K',
-      valueGetter: (_, row) => row?.valuesByStat[BaseballStat.K],
-      type: 'number',
-      sortable: true,
-    },
-    {
-      field: `${BaseballStat.W}`,
-      headerName: 'W',
-      valueGetter: (_, row) => row?.valuesByStat[BaseballStat.W],
-      type: 'number',
-      sortable: true,
-    },
-    {
-      field: `${BaseballStat.SV}`,
-      headerName: 'SV',
-      valueGetter: (_, row) => row?.valuesByStat[BaseballStat.SV],
-      type: 'number',
-      sortable: true,
-    },
-    {
-      field: `${BaseballStat.HD}`,
-      headerName: 'HD',
-      valueGetter: (_, row) => row?.valuesByStat[BaseballStat.HD],
-      type: 'number',
-      sortable: true,
-    },
-    {
-      field: `${BaseballStat.ERA}`,
-      headerName: 'ERA',
-      valueGetter: (_, row) => row?.valuesByStat[BaseballStat.ERA],
-      type: 'number',
-      sortable: true,
-    },
-  ];
+  const transactionsByDate = useSelector(getGroupedTransactions);
 
-  const dataSource = isSuccess ? data.teams : [];
+  const seasonCompletedPct = useSelector(selectSeasonCompletedPct);
+
+  const dataSource = data?.teams ?? [];
+
+  const graphData = dataSource
+    .map(team => ({
+      value: team.valuesByStat[selectedGraphStat],
+      label: team.name,
+    }))
+    .sort((a, b) => b.value - a.value);
 
   return (
     <>
-      <div className="my-3">{data?.name}</div>
-      <div className="my-3">Year: {year}</div>
-      <div className="my-3">League ID: {leagueId}</div>
-      <div className="my-3">
-        <a
-          href={`https://fantasy.espn.com/baseball/league?leagueId=${leagueId}`}
-          target="_blank"
-        >
-          Go To league
-        </a>
-      </div>
-      <Grid2 container spacing={3}>
-        <Grid2 xs={12} sm={4}>
-          <Card>
-            <CardContent>
-              Teams with Tradeables
-              <Typography variant="h3">
-                {teamsWithTradeablePlayersCount}
-              </Typography>
-              {teamsWithTradeablePlayers.map(team => {
-                return (
-                  <ul key={team.id}>
-                    <li>{team.name}</li>
-                  </ul>
-                );
-              })}
-            </CardContent>
-          </Card>
-        </Grid2>
-        <Grid2 xs={12} sm={4}>
-          <Card>
-            <CardContent>
-              Total League Transactions
-              <Typography variant="h3">
-                {teamsWithTradeablePlayersCount}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid2>
-        <Grid2 xs={12} sm={4}>
-          <Card>
-            <CardContent>3</CardContent>
-          </Card>
-        </Grid2>
-      </Grid2>
+      <BaseballLeagueHeader isLoading={false} league={data} />
+      <Grid container spacing={3} className="my-4">
+        <Grid size={12}>
+          <WidgetCard
+            title={`${MLB_STATS_MAP[selectedGraphStat].description} by team`}
+          >
+            <BarChart
+              height={300}
+              series={[
+                {
+                  data: graphData.map(({ value }) => value),
+                  type: 'bar',
+                  color: '#3F88C5',
+                },
+              ]}
+              xAxis={[
+                {
+                  data: graphData.map(({ label }) => label),
+                  scaleType: 'band',
+                },
+              ]}
+              borderRadius={20}
+              axisHighlight={{ y: 'line' }}
+              loading={false}
+            />
+          </WidgetCard>
+        </Grid>
+      </Grid>
+      <Grid container spacing={3} className="mb-4">
+        <Grid size={{ xs: 12, sm: 4 }}>
+          <BaseballTradeablesWidget
+            teamsWithTradeablePlayersCount={teamsWithTradeablePlayersCount}
+            teamsWithTradeablePlayers={teamsWithTradeablePlayers}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 4 }}>
+          <BaseballSeasonCompletedPctWidget
+            seasonCompletedPct={seasonCompletedPct}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 4 }}>
+          <WidgetCard
+            title="Roster Drops"
+            value={totalLeagueDropTotal}
+            isEmpty={true}
+          />
+        </Grid>
+      </Grid>
 
-      <div className="flex mt-2">
-        <div className="flex-1">
-          {/* {liveStandings.map(team => {
-            return (
-              <ul key={team.id}>
-                <li>
-                  {team.team.name} - {team.liveScore}
-                </li>
-              </ul>
-            );
-          })} */}
-        </div>
-      </div>
-      <div className="flex">
-        <div className="flex-1 w-100">
+      <Grid container spacing={3}>
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <WidgetCard
+            title="Active roster moves"
+            value={totalTeamMoveToActive}
+            isEmpty={true}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <WidgetCard
+            title="To Injured Reserve"
+            value={totalTeamMoveToInjuredReserve}
+            isEmpty={true}
+          />
+        </Grid>
+        <Grid size={12}>
+          <BaseballTransactionsWidget
+            transactions={transactionsByDate}
+            title="League Transactions"
+          />
+        </Grid>
+
+        <Grid size={12}>
           <Card>
             <CardContent>
               <DataGrid
+                getRowId={row => row.id}
                 rows={dataSource}
-                columns={columns}
+                columns={LEAGUE_STATS_TABLE_COLUMNS}
                 sx={{ border: 0 }}
+                disableColumnMenu={true}
+                hideFooterPagination={true}
               />
             </CardContent>
           </Card>
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     </>
   );
 }

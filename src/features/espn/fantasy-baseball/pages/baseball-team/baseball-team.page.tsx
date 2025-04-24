@@ -1,45 +1,64 @@
-import { RouteBuilder } from '@/core/routes/route-builder';
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  CardContent,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+} from '@mui/material';
+import Grid from '@mui/material/Grid2';
+import { BarChart } from '@mui/x-charts';
 import { SelectComponent } from '@shared/components';
+import { WidgetCard } from '@shared/components/widget-card.component';
+import { setStatSplitPeriod } from '@shared/fangraphs';
 import {
-  DEFAULT_PAGE_NUMBER,
-  DEFAULT_PAGE_SIZE,
-  FangraphsPlayerProjectionsRequestBody,
-  FangraphsPlayerStatsRequestBody,
-  FangraphsProjection,
-  FangraphsTeam,
-  setStatSplitPeriod,
-} from '@shared/fangraphs';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import {
-  useGetFangraphProjectionsQuery,
   useGetFangraphStatsQuery,
   useGetStatPeriodSplitOptionsQuery,
   useRefetchStatsMutation,
-} from '../../../../../@shared/fangraphs/client/fangraphs.client';
-import { FangraphsPosition } from '../../../../../@shared/fangraphs/models';
-import { selectFangraphsPlayerEntities } from '../../../../../@shared/fangraphs/selectors';
-import { selectStatSplitPeriod } from '../../../../../@shared/fangraphs/selectors/stats-filter.selector';
+} from '@shared/fangraphs/client/fangraphs.client';
+import {
+  FangraphsPlayerStatEntity,
+  FangraphsPlayerStatsRequest,
+} from '@shared/fangraphs/models';
+import { selectStatSplitPeriod } from '@shared/fangraphs/selectors/stats-filter.selector';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { COLOR } from 'src/app.theme';
+import { RouteBuilder } from 'src/core/routes/route-builder';
 import { EspnFantasyClientV3 } from '../../../client/espn-fantasy-v3.client';
+import { BaseballLineupCard, BaseballPlayerStatsTable } from '../../components';
+import { BaseballInjuryWidget } from '../../components/baseball-injury-widget.component';
 import {
-  BaseballLineupCard,
-  BaseballPlayerProjectionTable,
-  BaseballPlayerStatsTable,
-} from '../../components';
-import { BaseballTeamHeader } from '../../components/baseball-team-header/baseball-team-header.component';
+  BATTER_TABLE_COLUMNS_BY_TYPE,
+  PITCHER_BASIC_STATS_TABLE_COLUMNS,
+} from '../../components/baseball-player-stats-table/baseball-player-stats-table.model';
+import { BaseballTeamHeader } from '../../components/baseball-team-header.component';
+import { BATTER_FILTERS } from '../../models/stat-filters.model';
 import {
-  selectPlayerIds,
+  selectInjuryPlayerList,
+  selectPitcherFangraphIds,
   selectStartingBatterFangraphIds,
-  selectTeamStartingBatterList,
+  selectTeamBenchBatterListWithEvents,
+  selectTeamBenchPitcherListWithEvents,
   selectTeamStartingBatterListWithEvents,
-  selectTeamStartingPitcherList,
   selectTeamStartingPitcherListWithEvents,
 } from '../../selectors/baseball-team-roster.selector';
 
 export function BaseballTeam() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [selectedStatFilter, setSelectedStatFilter] = useState(
+    '+WPA' as string
+  );
+
+  const [batterStatFilter, setBatterStatFilter] = useState<string>(
+    BATTER_FILTERS.Basic
+  );
 
   const { playerByIdRoute } = RouteBuilder();
 
@@ -56,69 +75,44 @@ export function BaseballTeam() {
       teamId: teamId ?? '',
     });
 
-  const playerSportsUiIdList = useSelector(selectPlayerIds);
-  const startingBatters = useSelector(selectTeamStartingBatterList);
-  const startingPitchers = useSelector(selectTeamStartingPitcherList);
-  const fangraphsPlayers = useSelector(selectFangraphsPlayerEntities);
-  const mappedPlayerIds = useSelector(selectStartingBatterFangraphIds);
+  const injuryPlayerList = useSelector(selectInjuryPlayerList);
+
+  const mappedStartingBatterPlayerIds = useSelector(
+    selectStartingBatterFangraphIds
+  );
+
+  const mappedStartingPitcherPlayerIds = useSelector(selectPitcherFangraphIds);
   const getStatSplitPeriod = useSelector(selectStatSplitPeriod);
 
   const teamStartingBatterListWithEvents = useSelector(
     selectTeamStartingBatterListWithEvents
   );
 
+  const teamBenchPlayerListWithEvents = useSelector(
+    selectTeamBenchBatterListWithEvents
+  );
+
   const teamStartingPitcherListWithEvents = useSelector(
     selectTeamStartingPitcherListWithEvents
   );
 
-  const projectionsFilter: FangraphsPlayerProjectionsRequestBody = {
-    type: FangraphsProjection.RestOfSeasonTheBatX,
-    team: FangraphsTeam.AllTeams,
-    pos: FangraphsPosition.All,
-    players: mappedPlayerIds,
-  };
+  const teamBenchPitcherListWithEvents = useSelector(
+    selectTeamBenchPitcherListWithEvents
+  );
 
-  useEffect(() => {}, []);
+  const { data: fangraphsBatterStats, isLoading: isFangraphsStatsLoading } =
+    useGetFangraphStatsQuery({
+      ...FangraphsPlayerStatsRequest.requestBody,
+      players: mappedStartingBatterPlayerIds,
+      month: getStatSplitPeriod.toString(),
+    });
 
-  // const { data: fangraphsProj, isLoading: isFangraphsProjectionsLoading } =
-  //   useGetFangraphProjectionsQuery(projectionsFilter);
-
-  // const fangraphsProjections = fangraphsProj?.reduce(
-  //   (acc, player) => {
-  //     const id = `name=${normalizeName(player.PlayerName)}~team=${player.Team ? FangraphsTeamToEspnTeam[player.Team].toLowerCase() : ''}`;
-  //     acc[id] = { ...player };
-  //     return acc;
-  //   },
-  //   {} as Record<string, unknown>
-  // );
-
-  // const espnToFangraphsStartingBatters = mapFangraphsPlayersToBaseballTeam(
-  //   startingBatters,
-  //   fangraphsProjections as Record<string, FangraphsPlayerProjectionEntity>
-  // );
-
-  // const fangraphIds = espnToFangraphsStartingBatters?.map(player =>
-  //   Number(
-  //     (player?.fangraphsProjection as FangraphsPlayerProjectionEntity)?.playerid
-  //   )
-  // );
-
-  const statsFilter: FangraphsPlayerStatsRequestBody = {
-    team: FangraphsTeam.AllTeams,
-    pos: FangraphsPosition.All,
-    players: mappedPlayerIds,
-    meta: {
-      pageitems: DEFAULT_PAGE_SIZE,
-      pagenum: DEFAULT_PAGE_NUMBER,
-    },
-    statSplitPeriod: getStatSplitPeriod,
-  };
-
-  const { data: fangraphsStats, isLoading: isFangraphsStatsLoading } =
-    useGetFangraphStatsQuery(statsFilter);
-
-  const { data: fangraphsProj, isLoading: isFangraphsProjectionsLoading } =
-    useGetFangraphProjectionsQuery(projectionsFilter);
+  const { data: fangraphsPitcherStats } = useGetFangraphStatsQuery({
+    ...FangraphsPlayerStatsRequest.requestBody,
+    stats: 'pit',
+    players: mappedStartingPitcherPlayerIds,
+    month: getStatSplitPeriod.toString(),
+  });
 
   const { data: statPeriodList, isLoading: statPeriodLoading } =
     useGetStatPeriodSplitOptionsQuery();
@@ -137,45 +131,209 @@ export function BaseballTeam() {
     );
   }
 
+  const statsDropdownOptions = Object.keys(fangraphsBatterStats?.data[0] ?? {});
+
   const loading = isLoading || isFangraphsStatsLoading || statPeriodLoading;
 
   return (
     <div key={team?.id}>
-      <BaseballTeamHeader team={team} isLoading={loading} />
+      <BaseballTeamHeader team={team} isLoading={loading} leagueId={leagueId} />
 
-      <div className="flex flex-wrap text-left">
-        <div className="w-full xl:px-4 xl:w-3/12">
-          <div className="font-bold">Starting Batters</div>
-          {teamStartingBatterListWithEvents.map(player => (
-            <BaseballLineupCard player={player} onClick={handlePlayerClick} />
-          ))}
-          <div className="py-3"></div>
-          <div className="font-bold">Starting Pitchers</div>
-          {teamStartingPitcherListWithEvents.map(player => (
-            <BaseballLineupCard player={player} onClick={handlePlayerClick} />
-          ))}
-        </div>
+      <Grid container spacing={3} marginBottom={3} width="100%">
+        <Grid size={{ xs: 12, sm: 4 }}>
+          <BaseballInjuryWidget injuryPlayerList={injuryPlayerList} />
+        </Grid>
 
-        <div className="w-full xl:px-4 xl:w-9/12">
-          <div>
-            <div className="my-3">Season</div>
-            <div className="my-3">
-              <div className="flex justify-center">
-                <SelectComponent
-                  label=""
-                  options={statPeriodList ?? []}
-                  onHandleOptionChange={handleStatPeriodChange}
-                />
+        <Grid size={{ xs: 12, sm: 8 }}>
+          <WidgetCard title={` by player`}>
+            <SelectComponent
+              options={statsDropdownOptions.map(stat => ({
+                label: stat,
+                value: stat,
+              }))}
+              onHandleOptionChange={setSelectedStatFilter}
+            />
+            <BarChart
+              height={300}
+              series={[
+                {
+                  data:
+                    fangraphsBatterStats?.data.map(value => {
+                      const stat =
+                        value[
+                          selectedStatFilter as keyof FangraphsPlayerStatEntity
+                        ];
+
+                      if (!stat) return null;
+                      if (typeof stat === 'string') return null;
+
+                      return stat;
+                    }) ?? [],
+                  type: 'bar',
+                  color: COLOR.MODERN_BLUE,
+                },
+              ]}
+              xAxis={[
+                {
+                  data:
+                    fangraphsBatterStats?.data.map(
+                      ({ PlayerName }) => PlayerName
+                    ) ?? [],
+                  scaleType: 'band',
+                },
+              ]}
+              borderRadius={20}
+              axisHighlight={{ y: 'line' }}
+              loading={false}
+            />
+          </WidgetCard>
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={3} marginBottom={3}>
+        <Grid size={{ xs: 12, sm: 4 }}>
+          <Card className="mb-5">
+            <CardContent>
+              <List>
+                {teamStartingBatterListWithEvents.map(player => (
+                  <ListItem disablePadding key={player.id}>
+                    <ListItemButton>
+                      <ListItemText
+                        children={
+                          <BaseballLineupCard
+                            player={player}
+                            onClick={handlePlayerClick}
+                          />
+                        }
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+              <Divider sx={{ marginTop: 2 }}>Bench</Divider>
+              <List>
+                {teamBenchPlayerListWithEvents.map(player => (
+                  <ListItem disablePadding key={player.id}>
+                    <ListItemButton>
+                      <ListItemText
+                        children={
+                          <BaseballLineupCard
+                            player={player}
+                            onClick={handlePlayerClick}
+                          />
+                        }
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent>
+              <List>
+                {teamStartingPitcherListWithEvents.map(player => (
+                  <ListItem disablePadding key={player.id}>
+                    <ListItemButton>
+                      <ListItemText
+                        children={
+                          <BaseballLineupCard
+                            player={player}
+                            onClick={handlePlayerClick}
+                          />
+                        }
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+              <Divider sx={{ marginTop: 2 }}>Bench</Divider>
+              <List>
+                {teamBenchPitcherListWithEvents.map(player => (
+                  <ListItem disablePadding key={player.id}>
+                    <ListItemButton>
+                      <ListItemText
+                        children={
+                          <BaseballLineupCard
+                            player={player}
+                            onClick={handlePlayerClick}
+                          />
+                        }
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 8 }}>
+          <Card className="mb-5">
+            <CardContent>
+              <Grid size={{ xs: 12 }} marginBottom={3}>
+                <div className="my-3">Batters</div>
+                <div className="my-3">
+                  <div className="flex justify-center">
+                    <SelectComponent
+                      options={statPeriodList ?? []}
+                      onHandleOptionChange={handleStatPeriodChange}
+                    />
+                  </div>
+                </div>
+              </Grid>
+
+              <Grid size={{ xs: 12 }} marginBottom={3} sx={{ width: '100%' }}>
+                <ButtonGroup sx={{ width: '100%' }}>
+                  <Button
+                    onClick={() => setBatterStatFilter(BATTER_FILTERS.Basic)}
+                  >
+                    Basic
+                  </Button>
+                  <Button
+                    onClick={() => setBatterStatFilter(BATTER_FILTERS.Advanced)}
+                  >
+                    Advanced
+                  </Button>
+                  <Button
+                    disabled
+                    onClick={() =>
+                      setBatterStatFilter(BATTER_FILTERS.BattedBall)
+                    }
+                  >
+                    Batted Ball
+                  </Button>
+                </ButtonGroup>
+              </Grid>
+
+              <BaseballPlayerStatsTable
+                data={fangraphsBatterStats?.data ?? []}
+                basicStatsColumns={
+                  BATTER_TABLE_COLUMNS_BY_TYPE[batterStatFilter]
+                }
+              />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent>
+              <div className="my-3">Pitchers</div>
+              <div className="my-3">
+                <div className="flex justify-center">
+                  <SelectComponent
+                    options={statPeriodList ?? []}
+                    onHandleOptionChange={handleStatPeriodChange}
+                  />
+                </div>
               </div>
-            </div>
-            <BaseballPlayerStatsTable data={fangraphsStats?.data ?? []} />
-          </div>
-          <div>
-            <div className="my-3">Rest of Season</div>
-            <BaseballPlayerProjectionTable data={fangraphsProj ?? []} />
-          </div>
-        </div>
-      </div>
+              <BaseballPlayerStatsTable
+                data={fangraphsPitcherStats?.data ?? []}
+                basicStatsColumns={PITCHER_BASIC_STATS_TABLE_COLUMNS}
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     </div>
   );
 }
