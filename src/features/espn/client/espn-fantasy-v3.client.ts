@@ -102,14 +102,7 @@ export const EspnFantasyClientV3 = createApi({
             'X-Fantasy-Filter': JSON.stringify({
               transactions: {
                 filterType: {
-                  value: [
-                    'WAIVER',
-                    // 'WAIVER_ERROR',
-                    //  'DRAFT',
-                    'FREEAGENT',
-                    // 'DROP',
-                    // 'ROSTER',
-                  ],
+                  value: ['WAIVER', 'FREEAGENT'],
                 },
               },
               schedule: { filterCurrentMatchupPeriod: { value: true } },
