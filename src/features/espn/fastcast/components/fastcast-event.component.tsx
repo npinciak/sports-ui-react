@@ -18,7 +18,9 @@ export function FastcastEventComponent({ event }: FastcastEventComponentProps) {
               container
               className="w-full mb-2 text-xs font-semibold truncate"
             >
-              {fastcastEventSummary(event)}
+              <a href={event.link} target="_blank" rel="noopener noreferrer">
+                {fastcastEventSummary(event)}
+              </a>
             </Grid>
             <Grid container className="w-full mb-2">
               <FastcastTeamComponent team={event.teams?.away} />

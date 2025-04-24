@@ -57,7 +57,6 @@ export function AdminLeagueProgressionPage() {
                 color: '#c084fc',
               },
             ]}
-            width={800}
             height={400}
           />
         </Grid>
