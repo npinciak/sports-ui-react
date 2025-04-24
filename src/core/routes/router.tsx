@@ -1,5 +1,5 @@
-import { fangraphsClient } from '@shared/fangraphs/client/fangraphs.client';
 import { LoaderFunctionArgs, RouteObject } from 'react-router';
+import { BaseballTeamResolver } from 'src/features/espn/fantasy-baseball/resolver/baseball-team.resolver';
 import { AppStore } from '../../app.store';
 import {
   AdminLeagueProgressionPage,
@@ -156,26 +156,12 @@ export const publicRoutes: RouteObject[] = [
                                 element: <BaseballTeam />,
                                 loader: async ({
                                   params,
-                                }: LoaderFunctionArgs) => {
-                                  await AppStore.dispatch(
-                                    EspnFantasyClientV3.endpoints.getBaseballTeamById.initiate(
-                                      {
-                                        year:
-                                          params?.year ?? ROUTE_FRAGMENT.EMPTY,
-                                        leagueId:
-                                          params?.leagueId ??
-                                          ROUTE_FRAGMENT.EMPTY,
-                                        teamId:
-                                          params?.teamId ??
-                                          ROUTE_FRAGMENT.EMPTY,
-                                      }
-                                    )
-                                  );
-                                  await AppStore.dispatch(
-                                    fangraphsClient.endpoints.getFangraphPlayerList.initiate()
-                                  );
-                                  return null;
-                                },
+                                  request,
+                                }: LoaderFunctionArgs) =>
+                                  BaseballTeamResolver({
+                                    params,
+                                    request,
+                                  }),
                               },
                               {
                                 path: ROUTE_FRAGMENT.BATTERS,
