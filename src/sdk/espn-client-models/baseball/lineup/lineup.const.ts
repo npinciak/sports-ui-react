@@ -83,11 +83,7 @@ export const BASEBALL_LINEUP_MAP: LineupEntityMap = {
     active: true,
     bench: false,
     displayOrder: 11,
-    eligiblePositions: [
-      ClientMlbPosition.LeftField,
-      ClientMlbPosition.CenterField,
-      ClientMlbPosition.RightField,
-    ],
+    eligiblePositions: [ClientMlbPosition.LeftField, ClientMlbPosition.CenterField, ClientMlbPosition.RightField],
     id: ClientBaseballLineupSlot.OF,
     lineupSlotEligible: true,
     name: 'Outfield',

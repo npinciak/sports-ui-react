@@ -16,59 +16,59 @@ export const enum ClientMlbPosition {
 }
 
 export const MLB_POSITION_MAP = {
-  0: {
+  [ClientMlbPosition.Undefined]: {
     abbrev: 'POS0',
     name: 'Undefined',
   },
-  1: {
+  [ClientMlbPosition.StartingPitcher]: {
     abbrev: 'SP',
     name: 'Starting Pitcher',
   },
-  2: {
+  [ClientMlbPosition.Catcher]: {
     abbrev: 'C',
     name: 'Catcher',
   },
-  3: {
+  [ClientMlbPosition.FirstBase]: {
     abbrev: '1B',
     name: 'First Base',
   },
-  4: {
+  [ClientMlbPosition.SecondBase]: {
     abbrev: '2B',
     name: 'Second Base',
   },
-  5: {
+  [ClientMlbPosition.ThirdBase]: {
     abbrev: '3B',
     name: 'Third Base',
   },
-  6: {
+  [ClientMlbPosition.Shortstop]: {
     abbrev: 'SS',
     name: 'Shortstop',
   },
-  7: {
+  [ClientMlbPosition.LeftField]: {
     abbrev: 'LF',
     name: 'Left Field',
   },
-  8: {
+  [ClientMlbPosition.CenterField]: {
     abbrev: 'CF',
     name: 'Center Field',
   },
-  9: {
+  [ClientMlbPosition.RightField]: {
     abbrev: 'RF',
     name: 'Right Field',
   },
-  10: {
+  [ClientMlbPosition.DesignatedHitter]: {
     abbrev: 'DH',
     name: 'Designated Hitter',
   },
-  11: {
+  [ClientMlbPosition.ReliefPitcher]: {
     abbrev: 'RP',
     name: 'Relief Pitcher',
   },
-  12: {
+  [ClientMlbPosition.PinchHitter]: {
     abbrev: 'PH',
     name: 'Pinch Hitter',
   },
-  13: {
+  [ClientMlbPosition.PinchRunner]: {
     abbrev: 'PR',
     name: 'Pinch Runner',
   },
