@@ -1,72 +1,57 @@
 import { getContrastRatio } from '@sdk/color-ratio';
 import { IClientPlayerStatsYearEntity, IClientProLeagueType } from '@sdk/espn-client-models';
 import { ICompetitorsEntity } from './fastcast/models/competitors-entity.model';
-import { ESPN_PARAM_FRAGMENTS, ESPN_VIEW_PARAM_FRAGMENTS } from './helpers/endpoint-builder/endpoint-builder.const';
+import { EspnParamsBuilder, EspnParamsHandler } from './helpers/params-handler';
 import { SportTypeId } from './models/sport-type.model';
+
+// Re-export for backward compatibility
+export { EspnParamsBuilder, EspnParamsHandler };
 
 /**
  * Generates league params
  * @returns URLSearchParams
+ * @deprecated Use EspnParamsBuilder.forLeague().build() instead
  */
 export function generateLeagueParams(): URLSearchParams {
-  const params = new URLSearchParams();
-  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Settings);
-  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.LiveScoring);
-  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Scoreboard);
-  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Status);
-  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Team);
-  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Transactions);
-  return params;
+  return EspnParamsBuilder.forLeague().build();
 }
 
 /**
  * Generates player query params
  * @returns URLSearchParams
+ * @deprecated Use EspnParamsHandler.generatePlayerParams() instead
  */
 export function generatePlayerParams(scoringPeriodId: string): URLSearchParams {
-  const params = new URLSearchParams();
-  params.append(ESPN_PARAM_FRAGMENTS.ScoringPeriod, scoringPeriodId);
-  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.PlayersWl);
-  return params;
+  return EspnParamsHandler.generatePlayerParams(scoringPeriodId);
 }
 
 /**
  * Generates team params
  * @param teamId
  * @returns URLSearchParams
+ * @deprecated Use EspnParamsHandler.generateTeamParams() instead
  */
 export function generateTeamParams(teamId: string): URLSearchParams {
-  const params = new URLSearchParams();
-  params.append(ESPN_PARAM_FRAGMENTS.RosterForTeamId, teamId);
-  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Team);
-  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.Roster);
-  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.PendingTransactions);
-  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.PositionalRatings);
-  return params;
+  return EspnParamsHandler.generateTeamParams(teamId);
 }
 
 /**
- * Generates team params
- * @param teamId
+ * Generates event params
+ * @param dateRange
  * @returns URLSearchParams
+ * @deprecated Use EspnParamsHandler.generateEventParams() instead
  */
 export function generateEventParams(dateRange: string): URLSearchParams {
-  const params = new URLSearchParams();
-  params.append(ESPN_PARAM_FRAGMENTS.UseMap, 'true');
-  params.append(ESPN_PARAM_FRAGMENTS.Dates, dateRange);
-  params.append(ESPN_PARAM_FRAGMENTS.PbpOnly, 'true');
-  return params;
+  return EspnParamsHandler.generateEventParams(dateRange);
 }
 
 /**
- * Generates team params
- * @param teamId
+ * Generates pro team schedule params
  * @returns URLSearchParams
+ * @deprecated Use EspnParamsHandler.generateProTeamScheduleParams() instead
  */
 export function generateProTeamScheduleParams(): URLSearchParams {
-  const params = new URLSearchParams();
-  params.append(ESPN_PARAM_FRAGMENTS.View, ESPN_VIEW_PARAM_FRAGMENTS.ProTeamSchedules);
-  return params;
+  return EspnParamsHandler.generateProTeamScheduleParams();
 }
 
 /**

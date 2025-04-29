@@ -55,5 +55,6 @@ export const ESPN_VIEW_PARAM_FRAGMENTS = {
   PendingTransactions: 'mPendingTransactions',
   Comms: 'kona_league_communication',
   ProTeamSchedules: 'proTeamSchedules_wl',
+  PlayersWl: 'players_wl',
   PositionalRatings: 'mPositionalRatings',
 } as const;
