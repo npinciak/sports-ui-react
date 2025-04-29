@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IClientBaseballTeam, IClientSimplePlayerEntity } from '@sdk/espn-client-models';
 import { IClientBaseballLeague, IClientLeague } from '@sdk/espn-client-models/league.model';
 import { ApiEndpointConfiguration } from '../../../api.config';
-import { generateLeagueParams, generatePlayerParams, generateTeamParams } from '../espn-helpers';
 import { BaseballLeague } from '../fantasy-baseball/models/baseball-league.model';
 import { BaseballPlayerEntity } from '../fantasy-baseball/models/baseball-player.model';
 import { BaseballTeamEntity } from '../fantasy-baseball/models/baseball-team.model';
@@ -15,6 +14,7 @@ import { FANTASY_SPORTS_ABBREVIATION } from '../helpers/endpoint-builder/endpoin
 import { FantasySportsAbbreviation } from '../helpers/endpoint-builder/endpoint-builder.model';
 import { IFantasyLeague } from '../models';
 import { clientLeagueToLeagueSettings } from '../transformers';
+import { EspnParamsBuilder } from '../helpers/params-handler/params-handler';
 
 interface IClientGetBaseballPlayerParams {
   year: string;
@@ -48,7 +48,7 @@ export const EspnFantasyClientV3 = createApi({
       query: args => {
         const { year, scoringPeriodId } = args;
 
-        const params = generatePlayerParams(scoringPeriodId);
+        const params = EspnParamsBuilder.forPlayer(scoringPeriodId).build();
 
         return {
           url: `/games/${FANTASY_SPORTS_ABBREVIATION.Baseball}/seasons/${year}/players`,
@@ -93,7 +93,7 @@ export const EspnFantasyClientV3 = createApi({
     getBaseballLeague: builder.query<BaseballLeague, IClientGetBaseballLeagueParams>({
       query: args => {
         const { year, leagueId } = args;
-        const params = generateLeagueParams();
+        const params = EspnParamsBuilder.forLeague().build();
 
         return {
           url: `/games/${FANTASY_SPORTS_ABBREVIATION.Baseball}/seasons/${year}/segments/0/leagues/${leagueId}`,
@@ -120,7 +120,7 @@ export const EspnFantasyClientV3 = createApi({
       query: args => {
         const { year, leagueId, teamId } = args;
 
-        const params = generateTeamParams(teamId);
+        const params = EspnParamsBuilder.forTeam(teamId).build();
 
         return {
           url: `/games/${FANTASY_SPORTS_ABBREVIATION.Baseball}/seasons/${year}/segments/0/leagues/${leagueId}`,
@@ -138,7 +138,7 @@ export const EspnFantasyClientV3 = createApi({
     validateLeague: builder.query<IFantasyLeague, IClientValidateLeagueParams>({
       query: args => {
         const { year, leagueId, sport } = args;
-        const params = generateLeagueParams();
+        const params = EspnParamsBuilder.forLeague().build();
 
         return {
           url: `/games/${sport}/seasons/${year}/segments/0/leagues/${leagueId}`,

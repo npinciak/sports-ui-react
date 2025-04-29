@@ -3,10 +3,10 @@ import { IClientEventEntity } from '@sdk/espn-client-models/event.model';
 import { IClientPlayerNewsFeed } from '@sdk/espn-client-models/player-news-feed.model';
 import { SmartDate } from '@shared//helpers';
 import { ApiEndpointConfiguration } from '../../../api.config';
-import { generateEventParams } from '../espn-helpers';
 import { FantasySportsAbbreviation } from '../helpers/endpoint-builder/endpoint-builder.model';
 import { FantasyPlayerNewsEntity } from '../models/fantasy-player-news-entity.model';
 import { transformClientPlayerNewsFeed } from '../transformers/fantasy-player.transformers';
+import { EspnParamsBuilder } from '../helpers/params-handler/params-handler';
 
 interface IClientPlayerNewsParams {
   fantasySport: FantasySportsAbbreviation;
@@ -51,7 +51,7 @@ export const EspnFantasyClientV2 = createApi({
 
         const dateRange = `${oneWeekAgoFromToday}-${oneWeekFromToday}`;
 
-        const params = generateEventParams(dateRange);
+        const params = EspnParamsBuilder.forEvent(dateRange).build();
 
         return {
           url: `/games/${fantasySport}/games`,

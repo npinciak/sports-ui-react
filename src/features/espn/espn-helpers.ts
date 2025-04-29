@@ -1,58 +1,7 @@
 import { getContrastRatio } from '@sdk/color-ratio';
 import { IClientPlayerStatsYearEntity, IClientProLeagueType } from '@sdk/espn-client-models';
 import { ICompetitorsEntity } from './fastcast/models/competitors-entity.model';
-import { EspnParamsBuilder, EspnParamsHandler } from './helpers/params-handler';
 import { SportTypeId } from './models/sport-type.model';
-
-// Re-export for backward compatibility
-export { EspnParamsBuilder, EspnParamsHandler };
-
-/**
- * Generates league params
- * @returns URLSearchParams
- * @deprecated Use EspnParamsBuilder.forLeague().build() instead
- */
-export function generateLeagueParams(): URLSearchParams {
-  return EspnParamsBuilder.forLeague().build();
-}
-
-/**
- * Generates player query params
- * @returns URLSearchParams
- * @deprecated Use EspnParamsHandler.generatePlayerParams() instead
- */
-export function generatePlayerParams(scoringPeriodId: string): URLSearchParams {
-  return EspnParamsHandler.generatePlayerParams(scoringPeriodId);
-}
-
-/**
- * Generates team params
- * @param teamId
- * @returns URLSearchParams
- * @deprecated Use EspnParamsHandler.generateTeamParams() instead
- */
-export function generateTeamParams(teamId: string): URLSearchParams {
-  return EspnParamsHandler.generateTeamParams(teamId);
-}
-
-/**
- * Generates event params
- * @param dateRange
- * @returns URLSearchParams
- * @deprecated Use EspnParamsHandler.generateEventParams() instead
- */
-export function generateEventParams(dateRange: string): URLSearchParams {
-  return EspnParamsHandler.generateEventParams(dateRange);
-}
-
-/**
- * Generates pro team schedule params
- * @returns URLSearchParams
- * @deprecated Use EspnParamsHandler.generateProTeamScheduleParams() instead
- */
-export function generateProTeamScheduleParams(): URLSearchParams {
-  return EspnParamsHandler.generateProTeamScheduleParams();
-}
 
 /**
  * Leagues to exclude in Fastcast
