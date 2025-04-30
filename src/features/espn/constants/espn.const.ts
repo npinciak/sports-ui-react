@@ -7,7 +7,6 @@ export const CDN_REDESIGN_IMG = `${CDN_A}/redesign/assets/img`;
 export const FASTCAST_SERVICE_URI = import.meta.env.VITE_ESPN_FASTCAST_SERVICE_URI as string;
 export const FASTCAST_BASE = import.meta.env.VITE_ESPN_FASTCAST_BASE! + FASTCAST_SERVICE_URI + '/topic';
 
-export const ICON_PATH = `${CDN_REDESIGN_IMG}/sprites/transitional-secondary-navigation-icons-v4.png`;
 
 export const NO_LOGO = `${CDN_COMBINER}?img=/i/teamlogos/default-team-logo-500.png&h=100&scale=crop&w=100&location=origin`;
 

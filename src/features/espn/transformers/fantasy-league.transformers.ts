@@ -9,13 +9,17 @@ export function clientLeagueToLeagueSettings(league: IClientLeague): IFantasyLea
     status: { firstScoringPeriod, finalScoringPeriod },
     settings: {
       scheduleSettings: { matchupPeriodCount },
+      scoringSettings: { scoringType },
       name,
+      size,
     },
   } = league;
 
   return {
     id: id.toString(),
     name,
+    size,
+    scoringType,
     seasonId: seasonId.toString(),
     scoringPeriodId: scoringPeriodId.toString(),
     firstScoringPeriod: firstScoringPeriod.toString(),

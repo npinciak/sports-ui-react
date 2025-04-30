@@ -1,3 +1,4 @@
+import { ClientBaseballLineupSlot } from '@sdk/espn-client-models/baseball/lineup/lineup.model';
 import { LineupEntityMap } from '@sdk/espn-client-models/lineup.model';
 import { FangraphsPlayerProjectionEntity, FangraphsTeamToEspnTeam } from '@shared/fangraphs';
 import { normalizeName } from '../../espn-helpers';
@@ -10,9 +11,19 @@ import { BaseballPlayerEntity, BaseballPlayerStatsRowEntity } from '../models/ba
  * @param lineupMap
  * @returns
  */
-export function startingPlayersFilter<T extends BaseballPlayerEntity>(players: T[], lineupMap: LineupEntityMap): T[] {
-  const playerList = players.filter(p => !lineupMap[p.lineupSlotId].bench && p.lineupSlotId !== 21);
+export function startingPlayersFilter(players: BaseballPlayerEntity[], lineupMap: LineupEntityMap): BaseballPlayerEntity[] {
+  const playerList = players.filter(p => isInStartingLineup(p, lineupMap));
   return sortPlayersByLineupSlotDisplayOrder(playerList, lineupMap);
+}
+
+function isInStartingLineup(player: BaseballPlayerEntity, lineupMap: LineupEntityMap): boolean {
+  const { lineupSlotId } = player;
+
+  const isBench = lineupMap[lineupSlotId].bench;
+  const isInjuryList = lineupSlotId === ClientBaseballLineupSlot.IL;
+  const isPitcherTwo = lineupSlotId === ClientBaseballLineupSlot.P2;
+
+  return !isBench && !isInjuryList && !isPitcherTwo;
 }
 
 /**
@@ -36,9 +47,19 @@ export function sortPlayersByLineupSlotDisplayOrder<T extends BaseballPlayerEnti
  * @param lineupMap
  * @returns
  */
-export function benchPlayersFilter<T extends BaseballPlayerEntity>(players: T[], lineupMap: LineupEntityMap): T[] {
-  const playerList = players.filter(p => lineupMap[p.lineupSlotId].bench && p.health?.isInjured);
+export function benchPlayersFilter(players: BaseballPlayerEntity[], lineupMap: LineupEntityMap): BaseballPlayerEntity[] {
+  const playerList = players.filter(p => isOnBench(p, lineupMap));
+
   return sortPlayersByLineupSlotDisplayOrder(playerList, lineupMap);
+}
+
+function isOnBench(player: BaseballPlayerEntity, lineupMap: LineupEntityMap): boolean {
+  const { lineupSlotId } = player;
+
+  const isBench = lineupMap[lineupSlotId].bench;
+  const isInjured = player.health?.isInjured;
+
+  return isBench && !isInjured;
 }
 
 export function generateSportsUiPlayerId({

@@ -2,7 +2,8 @@ import { EVENT_STATUS, EVENT_STATUS_TYPE } from '@sdk/espn-client-models/event-s
 import { SEASON_TYPE, SEASON_TYPE_LIST } from '@sdk/espn-client-models/season-type.model';
 import { exists } from '@shared/helpers/exists';
 import { NO_LOGO } from '../../constants';
-import { parseEventUidStringToId, parseTeamUidStringToId, teamColorHandler } from '../../espn-helpers';
+import { teamColorHandler } from '../../espn-helpers';
+import { parseUid, UidFormats } from '../../helpers/uid-parser';
 import { SPORT_TYPE_ID_INCLUDE_LIST } from '../../models/sport-type.model';
 import { EspnDateHelper } from '../helpers/espn-date-helper';
 import { FASTCAST_EVENT_TYPE, ICompetitorsEntity, IEventsEntity, ILeaguesEntity, ISportsEntity } from '../models';
@@ -97,7 +98,7 @@ export function clientCompetitorToFastcastTeam(data: ICompetitorsEntity, event: 
   return {
     id,
     uid,
-    eventIds: parseTeamUidStringToId(uid),
+    eventIds: parseUid(uid, UidFormats.TEAM),
     score,
     abbrev: abbreviation,
     isHome,
@@ -189,7 +190,7 @@ export function clientEventToFastcastEvent(event: IEventsEntity): FastcastEvent 
   return {
     id,
     uid,
-    eventIds: parseEventUidStringToId(uid),
+    eventIds: parseUid(uid, UidFormats.EVENT),
     timestamp: new Date(date).getTime(),
     state,
     completed,

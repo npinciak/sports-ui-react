@@ -1,7 +1,6 @@
 import { getContrastRatio } from '@sdk/color-ratio';
-import { IClientPlayerStatsYearEntity, IClientProLeagueType } from '@sdk/espn-client-models';
+import { IClientPlayerStatsYearEntity } from '@sdk/espn-client-models';
 import { ICompetitorsEntity } from './fastcast/models/competitors-entity.model';
-import { SportTypeId } from './models/sport-type.model';
 
 /**
  * Leagues to exclude in Fastcast
@@ -81,74 +80,6 @@ export function transformDownDistancePositionText(downDistanceText: string | nul
 
   return `${downDistanceText}, ${possessionText}`;
 }
-
-/**
- * Transforms uid string to league id
- *
- * @param uid
- * @returns
- *
- * @example transformUidToLeagueId('s:6~l:1~s:4~t:5') // '1'
- */
-export function transformUidToLeagueId(uid: string | null): string | null {
-  if (!uid) return null;
-  return uid.split('~')[1].replace('l:', '');
-}
-
-export function transformIdToUid(
-  sportType: SportTypeId | null,
-  leagueId: IClientProLeagueType | null,
-  teamId: string | number | null
-): string {
-  if (!sportType || !leagueId || !teamId) return '';
-  return `s:${sportType}~l:${leagueId}~t:${teamId}`;
-}
-
-/**
- *
- *
- * @param str
- * @returns
- */
-export function parseEventUidStringToId(str: string): ParsedUid | null {
-  const tokens = str.split('~');
-
-  if (tokens.length !== 4) return null;
-
-  const [s, l, e, c] = tokens.map(token => {
-    const [key, value] = token.split(':');
-    if (key && value) return value;
-    return null;
-  });
-
-  if (s && l && e && c) return { sportTypeId: s, leagueId: l, eventId: e, competitionId: c };
-
-  return null;
-}
-
-export function parseTeamUidStringToId(str: string): ParsedUid | null {
-  const tokens = str.split('~');
-
-  if (tokens.length !== 3) return null;
-
-  const [s, l, t] = tokens.map(token => {
-    const [key, value] = token.split(':');
-    if (key && value) return value;
-    return null;
-  });
-
-  if (s && l && t) return { sportTypeId: s, leagueId: l, teamId: t };
-
-  return null;
-}
-
-export type ParsedUid = {
-  sportTypeId: string;
-  leagueId: string;
-  eventId?: string;
-  competitionId?: string;
-  teamId?: string;
-};
 
 /**
  * Flatten player stats

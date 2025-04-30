@@ -1,13 +1,14 @@
 import { IClientPlayerNewsFeedEntity } from '@sdk/espn-client-models/player-news-feed.model';
 import { IClientPlayerInfoEntity, IClientSimplePlayerEntity, PlayerOutlooksMap } from '@sdk/espn-client-models/player.model';
-import { PRO_LEAGUE_ABBREV_BY_PRO_LEAGUE_TYPE } from '@sdk/espn-client-models/professional-league-type.const';
 import { IClientProLeagueType } from '@sdk/espn-client-models/professional-league-type.model';
-import { INJURY_STATUS_LIST, PLAYER_COMPETITION_STATUS, PlayerCompetitionStatus } from '@sdk/injury';
+import { SportLeague } from '@sdk/espn-client-models/sport-league.model';
+import { INJURY_STATUS_LIST, PLAYER_COMPETITION_STATUS } from '@sdk/injury';
 import { INJURY_SEVERITY_BY_INJURY_STATUS } from '@sdk/injury/injury-severity.model';
 import { exists } from '@shared/helpers/exists';
 import { PositionEntityMap } from '@shared/models';
-import { flattenPlayerStats, normalizeName, transformIdToUid } from '../espn-helpers';
+import { flattenPlayerStats, normalizeName } from '../espn-helpers';
 import { ImageBuilder } from '../helpers';
+import { generateTeamUid } from '../helpers/uid-parser';
 import { FantasyPlayerNewsEntity } from '../models/fantasy-player-news-entity.model';
 import { FantasyPlayerEntity } from '../models/fantasy-player.model';
 import { SportTypeId } from '../models/sport-type.model';
@@ -49,6 +50,7 @@ interface IClientPlayerToFantasyPlayerParams {
   leagueId: IClientProLeagueType;
   teamMap: Record<string, string>;
   positionMap: PositionEntityMap;
+  sportLeagueMap: Record<IClientProLeagueType, SportLeague>;
 }
 
 interface IClientSimplePlayerToFantasyPlayerParams {
@@ -57,6 +59,7 @@ interface IClientSimplePlayerToFantasyPlayerParams {
   leagueId: IClientProLeagueType;
   teamMap: Record<string, string>;
   positionMap: PositionEntityMap;
+  sportLeagueMap: Record<IClientProLeagueType, SportLeague>;
 }
 
 export function clientSimplePlayerToFantasyPlayer({
@@ -65,17 +68,18 @@ export function clientSimplePlayerToFantasyPlayer({
   leagueId,
   teamMap,
   positionMap,
+  sportLeagueMap,
 }: IClientSimplePlayerToFantasyPlayerParams): FantasyPlayerEntity {
   const { id, proTeamId, fullName, defaultPositionId, ownership } = clientPlayer;
 
   const team = teamMap[proTeamId] as string;
-  const league = PRO_LEAGUE_ABBREV_BY_PRO_LEAGUE_TYPE[leagueId].toLowerCase();
+  const league = sportLeagueMap[leagueId];
 
   return {
     id: id.toString(),
     sportsUiId: `name=${normalizeName(fullName)}~team=${team.toLowerCase()}`,
     name: fullName,
-    teamUid: transformIdToUid(sportId, leagueId, proTeamId),
+    teamUid: generateTeamUid(sportId, leagueId, proTeamId),
     position: positionMap[defaultPositionId]?.abbrev,
     img: ImageBuilder({ league }).headshotImgBuilder({ id }),
     team,
@@ -97,6 +101,7 @@ export function clientPlayerToFantasyPlayer({
   leagueId,
   teamMap,
   positionMap,
+  sportLeagueMap,
 }: IClientPlayerToFantasyPlayerParams): FantasyPlayerEntity {
   const { proTeamId, defaultPositionId, outlooks, id, fullName, ownership, lastNewsDate } = clientPlayer;
 
@@ -104,24 +109,26 @@ export function clientPlayerToFantasyPlayer({
   const stats = flattenPlayerStats(clientPlayer.stats);
   const outlookByWeek = clientPlayerOutlook(outlooks);
   const injuryStatus = exists(clientPlayer.injuryStatus) ? clientPlayer.injuryStatus : PLAYER_COMPETITION_STATUS.Active;
-  const league = PRO_LEAGUE_ABBREV_BY_PRO_LEAGUE_TYPE[leagueId].toLowerCase();
+  const league = sportLeagueMap[leagueId];
+
+  const health = {
+    isActive: injuryStatus === PLAYER_COMPETITION_STATUS.Active,
+    isHealthy: true,
+    isInjured: INJURY_STATUS_LIST.includes(injuryStatus as (typeof INJURY_STATUS_LIST)[number]),
+    injuryStatus,
+    injurySeverity: INJURY_SEVERITY_BY_INJURY_STATUS[injuryStatus],
+  };
 
   return {
     id: id.toString(),
     sportsUiId: `name=${normalizeName(fullName)}~team=${team.toLowerCase()}`,
     name: fullName,
     teamId: proTeamId.toString(),
-    teamUid: transformIdToUid(sportId, leagueId, proTeamId),
+    teamUid: generateTeamUid(sportId, leagueId, proTeamId),
     position: positionMap[defaultPositionId].abbrev,
     img: ImageBuilder({ league }).headshotImgBuilder({ id }),
     lastNewsDate,
-    health: {
-      isActive: injuryStatus === PLAYER_COMPETITION_STATUS.Active,
-      isHealthy: false,
-      isInjured: INJURY_STATUS_LIST.includes(injuryStatus as PlayerCompetitionStatus),
-      injuryStatus,
-      injurySeverity: INJURY_SEVERITY_BY_INJURY_STATUS[injuryStatus],
-    },
+    health,
     stats,
     team,
     defaultPositionId,

@@ -97,7 +97,7 @@ export function addEventsToBatterEntity(player: BaseballPlayerEntity) {
     }
   }
 
-  const isStarting = playerStartingStatus === PLAYER_INJURY_STATUS.Starting ? true : false;
+  const isStarting = playerStartingStatus === PLAYER_INJURY_STATUS.Starting;
 
   return {
     ...player,

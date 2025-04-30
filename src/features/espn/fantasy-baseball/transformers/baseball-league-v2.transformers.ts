@@ -11,12 +11,13 @@ import {
   TRADE_BLOCK_STATUS,
   TRANSACTION_STATUS,
 } from '@sdk/espn-client-models';
-import { BASEBALL_LINEUP_MAP, PITCHING_LINEUP_IDS } from '@sdk/espn-client-models/baseball/lineup/lineup.const';
+import { BASEBALL_LINEUP_MAP, LINEUP_DISPLAY_SET, PITCHING_LINEUP_IDS } from '@sdk/espn-client-models/baseball/lineup/lineup.const';
 import { ClientBaseballLineupSlot } from '@sdk/espn-client-models/baseball/lineup/lineup.model';
 import { MLB_POSITION_MAP } from '@sdk/espn-client-models/baseball/position/mlb-position.model';
 import { MLB_TEAM_MAP } from '@sdk/espn-client-models/baseball/team/mlb-team.const';
 import { IClientBaseballLeague } from '@sdk/espn-client-models/league.model';
 import { LineupEntityMap } from '@sdk/espn-client-models/lineup.model';
+import { SPORT_LEAGUE_BY_PRO_LEAGUE_TYPE } from '@sdk/espn-client-models/sport-league.model';
 import { FangraphsPlayerProjectionEntity } from '@shared/fangraphs';
 import { exists } from '@shared/helpers/exists';
 import * as DateFns from 'date-fns';
@@ -50,9 +51,10 @@ export function clientSimplePlayerToBaseballPlayer(clientPlayer: IClientSimplePl
     leagueId: IClientProLeagueType.MLB,
     teamMap: MLB_TEAM_MAP,
     positionMap: MLB_POSITION_MAP,
+    sportLeagueMap: SPORT_LEAGUE_BY_PRO_LEAGUE_TYPE,
   });
 
-  const eligibleLineupSlots = playerEligibleLineupSlotDisplay(eligibleSlots ?? [], BASEBALL_LINEUP_MAP);
+  const eligibleLineupSlots = playerEligibleLineupSlotDisplay(eligibleSlots ?? [], LINEUP_DISPLAY_SET, BASEBALL_LINEUP_MAP);
 
   return {
     ...playerInfo,
@@ -97,7 +99,7 @@ function transformTransactionToBaseballTransaction(
   const transactionProcessDate = processDate ? DateFns.format(processDate, 'MM-dd-yy', { locale: enUS }) : null;
   const transactionProposedDate = proposedDate ? DateFns.format(proposedDate, 'MM-dd-yy', { locale: enUS }) : null;
 
-  const items = transaction.items?.map(item => transformTransactionItems(item, status)) ?? [];
+  const items = transaction.items?.map(item => transformTransactionItems(item, BASEBALL_LINEUP_MAP, status)) ?? [];
 
   return {
     id,
@@ -115,14 +117,18 @@ function transformTransactionToBaseballTransaction(
   };
 }
 
-function transformTransactionItems(item: IClientLeagueTransactionItemEntity, transactionStatus: ClientTransactionStatus) {
+function transformTransactionItems(
+  item: IClientLeagueTransactionItemEntity,
+  lineupMap: LineupEntityMap,
+  transactionStatus: ClientTransactionStatus
+) {
   const { playerId, fromLineupSlotId, fromTeamId, toLineupSlotId, toTeamId, type } = item;
 
   const transactionSuccess = transactionStatus === TRANSACTION_STATUS.Executed;
 
   return {
-    fromLineupSlot: transactionSuccess ? BASEBALL_LINEUP_MAP[fromLineupSlotId].abbrev : null,
-    toLineupSlot: transactionSuccess ? BASEBALL_LINEUP_MAP[toLineupSlotId].abbrev : null,
+    fromLineupSlot: transactionSuccess ? lineupMap[fromLineupSlotId].abbrev : null,
+    toLineupSlot: transactionSuccess ? lineupMap[toLineupSlotId].abbrev : null,
     fromLineupSlotId,
     toLineupSlotId,
     fromTeamId: fromTeamId.toString(),
@@ -133,22 +139,14 @@ function transformTransactionItems(item: IClientLeagueTransactionItemEntity, tra
   };
 }
 
-export function playerEligibleLineupSlotDisplay(val: ClientBaseballLineupSlot[], lineupMap: LineupEntityMap): string {
+export function playerEligibleLineupSlotDisplay(
+  val: ClientBaseballLineupSlot[],
+  lineupSlotSet: Set<ClientBaseballLineupSlot>,
+  lineupMap: LineupEntityMap
+): string {
   if (val.length === 0) return 'None';
   return val
-    .filter(slot =>
-      [
-        ClientBaseballLineupSlot.FirstBase,
-        ClientBaseballLineupSlot.SecondBase,
-        ClientBaseballLineupSlot.SS,
-        ClientBaseballLineupSlot.ThirdBase,
-        ClientBaseballLineupSlot.C,
-        ClientBaseballLineupSlot.OF,
-        ClientBaseballLineupSlot.DH,
-        ClientBaseballLineupSlot.SP,
-        ClientBaseballLineupSlot.RP,
-      ].includes(slot)
-    )
+    .filter(slot => lineupSlotSet.has(slot))
     .map(slot => lineupMap[slot].abbrev)
     .join(', ');
 }
@@ -212,9 +210,10 @@ export function clientPlayerToBaseballPlayer(player: IClientTeamRosterEntity): B
     leagueId: IClientProLeagueType.MLB,
     teamMap: MLB_TEAM_MAP,
     positionMap: MLB_POSITION_MAP,
+    sportLeagueMap: SPORT_LEAGUE_BY_PRO_LEAGUE_TYPE,
   });
 
-  const eligibleLineupSlots = playerEligibleLineupSlotDisplay(eligibleSlots, BASEBALL_LINEUP_MAP);
+  const eligibleLineupSlots = playerEligibleLineupSlotDisplay(eligibleSlots, LINEUP_DISPLAY_SET, BASEBALL_LINEUP_MAP);
   const starterStatusByProGame = player.playerPoolEntry.player.starterStatusByProGame ?? null;
 
   return {

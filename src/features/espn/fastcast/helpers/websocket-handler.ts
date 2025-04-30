@@ -8,7 +8,6 @@ export const fastcastWebSocketMiddleware: Middleware = (api: MiddlewareAPI<Dispa
   let _websocket: WebSocket | null = null;
   let _sessionId: string | null = null;
 
-
   const _eventType: FastcastEventType | null = FASTCAST_EVENT_TYPE.TOP_EVENTS;
 
   const onOpen = (api: MiddlewareAPI) => (event: any) => {
@@ -55,14 +54,13 @@ export const fastcastWebSocketMiddleware: Middleware = (api: MiddlewareAPI<Dispa
 
       break;
     case ACTIONS.WS_CONNECTED:
-
       // if (_websocket == null) return;
 
-      (_websocket as WebSocket)!.send(JSON.stringify({ op: OPERATION_CODE.CONNECT }));
+      (_websocket as unknown as WebSocket)!.send(JSON.stringify({ op: OPERATION_CODE.CONNECT }));
 
       break;
     case ACTIONS.WS_DISCONNECT:
-      (_websocket as WebSocket).send(JSON.stringify({ op: OPERATION_CODE.U, sid: _sessionId, tc: _eventType }));
+      (_websocket as unknown as WebSocket).send(JSON.stringify({ op: OPERATION_CODE.U, sid: _sessionId, tc: _eventType }));
 
       // if (_websocket != null) {
       //   (_websocket as WebSocket).close();

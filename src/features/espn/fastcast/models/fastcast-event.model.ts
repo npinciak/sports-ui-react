@@ -1,5 +1,5 @@
 import { ClientEventStatus, ClientEventStatusType } from '@sdk/espn-client-models/event-status.model';
-import { ParsedUid } from '../../espn-helpers';
+import { ParsedUid } from '../../helpers/uid-parser';
 import { IEventsEntity } from './events-entity.model';
 import { FastcastEventTeam } from './fastcast-team.model';
 import { IFullStatus } from './full-status.model';
