@@ -30,4 +30,12 @@ export class ApiEndpointConfiguration {
 
     return endpoint;
   }
+
+  static get tomorrowIoKey(): string {
+    const key = import.meta.env.VITE_TOMORROW_IO as string | undefined;
+
+    if (key == undefined) throw new Error('VITE_TOMORROW_IO is not defined in .env file');
+
+    return key;
+  }
 }
