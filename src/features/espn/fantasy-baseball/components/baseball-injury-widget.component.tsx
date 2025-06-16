@@ -1,13 +1,11 @@
-import { LocalHospital, MoreHoriz, WarningAmber } from '@mui/icons-material';
+import { WarningAmber } from '@mui/icons-material';
 import {
   Box,
   Button,
   Card,
   CardContent,
-  CardHeader,
   Chip,
   Divider,
-  IconButton,
   List,
   ListItem,
   Tooltip,
@@ -26,7 +24,11 @@ import {
   PlayerCompetitionStatus,
 } from '@sdk/injury/injury-status.model';
 import { useState } from 'react';
+import { COLOR } from 'src/app.theme';
 import { BaseballPlayerEntity } from '../models/baseball-player.model';
+import { BaseballLineupCard } from './baseball-lineup-card';
+import { EmptyWidgetState } from './baseball-team-widget/widget-empty.component';
+import { WidgetHeader } from './baseball-team-widget/widget-header.component';
 
 // Helper function to get severity color based on injury status
 const getSeverityColorByStatus = (status: PlayerCompetitionStatus) => {
@@ -42,51 +44,6 @@ const getSeverityColorByStatus = (status: PlayerCompetitionStatus) => {
       return '#808080'; // Default gray color
   }
 };
-
-// Helper to convert severity color to MUI color
-const getMuiColorFromSeverity = (status: PlayerCompetitionStatus) => {
-  const severity = INJURY_SEVERITY_BY_INJURY_STATUS[status];
-  switch (severity) {
-    case InjurySeverity.Serious:
-      return 'error';
-    case InjurySeverity.SemiSerious:
-      return 'warning';
-    case InjurySeverity.Positive:
-      return 'success';
-    default:
-      return 'default';
-  }
-};
-
-// Header component for the injury widget
-interface InjuryWidgetHeaderProps {
-  count: number;
-}
-
-function InjuryWidgetHeader({ count }: InjuryWidgetHeaderProps) {
-  return (
-    <CardHeader
-      title={
-        <Box display="flex" alignItems="center" gap={1}>
-          <LocalHospital color="error" />
-          <Typography variant="h6" component="span">
-            Injuries
-          </Typography>
-          <Chip
-            label={count}
-            color={count > 0 ? 'error' : 'default'}
-            size="small"
-          />
-        </Box>
-      }
-      action={
-        <IconButton aria-label="settings">
-          <MoreHoriz />
-        </IconButton>
-      }
-    />
-  );
-}
 
 // Status chips summary component
 interface InjuryStatusChipsProps {
@@ -104,10 +61,13 @@ function InjuryStatusChips({ severityCounts }: InjuryStatusChipsProps) {
               status as PlayerCompetitionStatus
             ]
           }: ${count}`}
-          color={
-            getMuiColorFromSeverity(status as PlayerCompetitionStatus) as any
-          }
-          size="small"
+          sx={{
+            backgroundColor: getSeverityColorByStatus(
+              status as PlayerCompetitionStatus
+            ),
+            color: 'white',
+          }}
+          size="medium"
           variant="outlined"
         />
       ))}
@@ -135,9 +95,13 @@ function InjuryPlayerItem({ player, isLast }: InjuryPlayerItemProps) {
                     icon={<WarningAmber fontSize="small" />}
                     label="Starting"
                     size="small"
-                    color="success"
                     variant="outlined"
-                    sx={{ ml: 1, height: 20, fontSize: '0.7rem' }}
+                    sx={{
+                      backgroundColor: COLOR.DYNAMIC_GREEN,
+                      ml: 1,
+                      height: 20,
+                      fontSize: '0.7rem',
+                    }}
                   />
                 </Tooltip>
               )}
@@ -154,11 +118,6 @@ function InjuryPlayerItem({ player, isLast }: InjuryPlayerItemProps) {
                 ]
               }
               size="small"
-              color={
-                getMuiColorFromSeverity(
-                  player?.health?.injuryStatus as PlayerCompetitionStatus
-                ) as any
-              }
               sx={{
                 '& .MuiChip-label': {
                   color: 'white',
@@ -194,11 +153,13 @@ function InjuryPlayerList({ players, maxItems }: InjuryPlayerListProps) {
     <>
       <List disablePadding>
         {displayedItems.map((player, index) => (
-          <InjuryPlayerItem
-            key={player.id}
-            player={player}
-            isLast={index === displayedItems.length - 1}
-          />
+          <BaseballLineupCard player={player} onClick={() => {}} />
+
+          // <InjuryPlayerItem
+          //   key={player.id}
+          //   player={player}
+          //   isLast={index === displayedItems.length - 1}
+          // />
         ))}
       </List>
       {hasMoreItems && (
@@ -216,17 +177,6 @@ function InjuryPlayerList({ players, maxItems }: InjuryPlayerListProps) {
   );
 }
 
-// Empty state component
-function EmptyInjuryState() {
-  return (
-    <Box p={3} textAlign="center">
-      <Typography variant="body2" color="text.secondary">
-        No injuries to report
-      </Typography>
-    </Box>
-  );
-}
-
 // Main widget component
 interface BaseballInjuryWidgetProps {
   injuryPlayerList: BaseballPlayerEntity[];
@@ -237,31 +187,15 @@ export function BaseballInjuryWidget({
   injuryPlayerList,
   maxItems = 3,
 }: BaseballInjuryWidgetProps) {
-  // Get severity counts for the badge colors
-  const severityCounts = injuryPlayerList.reduce(
-    (acc, player) => {
-      const status = player?.health?.injuryStatus as PlayerCompetitionStatus;
-      if (status) {
-        acc[status] = (acc[status] || 0) + 1;
-      }
-      return acc;
-    },
-    {} as Record<PlayerCompetitionStatus, number>
-  );
-
   return (
     <Card elevation={2}>
-      <InjuryWidgetHeader count={injuryPlayerList.length} />
+      <WidgetHeader count={injuryPlayerList.length} title="Injuries" />
       <Divider />
       <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
         {injuryPlayerList.length === 0 ? (
-          <EmptyInjuryState />
+          <EmptyWidgetState title="No injuries to report" />
         ) : (
-          <>
-            <InjuryStatusChips severityCounts={severityCounts} />
-            <Divider />
-            <InjuryPlayerList players={injuryPlayerList} maxItems={maxItems} />
-          </>
+          <InjuryPlayerList players={injuryPlayerList} maxItems={maxItems} />
         )}
       </CardContent>
     </Card>

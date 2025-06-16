@@ -182,7 +182,9 @@ const TransactionItem: React.FC<{ item: TransactionItemType }> = ({ item }) => {
       <ListItemText
         primary={
           <Typography variant="body1" fontWeight="medium">
-            {item.playerName || 'Unknown Player'}
+            <Link to={`player/${item.playerId}`}>
+              {item.playerName || 'Unknown Player'}
+            </Link>
           </Typography>
         }
         secondary={

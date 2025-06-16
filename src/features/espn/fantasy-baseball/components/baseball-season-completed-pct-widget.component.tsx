@@ -10,7 +10,6 @@ interface SeasonCompletedPctWidgetProps {
 export function BaseballSeasonCompletedPctWidget({
   seasonCompletedPct,
 }: SeasonCompletedPctWidgetProps) {
-  // Format the percentage for display (e.g., 45.7% → "45.7%")
   const formattedPct = `${seasonCompletedPct.toFixed(1)}%`;
 
   return (
