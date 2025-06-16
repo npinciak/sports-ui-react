@@ -3,7 +3,6 @@ import { fangraphsPitcherSlice } from '@shared/fangraphs/slices/fangraphs-pitche
 import { fangraphsBatterSlice, fangraphsClient, FangraphsStatsFilterFormSlice } from './@shared/fangraphs';
 import { SupabaseClient } from './@shared/supabase/supabase.client';
 import { AuthenticationClient } from './core/authentication';
-import { AdminLeagueProgressionFormSlice } from './features/admin/slices/league-progression-form.slice';
 import { footballGameAttributesHandler } from './features/daily-fantasy/football/handlers/game-attributes.handler';
 import { dfsFootballPlayerGameAttributesSlice } from './features/daily-fantasy/football/slices/football-player-game-attributes.slice';
 import { dfsFootballTeamGameAttributesSlice } from './features/daily-fantasy/football/slices/football-team-game-attributes.slice';
@@ -27,10 +26,10 @@ import { FastcastEventsSlice } from './features/espn/fastcast/slices/fastcast-ev
 import { FastcastLeaguesSlice } from './features/espn/fastcast/slices/fastcast-league.slice';
 import { FastcastSportsSlice } from './features/espn/fastcast/slices/fastcast-sport.slice';
 import { EspnPlayerNewsSlice } from './features/espn/slices/espn-player-news.slice';
+import { TomorrowIoClient } from '@shared/weather/tomorrow-io.client';
 
 export const AppStore = configureStore({
   reducer: {
-    [AdminLeagueProgressionFormSlice.reducerPath]: AdminLeagueProgressionFormSlice.reducer,
     [AuthenticationClient.reducerPath]: AuthenticationClient.reducer,
     [EspnClientV2.reducerPath]: EspnClientV2.reducer,
     [EspnFantasyClientV2.reducerPath]: EspnFantasyClientV2.reducer,
@@ -59,6 +58,7 @@ export const AppStore = configureStore({
     [dfsFootballPlayerGameAttributesSlice.reducerPath]: dfsFootballPlayerGameAttributesSlice.reducer,
     [dfsFootballTeamGameAttributesSlice.reducerPath]: dfsFootballTeamGameAttributesSlice.reducer,
     [slatePlayersSlice.reducerPath]: slatePlayersSlice.reducer,
+    [TomorrowIoClient.reducerPath]: TomorrowIoClient.reducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware()
@@ -73,6 +73,7 @@ export const AppStore = configureStore({
       .concat(masterSlateHandler.middleware)
       .concat(footballGameAttributesHandler.middleware)
       .concat(slatePlayerHandler.middleware)
+      .concat(TomorrowIoClient.middleware)
       .concat(fastcastWebSocketMiddleware),
 });
 

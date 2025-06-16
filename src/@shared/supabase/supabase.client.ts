@@ -1,7 +1,7 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { createClient } from '@supabase/supabase-js';
 import { Database } from './supabase-database.model';
-import { SupaClientEspnPlayerInsert, SupaClientLeagueProgressionInsert, SupaClientProfile } from './supabase-tables.model';
+import { SupaClientLeagueProgressionInsert, SupaClientProfile } from './supabase-tables.model';
 
 export const supabase = createClient<Database>(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_KEY);
 
@@ -33,13 +33,6 @@ export const SupabaseClient = createApi({
       },
       invalidatesTags: [SupabaseClientTag.GetLeagueProgression],
     }),
-    createEspnPlayer: builder.mutation<null, SupaClientEspnPlayerInsert[]>({
-      queryFn: async player => {
-        const { data } = await supabase.from('espn_mlb_player').insert(player);
-
-        return { data };
-      },
-    }),
     getProfile: builder.query<SupaClientProfile | null, void>({
       queryFn: async () => {
         const { data } = await supabase.from('profile').select().single();
@@ -47,14 +40,42 @@ export const SupabaseClient = createApi({
         return { data };
       },
     }),
-    getProfileWithTeams: builder.query<unknown, void>({
+    getProfileTeams: builder.query<
+      | {
+          espn_team_id: number | null;
+          id: number | null;
+          league_id: string | null;
+          league_name: string | null;
+          league_season: number | null;
+          name: string | null;
+          sport: Database['public']['Enums']['Fantasy League Sport'] | null;
+          user_name: string | null;
+          uuid: string | null;
+        }[]
+      | null,
+      void
+    >({
       queryFn: async () => {
-        const { data } = await supabase
-          .from('profile')
-          .select(
-            'id,user_name,first_name,last_name,bio,teams:profile_to_fantasy_team(team(*)),leagues:profile_to_fantasy_league(league(*))'
-          )
-          .single();
+        const { data } = await supabase.from('profile_with_teams').select();
+
+        return { data };
+      },
+    }),
+    getProfileLeagues: builder.query<
+      | {
+          id: number | null;
+          league_id: string | null;
+          league_name: string | null;
+          league_season: number | null;
+          sport: Database['public']['Enums']['Fantasy League Sport'] | null;
+          user_name: string | null;
+          uuid: string | null;
+        }[]
+      | null,
+      void
+    >({
+      queryFn: async () => {
+        const { data } = await supabase.from('profile_with_leagues').select();
 
         return { data };
       },

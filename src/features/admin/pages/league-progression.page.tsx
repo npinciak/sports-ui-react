@@ -12,7 +12,6 @@ import {
 import Grid from '@mui/material/Grid2';
 import { LineChart } from '@mui/x-charts/LineChart/LineChart';
 import { SupabaseClient } from '@shared/supabase/supabase.client';
-import { AdminLeagueProgressionForm } from '../components/league-progression-form.component';
 
 export function AdminLeagueProgressionPage() {
   const { data: leagueProgression } =
@@ -35,13 +34,7 @@ export function AdminLeagueProgressionPage() {
       }}
     >
       <Grid container spacing={2}>
-        <Grid size={12}>
-          <Card>
-            <CardContent>
-              <AdminLeagueProgressionForm />
-            </CardContent>
-          </Card>
-        </Grid>
+        <Grid size={12}></Grid>
         <Grid size={12}>
           <LineChart
             yAxis={[{ data: chartData?.map(row => row.totalPoints) ?? [] }]}
