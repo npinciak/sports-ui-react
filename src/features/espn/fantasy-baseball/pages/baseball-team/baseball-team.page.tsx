@@ -37,11 +37,16 @@ import {
   PITCHER_BASIC_STATS_TABLE_COLUMNS,
 } from '../../components/baseball-player-stats-table/baseball-player-stats-table.model';
 import { BaseballTeamHeader } from '../../components/baseball-team-header.component';
+import { EmptyWidgetState } from '../../components/baseball-team-widget/widget-empty.component';
+import { WidgetHeader } from '../../components/baseball-team-widget/widget-header.component';
 import { BATTER_FILTERS } from '../../models/stat-filters.model';
 import {
   selectInjuryPlayerList,
   selectPitcherFangraphIds,
   selectStartingBatterFangraphIds,
+  selectStartingBattersNotInLineup,
+  selectStartingTeamBenchBatters,
+  selectStartingTeamBenchPitchers,
   selectTeamBenchBatterListWithEvents,
   selectTeamBenchPitcherListWithEvents,
   selectTeamStartingBatterListWithEvents,
@@ -88,6 +93,10 @@ export function BaseballTeam() {
     selectTeamStartingBatterListWithEvents
   );
 
+  const teamStartingBattersNotInLineup = useSelector(
+    selectStartingBattersNotInLineup
+  );
+
   const teamBenchPlayerListWithEvents = useSelector(
     selectTeamBenchBatterListWithEvents
   );
@@ -96,9 +105,21 @@ export function BaseballTeam() {
     selectTeamStartingPitcherListWithEvents
   );
 
+  const startingTeamBenchPitchers = useSelector(
+    selectStartingTeamBenchPitchers
+  );
+
   const teamBenchPitcherListWithEvents = useSelector(
     selectTeamBenchPitcherListWithEvents
   );
+
+  const startingTeamBenchBatters = useSelector(selectStartingTeamBenchBatters);
+
+  const startingBenchBattersCount = startingTeamBenchBatters.length;
+  const startingBenchPitchersCount = startingTeamBenchPitchers.length;
+
+  const hasStartingBenchPitchers = startingBenchPitchersCount > 0;
+  const hasStartingBenchBatters = startingBenchBattersCount > 0;
 
   const { data: fangraphsBatterStats, isLoading: isFangraphsStatsLoading } =
     useGetFangraphStatsQuery({
@@ -117,7 +138,7 @@ export function BaseballTeam() {
   const { data: statPeriodList, isLoading: statPeriodLoading } =
     useGetStatPeriodSplitOptionsQuery();
 
-  const [refetch] = useRefetchStatsMutation();
+  const [refetch, { data }] = useRefetchStatsMutation();
 
   function handleStatPeriodChange(value: any) {
     dispatch(setStatSplitPeriod(value));
@@ -143,8 +164,79 @@ export function BaseballTeam() {
         <Grid size={{ xs: 12, sm: 4 }}>
           <BaseballInjuryWidget injuryPlayerList={injuryPlayerList} />
         </Grid>
-
-        <Grid size={{ xs: 12, sm: 8 }}>
+        <Grid size={{ xs: 12, sm: 4 }}>
+          <Card elevation={2}>
+            <WidgetHeader
+              title="Benched Pitchers"
+              count={startingBenchPitchersCount}
+            />
+            <Divider />
+            <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+              {hasStartingBenchPitchers ? (
+                <>
+                  {startingTeamBenchPitchers.map(player => (
+                    <BaseballLineupCard
+                      key={player.id}
+                      player={player}
+                      onClick={handlePlayerClick}
+                    />
+                  ))}
+                </>
+              ) : (
+                <EmptyWidgetState title="No starting pitchers on the bench" />
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 4 }}>
+          <Card elevation={2}>
+            <WidgetHeader
+              title="Benched Batters"
+              count={startingBenchBattersCount}
+            />
+            <Divider />
+            <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+              {hasStartingBenchBatters ? (
+                <>
+                  {startingTeamBenchBatters.map(player => (
+                    <BaseballLineupCard
+                      key={player.id}
+                      player={player}
+                      onClick={handlePlayerClick}
+                    />
+                  ))}
+                </>
+              ) : (
+                <EmptyWidgetState title="No starting batters on the bench" />
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 4 }}>
+          <Card elevation={2}>
+            <WidgetHeader
+              title="Starting Batters not playing"
+              count={teamStartingBattersNotInLineup.length}
+            />
+            <Divider />
+            <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+              {teamStartingBattersNotInLineup.length > 0 ? (
+                <>
+                  {teamStartingBattersNotInLineup.map(player => (
+                    <BaseballLineupCard
+                      key={player.id}
+                      player={player}
+                      onClick={handlePlayerClick}
+                    />
+                  ))}
+                </>
+              ) : (
+                <EmptyWidgetState title="All batters playing" />
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid size={{ xs: 12 }}>
           <WidgetCard title={` by player`}>
             <SelectComponent
               options={statsDropdownOptions.map(stat => ({
@@ -311,6 +403,7 @@ export function BaseballTeam() {
                 basicStatsColumns={
                   BATTER_TABLE_COLUMNS_BY_TYPE[batterStatFilter]
                 }
+                isLoading={loading}
               />
             </CardContent>
           </Card>
@@ -329,6 +422,7 @@ export function BaseballTeam() {
               <BaseballPlayerStatsTable
                 data={fangraphsPitcherStats?.data ?? []}
                 basicStatsColumns={PITCHER_BASIC_STATS_TABLE_COLUMNS}
+                isLoading={loading}
               />
             </CardContent>
           </Card>

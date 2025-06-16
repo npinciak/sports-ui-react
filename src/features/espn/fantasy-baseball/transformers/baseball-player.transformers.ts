@@ -81,26 +81,24 @@ export function addEventsToPitcherEntity(player: BaseballPlayerEntity, eventIdSe
   };
 }
 
-export function addEventsToBatterEntity(player: BaseballPlayerEntity) {
-  let playerStartingStatus = '';
+export function addEventsToBatterEntity(player: BaseballPlayerEntity): BaseballPlayerEntity {
+  let playerStartingStatus = null;
 
   const { starterStatusByProGame } = player;
 
-  if (starterStatusByProGame) {
-    const hasGames = Object.entries(starterStatusByProGame).length > 0;
+  const hasGames = starterStatusByProGame != null && Object.entries(starterStatusByProGame).length > 0;
 
-    if (!hasGames) {
-      playerStartingStatus = PLAYER_INJURY_STATUS.NotStarting;
-    } else if (hasGames) {
-      const [_, startingStatus] = Object.entries(starterStatusByProGame)[0];
-      playerStartingStatus = startingStatus ?? PLAYER_INJURY_STATUS.UNKNOWN;
-    }
+  if (hasGames) {
+    const [_, startingStatus] = Object.entries(starterStatusByProGame)[0];
+    playerStartingStatus = startingStatus ?? PLAYER_INJURY_STATUS.UNKNOWN;
   }
 
-  const isStarting = playerStartingStatus === PLAYER_INJURY_STATUS.Starting;
+  const isInStartingLineup = hasGames && playerStartingStatus === PLAYER_INJURY_STATUS.Starting;
+  const isNotInStartingLineup = hasGames && playerStartingStatus === PLAYER_INJURY_STATUS.NotStarting;
 
   return {
     ...player,
-    isStarting,
+    isInStartingLineup,
+    isNotInStartingLineup,
   };
 }

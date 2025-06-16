@@ -2,6 +2,7 @@ import { LocalHospital } from '@mui/icons-material';
 import { Chip, Tooltip, Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid2';
+import { COLOR } from 'src/app.theme';
 import { BaseballPlayerEntity } from '../../models/baseball-player.model';
 
 interface BaseballLineupCardProps {
@@ -36,18 +37,34 @@ export function BaseballLineupCard({
         </div>
       </Grid>
       <Grid size={3}>
-        {player.isStarting && (
+        {player.isInStartingLineup && (
           <Tooltip
             title={
-              player.isStarting && !player.health!.isInjured
+              player.isInStartingLineup && !player.health!.isInjured
                 ? 'Starting'
-                : 'Not Starting'
+                : null
             }
           >
             <Chip
               label="Starting"
               size="small"
-              sx={{ color: 'white', backgroundColor: '#047857' }}
+              sx={{ color: 'white', backgroundColor: COLOR.DYNAMIC_GREEN }}
+            />
+          </Tooltip>
+        )}
+
+        {player.isNotInStartingLineup && (
+          <Tooltip
+            title={
+              player.isNotInStartingLineup && !player.health!.isInjured
+                ? 'Not in starting lineup'
+                : null
+            }
+          >
+            <Chip
+              label="Not Starting"
+              size="small"
+              sx={{ color: 'white', backgroundColor: COLOR.STRIKE_RED }}
             />
           </Tooltip>
         )}

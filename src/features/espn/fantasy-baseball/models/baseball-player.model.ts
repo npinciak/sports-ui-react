@@ -6,8 +6,8 @@ import { FantasyPlayerEntity } from '../../models';
 
 export interface BaseballPlayerEntity extends FantasyPlayerEntity {
   lineupSlotId: number;
-  isStarting: boolean;
-  startingStatus: string | null;
+  isInStartingLineup: boolean;
+  isNotInStartingLineup: boolean;
   playerRatings: IClientPlayerRatingsMapByTimePeriod | null;
   isPitcher: boolean;
   lineupSlot: string | null;

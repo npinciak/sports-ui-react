@@ -79,6 +79,14 @@ export const selectTeamBenchBatterListWithEvents = createSelector([selectTeamBen
   players.map(player => addEventsToBatterEntity(player))
 );
 
+export const selectStartingTeamBenchBatters = createSelector([selectTeamBenchBatterListWithEvents], benchPlayers =>
+  benchPlayers.filter(player => player.isInStartingLineup)
+);
+
+export const selectStartingBattersNotInLineup = createSelector([selectTeamStartingBatterListWithEvents], players =>
+  players.filter(player => player.isNotInStartingLineup)
+);
+
 export const selectTeamPitcherList = createSelector([selectPlayerEntityList], players =>
   players.filter(p => p.isPitcher && p.lineupSlotId !== ClientBaseballLineupSlot.UTIL)
 );
@@ -100,12 +108,16 @@ export const selectTeamBenchPitcherListWithEvents = createSelector([selectTeamBe
   players.map(player => addEventsToPitcherEntity(player, eventIdSet))
 );
 
+export const selectStartingTeamBenchPitchers = createSelector([selectTeamBenchPitcherListWithEvents], benchPlayers =>
+  benchPlayers.filter(player => player.isStarting)
+);
+
 export const selectFangraphsToBatters = createSelector(
   [selectTeamBatterList, selectFangraphsBatterEntities, selectFangraphsBatterTotal],
   (players, fangraphsEntities, totalFangraphsPlayers) => {
     const hasFangraphsPlayers = totalFangraphsPlayers > 0;
 
-    return players.map(player => ({
+    return players?.map(player => ({
       ...player,
       fangraphsProjection: hasFangraphsPlayers ? (fangraphsEntities[player.sportsUiId] as FangraphsPlayerProjectionEntity) : null,
     }));
