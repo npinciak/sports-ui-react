@@ -10,7 +10,7 @@ export function FastcastTeamComponent({ team }: FastcastTeamComponentProps) {
   return (
     <Grid container className="w-full py-2 ">
       <Grid size={2} alignContent={'center'}>
-        <Avatar src={team?.logo} alt={team?.name} />
+        <Avatar src={team?.logoDark} alt={team?.name} />
       </Grid>
       <Grid size={6} alignContent={'center'}>
         <Typography variant="body2">
