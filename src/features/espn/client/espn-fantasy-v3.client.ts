@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IClientBaseballTeam, IClientSimplePlayerEntity } from '@sdk/espn-client-models';
+import { IClientBaseballTeam, IClientSimplePlayerEntity, TRANSACTION } from '@sdk/espn-client-models';
+import { BATTING_LINEUP_SLOTS, ClientBaseballLineupSlot } from '@sdk/espn-client-models/baseball/lineup';
 import { IClientBaseballLeague, IClientLeague } from '@sdk/espn-client-models/league.model';
 import { ApiEndpointConfiguration } from '../../../api.config';
 import { BaseballLeague } from '../fantasy-baseball/models/baseball-league.model';
@@ -10,11 +11,12 @@ import {
   clientTeamToBaseballTeam,
   transformClientLeagueToBaseballLeagueV2,
 } from '../fantasy-baseball/transformers';
+import { FantasyBaseballEndpointBuilder } from '../helpers/endpoint-builder/endpoint-builder';
 import { FANTASY_SPORTS_ABBREVIATION } from '../helpers/endpoint-builder/endpoint-builder.const';
 import { FantasySportsAbbreviation } from '../helpers/endpoint-builder/endpoint-builder.model';
+import { EspnParamsBuilder } from '../helpers/params-handler/params-handler';
 import { IFantasyLeague } from '../models';
 import { clientLeagueToLeagueSettings } from '../transformers';
-import { EspnParamsBuilder } from '../helpers/params-handler/params-handler';
 
 interface IClientGetBaseballPlayerParams {
   year: string;
@@ -95,16 +97,19 @@ export const EspnFantasyClientV3 = createApi({
         const { year, leagueId } = args;
         const params = EspnParamsBuilder.forLeague().build();
 
+        const url = FantasyBaseballEndpointBuilder.getLeague(year, leagueId);
+
         return {
-          url: `/games/${FANTASY_SPORTS_ABBREVIATION.Baseball}/seasons/${year}/segments/0/leagues/${leagueId}`,
+          url,
           params,
           headers: {
             'X-Fantasy-Filter': JSON.stringify({
               transactions: {
                 filterType: {
-                  value: ['WAIVER', 'FREEAGENT'],
+                  value: [TRANSACTION.FreeAgent, TRANSACTION.Waiver],
                 },
               },
+  
               schedule: { filterCurrentMatchupPeriod: { value: true } },
             }),
           },
@@ -122,8 +127,10 @@ export const EspnFantasyClientV3 = createApi({
 
         const params = EspnParamsBuilder.forTeam(teamId).build();
 
+        const url = FantasyBaseballEndpointBuilder.getLeague(year, leagueId);
+
         return {
-          url: `/games/${FANTASY_SPORTS_ABBREVIATION.Baseball}/seasons/${year}/segments/0/leagues/${leagueId}`,
+          url,
           params,
         };
       },

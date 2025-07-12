@@ -23,8 +23,8 @@ export function ImageBuilder({ league, sport }: { league?: SportLeague; sport?: 
     }
 
     static headshotImgBuilder({ id, width, height }: ImageBuilderInput): string {
-      const w = exists(width) ? width : 55;
-      const h = exists(height) ? height : 40;
+      const w = exists(width) ? width : 426;
+      const h = exists(height) ? height : 320;
 
       return `${this._cdnCombiner}?img=/i/headshots/${this._league}/players/full/${id}.png&w=${w}&h=${h}&cb=1`;
     }

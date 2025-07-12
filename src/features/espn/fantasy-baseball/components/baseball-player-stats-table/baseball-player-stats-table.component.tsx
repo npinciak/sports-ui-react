@@ -1,19 +1,34 @@
-import {
-  TypeColumn,
-  TypeSortInfo,
-} from '@inovua/reactdatagrid-community/types';
+import Grid from '@mui/material/Grid2';
+import { DataGrid } from '@mui/x-data-grid/DataGrid';
+import { GridColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import { FangraphsPlayerStatEntity } from '@shared/fangraphs';
-import { BASEBALL_PLAYER_STATS_TABLE_COLUMNS } from './baseball-player-stats-table.model';
+
+interface BaseballPlayerStatsTableProps {
+  data: FangraphsPlayerStatEntity[];
+  basicStatsColumns: GridColDef[];
+  isLoading?: boolean;
+}
 
 export function BaseballPlayerStatsTable({
   data,
-}: {
-  data: FangraphsPlayerStatEntity[];
-}) {
-  const defaultSortInfo: TypeSortInfo = [];
-
-  const columns: TypeColumn[] = BASEBALL_PLAYER_STATS_TABLE_COLUMNS;
-
-  const gridStyle = { minHeight: 500 };
-  return <></>;
+  basicStatsColumns,
+  isLoading = false,
+}: BaseballPlayerStatsTableProps) {
+  return (
+    <>
+      <Grid container>
+        <Grid size={{ xs: 12 }}>
+          <DataGrid
+            getRowId={row => row.playerid}
+            rows={data}
+            columns={basicStatsColumns}
+            sx={{ border: 0 }}
+            disableColumnMenu={true}
+            hideFooterPagination={true}
+            loading={isLoading}
+          />
+        </Grid>
+      </Grid>
+    </>
+  );
 }

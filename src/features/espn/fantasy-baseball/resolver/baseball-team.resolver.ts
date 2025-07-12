@@ -12,15 +12,15 @@ export async function BaseballTeamResolver({ params }: LoaderFunctionArgs) {
 
   if (hasValidParams) {
     try {
-      await AppStore.dispatch(
+       AppStore.dispatch(
         EspnFantasyClientV3.endpoints.getBaseballTeamById.initiate({
           year,
           leagueId,
           teamId,
         })
       );
-      await AppStore.dispatch(fangraphsClient.endpoints.getFangraphBatterPlayerList.initiate());
-      await AppStore.dispatch(fangraphsClient.endpoints.getFangraphPitcherPlayerList.initiate());
+      AppStore.dispatch(fangraphsClient.endpoints.getFangraphBatterPlayerList.initiate());
+      AppStore.dispatch(fangraphsClient.endpoints.getFangraphPitcherPlayerList.initiate());
 
       return null;
     } catch (e) {

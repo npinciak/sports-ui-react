@@ -16,3 +16,5 @@ export const selectEventEntityList = createSelector(
   state => state,
   state => selectAll(state)
 );
+
+export const selectFirstGameOfDay = createSelector(selectEventEntityList, teams => teams[0]);

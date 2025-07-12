@@ -39,7 +39,13 @@ function ShellComponent() {
 
       {/* Show bottom navigation on both mobile and desktop */}
       <Paper
-        sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
+        sx={{
+          padding: '20px 0',
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+        }}
         elevation={3}
       >
         <ShellBottomNavigationComponent />

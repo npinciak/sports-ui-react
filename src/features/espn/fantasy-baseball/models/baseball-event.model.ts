@@ -5,4 +5,5 @@ type CompetitorEntity = Pick<IClientCompetitorEntity, 'id' | 'abbreviation' | 'h
 
 export type BaseballEvent = Pick<IClientEventEntity, 'id' | 'uid'> & {
   competitors: Record<string, CompetitorEntity>;
+  timestamp: number;
 };

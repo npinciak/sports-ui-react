@@ -1,4 +1,4 @@
-import { RefreshOutlined } from '@mui/icons-material';
+import { RefreshOutlined, SyncOutlined } from '@mui/icons-material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import {
   Avatar,
@@ -120,9 +120,19 @@ export function BaseballTeamHeader({
                   variant="contained"
                   size="small"
                   onClick={handleOpen}
-                  startIcon={<RefreshOutlined />}
+                  startIcon={<SyncOutlined />}
+                  sx={{ mr: 1 }}
                 >
                   Sync
+                </Button>
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={handleOpen}
+                  startIcon={<RefreshOutlined />}
+                  sx={{ mr: 1 }}
+                >
+                  Refresh
                 </Button>
                 <Dialog
                   fullWidth={true}

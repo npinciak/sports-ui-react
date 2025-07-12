@@ -1,3 +1,4 @@
+import { COLOR } from 'src/app.theme';
 import { PLAYER_INJURY_STATUS, PlayerCompetitionStatus } from './injury-status.model';
 
 export const enum InjurySeverity {
@@ -11,9 +12,9 @@ export type InjurySeverityColor = (typeof INJURY_SEVERITY_COLOR)[keyof typeof IN
 
 export const INJURY_SEVERITY_COLOR = {
   Unknown: null,
-  Serious: '#cb0123',
+  Serious: COLOR.STRIKE_RED,
   SemiSerious: '#E8B436',
-  Positive: '#267851',
+  Positive: COLOR.DYNAMIC_GREEN,
 } as const;
 
 export const INJURY_SEVERITY_COLOR_BY_INJURY_SEVERITY: { [key in InjurySeverity]: InjurySeverityColor } = {

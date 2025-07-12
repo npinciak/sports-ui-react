@@ -20,7 +20,7 @@ const HeaderBox = styled(Box)(({ theme }) => ({
 
 export interface WidgetCardProps {
   title: string;
-  value?: string | number;
+  value?: string | number | ReactNode;
   children?: ReactNode;
   emptyMessage?: string;
   isEmpty?: boolean;
