@@ -20,7 +20,8 @@ export function RouteBuilder() {
       if (!leagueId || !teamId) return '';
 
       const leagueRoute = RouteBuilderClass.leagueByLeagueIdRoute({ leagueId, sport, season });
-      return `/${leagueRoute}/${ROUTE_FRAGMENT.TEAM}/${teamId}`;
+
+      return `${leagueRoute}/${ROUTE_FRAGMENT.TEAM}/${teamId}`;
     }
 
     static leagueByLeagueIdRoute({ leagueId, sport, season }: LeagueRoute) {

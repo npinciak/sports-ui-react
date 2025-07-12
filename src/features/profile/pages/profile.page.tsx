@@ -29,7 +29,11 @@ export function ProfilePage() {
     data: profile,
     isLoading,
     isFetching,
-  } = SupabaseClient.useGetProfileWithTeamsQuery();
+  } = SupabaseClient.useGetProfileQuery();
+
+  const { data: teams } = SupabaseClient.useGetProfileTeamsQuery();
+
+  const { data: leagues } = SupabaseClient.useGetProfileLeaguesQuery();
 
   const [isAddLeagueFormDialogOpen, setIsAddLeagueFormDialogOpen] =
     useState<boolean>(false);
@@ -41,13 +45,14 @@ export function ProfilePage() {
 
   const { teamByTeamIdRoute, leagueByLeagueIdRoute } = RouteBuilder();
 
-  const handleToNavigateToTeam = ({
+  const handleNavigateToTeam = ({
     sport,
     season,
     leagueId,
     teamId,
-  }: TeamRoute) =>
+  }: TeamRoute) => {
     navigate(teamByTeamIdRoute({ sport, season, leagueId, teamId }));
+  };
 
   const handleToNavigateToLeague = ({ leagueId, sport, season }: LeagueRoute) =>
     navigate(leagueByLeagueIdRoute({ sport, season, leagueId }));
@@ -80,12 +85,12 @@ export function ProfilePage() {
             <CardContent>
               <Grid container spacing={2} alignContent={'center'}>
                 <Grid size={12}>
-                <Avatar
-                  alt={profile?.name?.toUpperCase()}
-                  src="./"
-                  aria-label={profile?.name ?? ''}
-                  sx={{ width: 56, height: 56 }}
-                />
+                  <Avatar
+                    alt={profile?.user_name}
+                    src="./"
+                    aria-label={profile?.user_name ?? ''}
+                    sx={{ width: 56, height: 56 }}
+                  />
                 </Grid>
               </Grid>
             </CardContent>
@@ -93,28 +98,28 @@ export function ProfilePage() {
         </Grid>
         <Grid size={12}>
           <Divider>Teams</Divider>
-          {profile?.teams.map(team => (
-            <Box sx={{ marginBottom: '16px' }} key={team.team.id}>
+          {teams?.map(team => (
+            <Box sx={{ marginBottom: '16px' }} key={team.id}>
               <Card>
                 <CardHeader
                   avatar={
                     <Avatar
-                      alt={team.team.name?.toUpperCase()}
+                      alt={team.name?.toUpperCase()}
                       src="./"
-                      aria-label={team.team.name ?? ''}
+                      aria-label={team.name ?? ''}
                     />
                   }
-                  title={team.team.name}
-                  subheader={team.team.fantasy_league_name}
+                  title={team.name}
+                  subheader={team.league_name}
                   action={
                     <IconButton
                       aria-label="navigate"
                       onClick={() =>
-                        handleToNavigateToTeam({
-                          sport,
-                          season,
-                          leagueId,
-                          teamId,
+                        handleNavigateToTeam({
+                          season: team?.league_season?.toString(),
+                          leagueId: team.league_id,
+                          sport: team.sport,
+                          teamId: team.espn_team_id?.toString(),
                         })
                       }
                     >
@@ -140,27 +145,27 @@ export function ProfilePage() {
         </Grid>
         <Grid size={12}>
           <Divider>Leagues</Divider>
-          {profile?.leagues.map(league => (
-            <Box sx={{ marginBottom: '16px' }} key={league.league.id}>
+          {leagues?.map(league => (
+            <Box sx={{ marginBottom: '16px' }} key={league.id}>
               <Card>
                 <CardHeader
                   avatar={
                     <Avatar
-                      alt={league.league.name?.toUpperCase()}
+                      alt={league?.league_name?.toUpperCase()}
                       src="./"
-                      aria-label={league.league.name ?? ''}
+                      aria-label={league?.league_name ?? ''}
                     />
                   }
-                  title={league.league.name}
-                  subheader={league.league.fantasy_league_name}
+                  title={league?.league_name}
+                  subheader={league?.league_season}
                   action={
                     <IconButton
                       aria-label="navigate"
                       onClick={() =>
                         handleToNavigateToLeague({
-                          season: league.league.season,
-                          leagueId: league.league.league_id,
-                          sport: league.league.sport,
+                          season: league?.league_season?.toString(),
+                          leagueId: league?.league_id,
+                          sport: league?.sport,
                         })
                       }
                     >

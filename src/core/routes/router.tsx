@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs, RouteObject } from 'react-router';
-import { BaseballTeamResolver } from 'src/features/espn/fantasy-baseball/resolver/baseball-team.resolver';
+import { BaseballTeamResolver } from '../../features/espn/fantasy-baseball/resolver/baseball-team.resolver';
 import { AppStore } from '../../app.store';
 import {
   AdminLeagueProgressionPage,
