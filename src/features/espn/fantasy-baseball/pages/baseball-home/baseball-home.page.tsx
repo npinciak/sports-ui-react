@@ -17,8 +17,10 @@ import { EspnFantasyClientV3 } from '../../../client/espn-fantasy-v3.client';
 import { BaseballLeagueHeader } from '../../components/baseball-league-header.component';
 import { BaseballSeasonCompletedPctWidget } from '../../components/baseball-season-completed-pct-widget.component';
 import { BaseballTradeablesWidget } from '../../components/baseball-tradeables-widget.component';
+import { BaseballTransactionsLockWidget } from '../../components/baseball-transactions-lock-widget.component';
 import { BaseballTransactionsWidget } from '../../components/baseball-transactions-widget/baseball-transactions-widget.component';
 import { LEAGUE_STATS_TABLE_COLUMNS } from '../../models/baseball-league-table.model';
+import { selectFirstGameOfDay } from '../../selectors/baseball-events.selector';
 import { selectSeasonCompletedPct } from '../../selectors/baseball-league.selector';
 import {
   getTeamDropTotals,
@@ -31,6 +33,10 @@ import { getGroupedTransactions } from '../../selectors/baseball-transaction.sel
 
 export function BaseballHome() {
   const { year, leagueId } = useParams<{ year: string; leagueId: string }>();
+
+  const firstGame = useSelector(selectFirstGameOfDay);
+
+  const firstEventDate = firstGame.timestamp;
 
   const [selectedGraphStat, setSelectedGraphStat] = useState(BaseballStat.K);
 
@@ -128,6 +134,9 @@ export function BaseballHome() {
             value={totalTeamMoveToInjuredReserve}
             isEmpty={true}
           />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6 }}>
+          <BaseballTransactionsLockWidget event={firstGame} />
         </Grid>
         <Grid size={12}>
           <BaseballTransactionsWidget
