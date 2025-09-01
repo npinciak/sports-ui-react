@@ -24,6 +24,10 @@ export interface IClientBaseballLeague extends Omit<IClientLeague, 'teams'> {
   teams: IClientBaseballTeam[];
 }
 
+export interface IClientFootballLeague extends Omit<IClientLeague, 'teams'> {
+  teams: IClientTeamEntity[];
+}
+
 export type IClientLeagueStatus = { firstScoringPeriod: number; finalScoringPeriod: number };
 export type IClientLeagueScheduleSettings = { matchupPeriodCount: number; playoffMatchupPeriodLength: number };
 export type IClientLeagueRosterSettings = { positionLimits: Record<string, number>; lineupSlotCounts: Record<string, number> };

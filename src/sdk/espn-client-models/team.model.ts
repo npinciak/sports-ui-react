@@ -37,3 +37,7 @@ interface IClientTradeBlock {
 export interface IClientBaseballTeam extends IClientTeamEntity {
   record: string;
 }
+
+export interface IClientFootballTeam extends IClientTeamEntity {
+  record: string;
+}
