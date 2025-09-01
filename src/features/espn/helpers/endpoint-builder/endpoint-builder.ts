@@ -14,3 +14,4 @@ export function EspnEndpointBuilder({ fantasySport }: EspnEndpointBuilderProps) 
 }
 
 export class FantasyBaseballEndpointBuilder extends EspnEndpointBuilder({ fantasySport: FANTASY_SPORTS_ABBREVIATION.Baseball }) {}
+export class FantasyFootballEndpointBuilder extends EspnEndpointBuilder({ fantasySport: FANTASY_SPORTS_ABBREVIATION.Football }) {}
