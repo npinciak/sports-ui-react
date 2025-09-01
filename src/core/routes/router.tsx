@@ -1,5 +1,4 @@
 import { LoaderFunctionArgs, RouteObject } from 'react-router';
-import { BaseballTeamResolver } from '../../features/espn/fantasy-baseball/resolver/baseball-team.resolver';
 import { AppStore } from '../../app.store';
 import {
   AdminLeagueProgressionPage,
@@ -14,6 +13,9 @@ import { FootballHomePage } from '../../features/daily-fantasy/football/pages/fo
 import { DailyFantasyHomePage } from '../../features/daily-fantasy/pages/home.page';
 import { EspnFantasyClientV2 } from '../../features/espn/client/espn-fantasy-v2.client';
 import { EspnFantasyClientV3 } from '../../features/espn/client/espn-fantasy-v3.client';
+import { BaseballTeamResolver } from '../../features/espn/fantasy-baseball/resolver/baseball-team.resolver';
+import { FootballHome } from '../../features/espn/fantasy-football/pages/home/home.page';
+import { FootballTeamResolver } from '../../features/espn/fantasy-football/resolver/football-team.resolver';
 import { FastcastScoreboardHomePage } from '../../features/espn/fastcast/pages/home.page';
 import { FANTASY_SPORTS_ABBREVIATION } from '../../features/espn/helpers/endpoint-builder/endpoint-builder.const';
 import { ProfilePage } from '../../features/profile';
@@ -251,7 +253,7 @@ export const publicRoutes: RouteObject[] = [
                     children: [
                       {
                         path: ROUTE_FRAGMENT.EMPTY,
-                        element: <div>Football Home</div>,
+                        element: <FootballHome />,
                       },
                       {
                         path: ROUTE_FRAGMENT.TEAM,
@@ -262,10 +264,14 @@ export const publicRoutes: RouteObject[] = [
                               {
                                 path: ROUTE_FRAGMENT.EMPTY,
                                 element: <div>Football Team</div>,
-                                loader: async () => {
-                                  //TODO: Implement
-                                  return null;
-                                },
+                                loader: async ({
+                                  params,
+                                  request,
+                                }: LoaderFunctionArgs) =>
+                                  FootballTeamResolver({
+                                    params,
+                                    request,
+                                  }),
                               },
                             ],
                           },
