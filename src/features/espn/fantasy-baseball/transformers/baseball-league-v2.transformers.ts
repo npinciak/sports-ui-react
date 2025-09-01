@@ -222,7 +222,7 @@ export function clientPlayerToBaseballPlayer(player: IClientTeamRosterEntity): B
     isPitcher: isPitcher(eligibleSlots ?? [], PITCHING_LINEUP_IDS),
     lineupSlotId,
     isInStartingLineup: false,
-    startingStatus: null,
+    isNotInStartingLineup: false,
     lineupSlot: BASEBALL_LINEUP_MAP[lineupSlotId].abbrev,
     starterStatusByProGame,
     eligibleLineupSlots,

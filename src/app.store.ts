@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { fangraphsPitcherSlice } from '@shared/fangraphs/slices/fangraphs-pitcher.slice';
+import { TomorrowIoClient } from '@shared/weather/tomorrow-io.client';
 import { fangraphsBatterSlice, fangraphsClient, FangraphsStatsFilterFormSlice } from './@shared/fangraphs';
 import { SupabaseClient } from './@shared/supabase/supabase.client';
 import { AuthenticationClient } from './core/authentication';
@@ -29,7 +30,6 @@ import { FastcastEventsSlice } from './features/espn/fastcast/slices/fastcast-ev
 import { FastcastLeaguesSlice } from './features/espn/fastcast/slices/fastcast-league.slice';
 import { FastcastSportsSlice } from './features/espn/fastcast/slices/fastcast-sport.slice';
 import { EspnPlayerNewsSlice } from './features/espn/slices/espn-player-news.slice';
-import { TomorrowIoClient } from '@shared/weather/tomorrow-io.client';
 
 export const AppStore = configureStore({
   reducer: {

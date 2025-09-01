@@ -1,5 +1,4 @@
-import { Box, Container, useMediaQuery, useTheme } from '@mui/material';
-import Paper from '@mui/material/Paper';
+import { Box, Container, useTheme } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import '../App.css';
 import { HeaderComponent } from '../core';
@@ -7,7 +6,6 @@ import { ShellBottomNavigationComponent } from './shell-bottom-navigation.compon
 
 function ShellComponent() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Box
@@ -36,20 +34,18 @@ function ShellComponent() {
           <Outlet />
         </Container>
       </Box>
-
-      {/* Show bottom navigation on both mobile and desktop */}
-      <Paper
+      {/* <Paper
         sx={{
           padding: '20px 0',
           position: 'fixed',
           bottom: 0,
           left: 0,
           right: 0,
+          backgroundColor: theme.palette.background.default,
         }}
-        elevation={3}
-      >
-        <ShellBottomNavigationComponent />
-      </Paper>
+      > */}
+      <ShellBottomNavigationComponent />
+      {/* </Paper> */}
     </Box>
   );
 }
