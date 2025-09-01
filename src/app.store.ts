@@ -20,6 +20,9 @@ import { baseballPlayersSlice } from './features/espn/fantasy-baseball/slices/ba
 import { baseballTeamLiveSlice } from './features/espn/fantasy-baseball/slices/baseball-team-live.slice';
 import { baseballTeamRosterSlice } from './features/espn/fantasy-baseball/slices/baseball-team-roster.slice';
 import { baseballTransactionSlice } from './features/espn/fantasy-baseball/slices/baseball-transactions.slice';
+import { footballLeagueSlice } from './features/espn/fantasy-football/slices/football-league.slice';
+import { footballTeamRosterSlice } from './features/espn/fantasy-football/slices/football-team-roster.slice';
+import { footballTeamSlice } from './features/espn/fantasy-football/slices/football-team.slice';
 import { FastcastClient } from './features/espn/fastcast/client/fastcast.client';
 import { fastcastWebSocketMiddleware } from './features/espn/fastcast/helpers/websocket-handler';
 import { FastcastEventsSlice } from './features/espn/fastcast/slices/fastcast-event.slice';
@@ -45,6 +48,9 @@ export const AppStore = configureStore({
     [baseballTeamLiveSlice.reducerPath]: baseballTeamLiveSlice.reducer,
     [baseballTransactionSlice.reducerPath]: baseballTransactionSlice.reducer,
     [baseballLeagueSlice.reducerPath]: baseballLeagueSlice.reducer,
+    [footballLeagueSlice.reducerPath]: footballLeagueSlice.reducer,
+    [footballTeamSlice.reducerPath]: footballTeamSlice.reducer,
+    [footballTeamRosterSlice.reducerPath]: footballTeamRosterSlice.reducer,
     [FastcastClient.reducerPath]: FastcastClient.reducer,
     [FastcastEventsSlice.reducerPath]: FastcastEventsSlice.reducer,
     [FastcastSportsSlice.reducerPath]: FastcastSportsSlice.reducer,
