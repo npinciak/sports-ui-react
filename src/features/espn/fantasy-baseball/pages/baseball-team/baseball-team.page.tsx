@@ -152,7 +152,7 @@ export function BaseballTeam() {
     );
   }
 
-  const statsDropdownOptions = Object.keys(fangraphsBatterStats?.data[0] ?? {});
+  const statsDropdownOptions = fangraphsBatterStats ? Object.keys(fangraphsBatterStats?.data[0] ?? {}) : []
 
   const loading = isLoading || isFangraphsStatsLoading || statPeriodLoading;
 

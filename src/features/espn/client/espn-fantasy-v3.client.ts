@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IClientBaseballTeam, IClientSimplePlayerEntity, TRANSACTION } from '@sdk/espn-client-models';
-import { BATTING_LINEUP_SLOTS, ClientBaseballLineupSlot } from '@sdk/espn-client-models/baseball/lineup';
-import { IClientBaseballLeague, IClientLeague } from '@sdk/espn-client-models/league.model';
+import { IClientBaseballTeam, IClientFootballTeam, IClientSimplePlayerEntity, TRANSACTION } from '@sdk/espn-client-models';
+import { IClientBaseballLeague, IClientFootballLeague, IClientLeague } from '@sdk/espn-client-models/league.model';
 import { ApiEndpointConfiguration } from '../../../api.config';
 import { BaseballLeague } from '../fantasy-baseball/models/baseball-league.model';
 import { BaseballPlayerEntity } from '../fantasy-baseball/models/baseball-player.model';
@@ -11,24 +10,30 @@ import {
   clientTeamToBaseballTeam,
   transformClientLeagueToBaseballLeagueV2,
 } from '../fantasy-baseball/transformers';
-import { FantasyBaseballEndpointBuilder } from '../helpers/endpoint-builder/endpoint-builder';
+import { FootballLeague } from '../fantasy-football/models/football-league.model';
+import { FootballTeamEntity } from '../fantasy-football/models/football-team.model';
+import {
+  clientTeamToFootballTeam,
+  transformClientLeagueToFootballLeague,
+} from '../fantasy-football/transformers/football-league.transformer';
+import { FantasyBaseballEndpointBuilder, FantasyFootballEndpointBuilder } from '../helpers/endpoint-builder/endpoint-builder';
 import { FANTASY_SPORTS_ABBREVIATION } from '../helpers/endpoint-builder/endpoint-builder.const';
 import { FantasySportsAbbreviation } from '../helpers/endpoint-builder/endpoint-builder.model';
 import { EspnParamsBuilder } from '../helpers/params-handler/params-handler';
 import { IFantasyLeague } from '../models';
 import { clientLeagueToLeagueSettings } from '../transformers';
 
-interface IClientGetBaseballPlayerParams {
+interface IClientGetPlayerParams {
   year: string;
   scoringPeriodId: string;
 }
 
-interface IClientGetBaseballLeagueParams {
+interface IClientGetLeagueParams {
   year: string;
   leagueId: string;
 }
 
-interface IClientGetBaseballTeamParams {
+interface IClientGetTeamParams {
   year: string;
   leagueId: string;
   teamId: string;
@@ -46,7 +51,7 @@ export const EspnFantasyClientV3 = createApi({
     baseUrl: ApiEndpointConfiguration.espnFantasyEndpointV3,
   }),
   endpoints: builder => ({
-    getBaseballPlayers: builder.query<BaseballPlayerEntity[], IClientGetBaseballPlayerParams>({
+    getBaseballPlayers: builder.query<BaseballPlayerEntity[], IClientGetPlayerParams>({
       query: args => {
         const { year, scoringPeriodId } = args;
 
@@ -92,7 +97,7 @@ export const EspnFantasyClientV3 = createApi({
         };
       },
     }),
-    getBaseballLeague: builder.query<BaseballLeague, IClientGetBaseballLeagueParams>({
+    getBaseballLeague: builder.query<BaseballLeague, IClientGetLeagueParams>({
       query: args => {
         const { year, leagueId } = args;
         const params = EspnParamsBuilder.forLeague().build();
@@ -109,7 +114,7 @@ export const EspnFantasyClientV3 = createApi({
                   value: [TRANSACTION.FreeAgent, TRANSACTION.Waiver],
                 },
               },
-  
+
               schedule: { filterCurrentMatchupPeriod: { value: true } },
             }),
           },
@@ -121,7 +126,7 @@ export const EspnFantasyClientV3 = createApi({
         return transformClientLeagueToBaseballLeagueV2(league, genericLeagueSettings);
       },
     }),
-    getBaseballTeamById: builder.query<BaseballTeamEntity, IClientGetBaseballTeamParams>({
+    getBaseballTeamById: builder.query<BaseballTeamEntity, IClientGetTeamParams>({
       query: args => {
         const { year, leagueId, teamId } = args;
 
@@ -140,6 +145,56 @@ export const EspnFantasyClientV3 = createApi({
         const team = league.teams.find(t => t.id.toString() === teamId) as IClientBaseballTeam;
 
         return clientTeamToBaseballTeam(team);
+      },
+    }),
+    getFootballLeague: builder.query<FootballLeague, IClientGetLeagueParams>({
+      query: args => {
+        const { year, leagueId } = args;
+        const params = EspnParamsBuilder.forLeague().build();
+
+        const url = FantasyFootballEndpointBuilder.getLeague(year, leagueId);
+
+        return {
+          url,
+          params,
+          headers: {
+            'X-Fantasy-Filter': JSON.stringify({
+              transactions: {
+                filterType: {
+                  value: [TRANSACTION.FreeAgent, TRANSACTION.Waiver],
+                },
+              },
+
+              schedule: { filterCurrentMatchupPeriod: { value: true } },
+            }),
+          },
+        };
+      },
+      transformResponse: (league: IClientBaseballLeague) => {
+        const genericLeagueSettings = clientLeagueToLeagueSettings(league);
+
+        return transformClientLeagueToFootballLeague(league, genericLeagueSettings);
+      },
+    }),
+    getFootballTeamById: builder.query<FootballTeamEntity, IClientGetTeamParams>({
+      query: args => {
+        const { year, leagueId, teamId } = args;
+
+        const params = EspnParamsBuilder.forTeam(teamId).build();
+
+        const url = FantasyFootballEndpointBuilder.getLeague(year, leagueId);
+
+        return {
+          url,
+          params,
+        };
+      },
+      transformResponse: (league: IClientFootballLeague, _, args) => {
+        const { teamId } = args;
+
+        const team = league.teams.find(t => t.id.toString() === teamId) as IClientFootballTeam;
+
+        return clientTeamToFootballTeam(team);
       },
     }),
     validateLeague: builder.query<IFantasyLeague, IClientValidateLeagueParams>({

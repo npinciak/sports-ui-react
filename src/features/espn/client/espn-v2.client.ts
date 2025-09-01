@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { ApiEndpointConfiguration } from '../../../api.config';
+import { IFastcastCheckpoint } from '../fastcast/models/fastcast-checkpoint.model';
 import { UIFastcast } from '../fastcast/models/fastcast-transform.model';
 import { transformFastcastCheckpointToUIFastcast } from '../fastcast/transformers/espn-fastcast.transformers';
 
@@ -15,9 +16,7 @@ export const EspnClientV2 = createApi({
           url: `/scoreboard/header`,
         };
       },
-      transformResponse: (response: any) => {
-        return transformFastcastCheckpointToUIFastcast(response);
-      },
+      transformResponse: (response: IFastcastCheckpoint) => transformFastcastCheckpointToUIFastcast(response),
     }),
   }),
 });
